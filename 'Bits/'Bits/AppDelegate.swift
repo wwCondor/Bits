@@ -33,8 +33,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
+    
     // MARK: - Core Data stack
+    
+    // NSManagedObjectContext: An object space that you use to manipulate and track changes to managed objects.
+    lazy var managedObjectContainer: NSManagedObjectContext = {
+        let container = self.persistentContainer
+        return container.viewContext
+    }()
 
+    // NSPersistentContainer: A container that encapsulates the Core Data stack in your app.
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
@@ -42,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
         */
-        let container = NSPersistentContainer(name: "_Bits")
+        let container = NSPersistentContainer(name: "Bits") // This needs to match with the dataModel name, otherwise the stack cannot find it
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.

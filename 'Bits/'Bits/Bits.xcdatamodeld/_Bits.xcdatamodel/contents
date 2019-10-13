@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15400" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CollectedBit" representedClassName="CollectedBit" syncable="YES" codeGenerationType="class">
+        <attribute name="date" attributeType="Date" defaultDateTimeInterval="592425120" usesScalarValueType="NO"/>
+        <attribute name="story" optional="YES" attributeType="String"/>
+        <attribute name="title" attributeType="String" minValueString="1" maxValueString="24" defaultValueString="Collected 'Bit"/>
+    </entity>
+    <entity name="FullResolution" representedClassName="FullResolution" syncable="YES" codeGenerationType="class">
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <relationship name="thumbnail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Thumbnail" inverseName="fullResolution" inverseEntity="Thumbnail"/>
+    </entity>
+    <entity name="Thumbnail" representedClassName="Thumbnail" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
+        <relationship name="fullResolution" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FullResolution" inverseName="thumbnail" inverseEntity="FullResolution"/>
+    </entity>
+    <elements>
+        <element name="CollectedBit" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="Thumbnail" positionX="-54" positionY="18" width="128" height="88"/>
+        <element name="FullResolution" positionX="-36" positionY="27" width="128" height="73"/>
+    </elements>
+</model>
