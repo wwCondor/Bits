@@ -12,10 +12,19 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        let navigationBarAppearace = UINavigationBar.appearance()
+
+        navigationBarAppearace.barTintColor = UIColor(named: Color.gentlemanGray.rawValue) // Bar Background
+        navigationBarAppearace.tintColor = UIColor(named: Color.washedWhite.rawValue) // Tintcolor title, images and back indicator
+
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        window?.rootViewController = UINavigationController(rootViewController: ViewController())
+
         return true
     }
 

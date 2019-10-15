@@ -8,12 +8,11 @@
 
 import UIKit
 
-// This cell should be reusable for he 3 different options in menu and change layout accordingly?
+
+// This
 class MenuItemCell: BaseCell {
     
-//    var menuItemSelected: MenuOptions? // This holds the selected option in the menu
-    
-    let entryImage: UIImageView = {
+    lazy var entryImage: UIImageView = {
         let entryImage = UIImageView()
 //        entryImage.backgroundColor = UIColor.red
         entryImage.image = UIImage(named: "BitsThumbnail") // Sets default image
@@ -24,8 +23,8 @@ class MenuItemCell: BaseCell {
     }()
     
     // These might becomeUITextLabel instead
-    let entryTitle: UILabel = {
-        let entryTitle = UILabel()
+    lazy var entryTitle: UITextField = {
+        let entryTitle = UITextField()
         entryTitle.backgroundColor = UIColor.systemTeal
         //            titleLabel.backgroundColor = UIColor(named: "SuitUpSilver")
         entryTitle.textColor = UIColor(named: "WashedWhite")
@@ -39,7 +38,7 @@ class MenuItemCell: BaseCell {
         return entryTitle
     }()
     
-    let entryDate: UILabel = {
+    lazy var entryDate: UILabel = {
         let entryDate = UILabel()
         entryDate.backgroundColor = UIColor.green
         //            dateLabel.backgroundColor = UIColor(named: "SuitUpSilver")
@@ -54,11 +53,15 @@ class MenuItemCell: BaseCell {
         return entryDate
     }()
     
-    let entryContent: UITextField = {
-        let entryContent = UITextField()
+    lazy var entryContent: UITextView = {
+        let entryContent = UITextView()
         entryContent.backgroundColor = UIColor.purple
         //        postContent.backgroundColor = UIColor(named: "SuitUpSilver")
-        entryContent.text = "This is some random story about some random event that goes with this random picture and that very random title."
+        entryContent.text = "Random Text."
+        entryContent.textAlignment = .left
+        entryContent.textContainer.maximumNumberOfLines = 10
+        let textInset: CGFloat = 10
+        entryContent.textContainerInset = UIEdgeInsets(top: textInset, left: textInset, bottom: textInset, right: textInset)
         entryContent.textColor = UIColor.white
         entryContent.translatesAutoresizingMaskIntoConstraints = false
         entryContent.layer.cornerRadius = 8
@@ -67,19 +70,21 @@ class MenuItemCell: BaseCell {
         return entryContent
     }()
     
-    lazy var saveButton: SaveButtonView = {
-        let saveButtonView = SaveButtonView()
-//        saveButtonView.backgroundColor = UIColor.red
-        return saveButtonView
+    lazy var saveButton: UIButton = {
+        let saveButton = UIButton()
+        let image = UIImage(named: "SaveIcon") // ?.withRenderingMode(.alwaysTemplate)
+        saveButton.setImage(image, for: .normal)
+        saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
+        return saveButton
     }()
     
-//    let savedPostsview: SavedPostsView = {
-//        let savedPostsview = SavedPostsView()
-//        return savedPostsview
-//    }()
    
     override func setupViews() {
         super.setupViews()
+        
+        // Noticationcenter: A notification dispatch mechanism that enables the broadcast of information to registered observers.
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         backgroundColor = UIColor.yellow
         
@@ -104,8 +109,35 @@ class MenuItemCell: BaseCell {
         addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(\(labelHeight))]-\(smallSpacing)-[v1(\(labelHeight))]-\(smallSpacing)-[v2]-\(largeSpacing)-|", views: entryTitle, entryDate, entryContent)
         addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(\(thumbnailImageSize))]-\(smallSpacing)-[v1]-\(largeSpacing)-|", views: saveButton, entryContent)
 
+//        addConstraint(NSLayoutConstraint(item: entryContent, attribute: .bottom, relatedBy: .equal, toItem: safeAreaLayoutGuide, attribute: .top, multiplier: 1, constant: 100))
         
     }
+    
+    @objc func saveEntry(sender: UIButton!) {
+        print("Entry Saved")
+    }
+    
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        
+        let keyboardFrame = keyboardSize.cgRectValue
+        
+        // In here something needs to slide up
+        
+        if super.frame.origin.y == 0 {
+            super.frame.origin.y -= keyboardFrame.height
+        }
+
+    }
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if super.frame.origin.y != 0 {
+            super.frame.origin.y = 0
+        }
+    }
+    
+
     
     
 }

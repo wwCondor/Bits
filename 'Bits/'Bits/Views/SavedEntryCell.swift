@@ -8,13 +8,9 @@
 
 import UIKit
 
-// MARK: Fixme - Refactor: Superclass inheritance
-class SavedPostCell: BaseCell {
-    
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        setupViews()
-//    }
+
+// This is the saved entry displayed inside the collectionView on the main screen
+class SavedEntryCell: BaseCell {
 
     let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
@@ -52,15 +48,15 @@ class SavedPostCell: BaseCell {
         return dateLabel
     }()
     
-//     This adds a space between the posts
-    let separatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.red
-//        view.backgroundColor = UIColor(named: "GentlemanGray")
-        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.layer.masksToBounds = true
-        return view
-    }()
+////     This adds a space between the posts
+//    let separatorView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor.red
+////        view.backgroundColor = UIColor(named: "GentlemanGray")
+//        view.translatesAutoresizingMaskIntoConstraints = false
+////        view.layer.masksToBounds = true
+//        return view
+//    }()
 
 
     override func setupViews() {
@@ -69,7 +65,7 @@ class SavedPostCell: BaseCell {
         addSubview(thumbnailImageView)
         addSubview(titleLabel)
         addSubview(dateLabel)
-        addSubview(separatorView)
+//        addSubview(separatorView)
         
         // MARK: Thumbnail Constraints
         
