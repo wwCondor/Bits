@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class NewEntryController: UIViewController {
+    
+    let cellColor = UIColor(named: Color.suitUpSilver.rawValue) // background color of each object
+    
+//    let mainController = ViewController()
+//    let managedObjectContext = AppDelegate()//.managedObjectContainer
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,11 +24,6 @@ class NewEntryController: UIViewController {
         setupBackButton()
         setupViews()
     }
-    
-//    lazy var newEntryContainer: NewEntry = {
-//       let newEntryContainer = NewEntry()
-//       return newEntryContainer
-//    }()
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
@@ -40,7 +41,7 @@ class NewEntryController: UIViewController {
     
     lazy var entryImage: UIImageView = {
         let entryImage = UIImageView()
-        entryImage.backgroundColor = UIColor.yellow
+        entryImage.backgroundColor = cellColor
 //        entryImage.image = UIImage(named: "BitsThumbnail") // Sets default image
         entryImage.translatesAutoresizingMaskIntoConstraints = false
 //        entryImage.layer.cornerRadius = 8
@@ -51,7 +52,7 @@ class NewEntryController: UIViewController {
     // These might becomeUITextLabel instead
     lazy var entryTitle: UITextField = {
         let entryTitle = UITextField()
-        entryTitle.backgroundColor = UIColor.systemTeal
+        entryTitle.backgroundColor = cellColor
         //            titleLabel.backgroundColor = UIColor(named: "SuitUpSilver")
         entryTitle.textColor = UIColor(named: "WashedWhite")
         entryTitle.text = "This is the title"
@@ -66,11 +67,12 @@ class NewEntryController: UIViewController {
     
     lazy var entryDate: UILabel = {
         let entryDate = UILabel()
-        entryDate.backgroundColor = UIColor.green
-        //            dateLabel.backgroundColor = UIColor(named: "SuitUpSilver")
+        entryDate.backgroundColor = cellColor
+        
         entryDate.textColor = UIColor(named: "WashedWhite")
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
+        
 //        entryDate.layer.cornerRadius = 8
 //        entryDate.layer.masksToBounds = true
         
@@ -81,7 +83,7 @@ class NewEntryController: UIViewController {
     
     lazy var entryContent: UITextView = {
         let entryContent = UITextView()
-        entryContent.backgroundColor = UIColor.purple
+        entryContent.backgroundColor = cellColor
         //        postContent.backgroundColor = UIColor(named: "SuitUpSilver")
         entryContent.text = "Random Text."
         entryContent.textAlignment = .left
@@ -95,9 +97,6 @@ class NewEntryController: UIViewController {
         
         return entryContent
     }()
-    
-
-    
     
     lazy var navigatonBarImage: UIImage = {
         let navBarImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
@@ -146,37 +145,46 @@ class NewEntryController: UIViewController {
         entryImage.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
         entryImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         
-        
-
         saveButton.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout
         saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true // Height of the menuBar
         saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
         saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         
-        
-        
     }
     
     
     @objc func saveEntry(sender: UIButton!) {
-        print("Item Saved")
+        // In here we check each property that we want to store and if it s empty
+        guard let title = entryTitle.text, !title.isEmpty else {
+            return
+        }
         
+//        guard let date = entryDate.date, !date.isEmpty else {
+//            return
+//        }
+            
+        guard let story = entryContent.text, !story.isEmpty else {
+            return
+        }
+        
+//        let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext.managedObjectContainer) as! Entry
+        
+//        entry.title = title
+//        entry.date = date
+//        entry.story = story
+        
+//        managedObjectContext.saveContext()
+        
+        print("Item Saved")
+
     }
     
     
     @objc func cancel() {
-        // This should have some sort of check to prevent dismissing information that was entered
+        // This should have some sort of check to prevent dismissing unsaved information 
         
         dismiss(animated: true, completion: nil)
         
     }
-    
-}
-
-
-extension NewEntryController {
-    
-    
-    
     
 }

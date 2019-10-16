@@ -11,6 +11,10 @@ import UIKit
 
 class SavedEntries: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    let newEntryController = NewEntryController()
+    let mainController = ViewController()
+    let entryCell = SavedEntryCell()
+    
     lazy var collectedBitsView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectedBitsView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -41,13 +45,17 @@ class SavedEntries: UIView, UICollectionViewDataSource, UICollectionViewDelegate
     // MARK: Delegate Methods
     // This is the amount of cells inside the collectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12 // MARK: Amount of Entries
+        return 10
+//        return mainController.entries.count // MARK: Amount of Entries
     }
     
-    
+
     // Returns a reusable cell object located by its identifier
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        
+//        let entry = mainController.entries[indexPath.row]
+//        entryCell.titleLabel.text = entry.title
         
         cell.backgroundColor = UIColor(named: "WashedWhite") // color of the cells within the container
 //        cell.layer.cornerRadius = 6
@@ -68,12 +76,47 @@ class SavedEntries: UIView, UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     
+    // MARK: Delegate (Needs work)
+    var cellTapDelegate: CellTapDelegate!
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // In here we launch newEntryController
+//        cellTapDelegate.launchEntryWithIndex(index: indexPath)
+        
+        print(indexPath)
+    }
+    
+    
+    @objc func gesture(sender: UITapGestureRecognizer) {
+        let point = sender.location(in: collectedBitsView)
+        if let indexPath = collectedBitsView.indexPathForItem(at: point) {
+            print(#function, indexPath)
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
+}
 
+extension SavedEntries: UIGestureRecognizerDelegate {
     
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let point = touch.location(in: collectedBitsView)
+        if let indexPath = collectedBitsView.indexPathForItem(at: point),
+            let cell = collectedBitsView.cellForItem(at: indexPath) {
+            print(indexPath, point)
+            return touch.location(in: cell).y > 50
+        }
+        
+        return false
+    }
+
+}
+
+protocol CellTapDelegate {
+    func launchEntryWithIndex(index: IndexPath)
 }
 
 

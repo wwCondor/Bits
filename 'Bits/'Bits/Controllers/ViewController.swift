@@ -4,14 +4,25 @@
 //
 //  Created by Wouter Willebrands on 09/10/2019.
 //  Copyright © 2019 Studio Willebrands. All rights reserved.
+//  https://icons8.com - Icon
 //
 
 import UIKit
+import CoreData
 
 
 class ViewController: UIViewController {
     
     let newEntryController = NewEntryController()
+//    let managedObjectContext = AppDelegate().managedObjectContainer
+    
+    // Empty array of entries with a didSet observer
+    // If a new value is added the collectionview will be reloaded
+    public var entries = [Entry]() {
+        didSet {
+            savedEntries.collectedBitsView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,11 +32,17 @@ class ViewController: UIViewController {
         setupViews()
         setupSortButton()
         
-        // This makes sure the collectionView holding the posts not go underneath the menuBar
-//         collectionView?.contentInset = UIEdgeInsetMake(0, 0, 0, 0)
-        // This make sure the scollBar does not go underneath the menuBar
-//         collectionView?.scrollIndicatorInsets = UIEdgeInsesMake(0, 0, 0, 0)
-        
+//        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+//
+//
+//        do {
+//            entries = try managedObjectContext.fetch(request)
+//        } catch {
+//            print("Error fetching Item objects: \(error.localizedDescription)")
+//        }
+
+//        savedEntries.cellTapDelegate = self
+
     }
     
     
@@ -48,9 +65,16 @@ class ViewController: UIViewController {
         return savedEntries
     }()
     
-    lazy var menuBar: MenuBar = {
-        let menuBar = MenuBar()
-        return menuBar
+    lazy var sortButton: UIButton = {
+        let sortButton = UIButton(type: .custom)
+        let sortImage = UIImage(named: Icon.sortIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
+        sortButton.setImage(sortImage, for: .normal)
+        let inset: CGFloat = 5
+        sortButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset)
+        sortButton.frame = CGRect(x: 0, y: 0, width: sortImage.size.width, height: sortImage.size.height) // Actually not needed?
+        sortButton.imageView?.contentMode = .scaleAspectFit
+        sortButton.addTarget(self, action: #selector(sortEntries), for: .touchUpInside)
+        return sortButton
     }()
     
     
@@ -60,17 +84,9 @@ class ViewController: UIViewController {
 //    }()
     
     private func setupSortButton() {
-        // Turn this into an image instead
-        let sortBarButton = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(sortEntries))
-        self.navigationItem.rightBarButtonItem = sortBarButton
-        
+        let barButton = UIBarButtonItem(customView: sortButton)
+        self.navigationItem.rightBarButtonItem = barButton
     }
-    
-//    lazy var navigatonBarImage: UIImage = {
-//        let navBarImage = UIImage(named: Icon.sortIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
-//        return navBarImage
-//    }()
-
     
     private func setupViews() {
 
@@ -79,7 +95,6 @@ class ViewController: UIViewController {
 
         savedEntries.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout for menuBar
         savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-//        savedPostsview.heightAnchor.constraint(equalToConstant: view.bounds.height * (7/9)).isActive = true // Heigth of the collectedBitsView
         savedEntries.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
         
         addButton.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout for menuBar
@@ -106,9 +121,10 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController {
+extension ViewController { // }: CellTapDelegate {
     
     @objc func presentController(sender: UIButton!) {
+
         self.navigationController?.pushViewController(newEntryController, animated: true)
     }
     
@@ -116,5 +132,12 @@ extension ViewController {
         // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
         print("Sorted!")
     }
+    
+    func launchEntryWithIndex(index: IndexPath) {
+        self.navigationController?.pushViewController(newEntryController, animated: true)
+    }
 }
+
+
+
 
