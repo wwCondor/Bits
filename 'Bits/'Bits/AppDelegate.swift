@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         navigationBarAppearace.barTintColor = UIColor(named: Color.gentlemanGray.rawValue) // Bar Background
         navigationBarAppearace.tintColor = UIColor(named: Color.washedWhite.rawValue) // Tintcolor title, images and back indicator
-
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = UINavigationController(rootViewController: ViewController())

@@ -15,11 +15,11 @@ class SavedEntryCell: BaseCell {
     let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
 //        imageView.backgroundColor = UIColor(named: "WashedWhite")
-        imageView.image = UIImage(named: "BitsThumbnail") // Sets default image
-//        imageView.backgroundColor = UIColor.red
+//        imageView.image = UIImage(named: "BitsThumbnail") // Sets default image
+        imageView.backgroundColor = UIColor.systemBlue
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 8
-        imageView.layer.masksToBounds = true
+//        imageView.layer.cornerRadius = 8
+//        imageView.layer.masksToBounds = true
         return imageView
     }()
     

@@ -141,7 +141,6 @@
 			isa = PBXGroup;
 			children = (
 				0B7BDF372350FC90006792B2 /* BaseCell.swift */,
-				0B7BDF24234E12F7006792B2 /* SavedEntries.swift */,
 				0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */,
 				0B7BDF452351EB99006792B2 /* NewEntryCell.swift */,
 				0B7BDF592355EB1F006792B2 /* NewEntry.swift */,
@@ -163,6 +162,7 @@
 				0B7BDF332350968F006792B2 /* NewEntryLauncher.swift */,
 				0B49DEC4234DC1EC00613EED /* MenuBar.swift */,
 				0B7BDF5123533A51006792B2 /* SortOptions.swift */,
+				0B7BDF24234E12F7006792B2 /* SavedEntries.swift */,
 			);
 			path = "Delete?";
 			sourceTree = "<group>";

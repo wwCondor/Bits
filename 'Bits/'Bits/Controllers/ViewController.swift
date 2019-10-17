@@ -12,17 +12,20 @@ import CoreData
 
 
 class ViewController: UIViewController {
+
     
     let newEntryController = NewEntryController()
 //    let managedObjectContext = AppDelegate().managedObjectContainer
     
     // Empty array of entries with a didSet observer
     // If a new value is added the collectionview will be reloaded
-    public var entries = [Entry]() {
-        didSet {
-            savedEntries.collectedBitsView.reloadData()
-        }
-    }
+//    public var entries = [Entry]() {
+//        didSet {
+//            savedEntries.collectedBitsView.reloadData()
+//        }
+//    }
+    
+    let cellId = "cellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +34,8 @@ class ViewController: UIViewController {
         
         setupViews()
         setupSortButton()
+        
+
         
 //        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
 //
@@ -41,7 +46,6 @@ class ViewController: UIViewController {
 //            print("Error fetching Item objects: \(error.localizedDescription)")
 //        }
 
-//        savedEntries.cellTapDelegate = self
 
     }
     
@@ -59,11 +63,22 @@ class ViewController: UIViewController {
         addButton.addTarget(self, action: #selector(presentController), for: .touchUpInside)
         return addButton
     }()
-
-    lazy var savedEntries: SavedEntries = {
-        let savedEntries = SavedEntries()
+    
+    lazy var savedEntries: UICollectionView = {
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        let savedEntries = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        savedEntries.backgroundColor = UIColor.systemYellow
+        savedEntries.register(SavedEntryCell.self, forCellWithReuseIdentifier: cellId)
+        savedEntries.dataSource = self
+        savedEntries.delegate = self
+        
         return savedEntries
     }()
+
+//    lazy var savedEntries: SavedEntries = {
+//        let savedEntries = SavedEntries()
+//        return savedEntries
+//    }()
     
     lazy var sortButton: UIButton = {
         let sortButton = UIButton(type: .custom)
@@ -121,7 +136,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController { // }: CellTapDelegate {
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout { // }: CellTapDelegate {
     
     @objc func presentController(sender: UIButton!) {
 
@@ -136,6 +151,34 @@ extension ViewController { // }: CellTapDelegate {
     func launchEntryWithIndex(index: IndexPath) {
         self.navigationController?.pushViewController(newEntryController, animated: true)
     }
+    
+    // MARK: CollectionView Delegate Methods
+    // Set as entries.count
+    // This sets the amount of cells inse the collectionView
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        
+        cell.backgroundColor = UIColor.systemRed
+        
+        return cell
+    }
+    
+//     This set the size of the cells
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let spacing: CGFloat = 16
+        return CGSize(width: view.frame.width - (2 * spacing), height: 90)
+    }
+
+//    // This sets the spacing between the posts
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
+    
 }
 
 
