@@ -60,7 +60,7 @@ class ViewController: UIViewController {
         let inset: CGFloat = 15
         addButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         addButton.imageView?.contentMode = .scaleAspectFit
-        addButton.addTarget(self, action: #selector(presentController), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(presentEntryController), for: .touchUpInside)
         return addButton
     }()
     
@@ -74,11 +74,6 @@ class ViewController: UIViewController {
         
         return savedEntries
     }()
-
-//    lazy var savedEntries: SavedEntries = {
-//        let savedEntries = SavedEntries()
-//        return savedEntries
-//    }()
     
     lazy var sortButton: UIButton = {
         let sortButton = UIButton(type: .custom)
@@ -138,15 +133,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout { // }: CellTapDelegate {
     
-    @objc func presentController(sender: UIButton!) {
 
-        self.navigationController?.pushViewController(newEntryController, animated: true)
-    }
-    
-    @objc func sortEntries(sender: UIBarButtonItem) {
-        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
-        print("Sorted!")
-    }
     
     func launchEntryWithIndex(index: IndexPath) {
         self.navigationController?.pushViewController(newEntryController, animated: true)
@@ -168,16 +155,47 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         return cell
     }
     
-//     This set the size of the cells
+        // This set the size of the cells
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let spacing: CGFloat = 16
         return CGSize(width: view.frame.width - (2 * spacing), height: 90)
     }
-
-//    // This sets the spacing between the posts
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 0
+    
+        // This sets the spacing between the posts
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    // In here we do something when a cell has been tapped
+    // We launch the newEntryController
+    // We populate the newEntryController with data from the cell that was tapped
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        newEntryController.entryTitle.text = "\(indexPath) titel of selected Entry"
+        newEntryController.entryContent.text = "\(indexPath) story of selected Entry"
+        navigationController?.pushViewController(newEntryController, animated: true)
+        
+//        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
+    }
+    
+//    func showEntryController(for indexPath: IndexPath) {
+//        newEntryController.entryTitle.text = "\(indexPath) titel of selected Entry"
+//        newEntryController.entryContent.text = "\(indexPath) story of selected Entry"
+//        navigationController?.pushViewController(newEntryController, animated: true)
 //    }
+    
+    @objc func presentEntryController(sender: Any?) {
+
+        navigationController?.pushViewController(newEntryController, animated: true)
+    }
+    
+    // MARK: Sort
+    @objc func sortEntries(sender: UIBarButtonItem) {
+        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
+        print("Sorted!")
+    }
+
+
     
 }
 
