@@ -22,9 +22,9 @@ extension Entry {
         return request
     }
     
-    @NSManaged public var title: String?
-    @NSManaged public var date: Date?
-    @NSManaged public var story: String?
+    @NSManaged public var title: String
+//    @NSManaged public var date: Date?
+    @NSManaged public var story: String
 
 
 }

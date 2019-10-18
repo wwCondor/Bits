@@ -15,17 +15,20 @@ class ViewController: UIViewController {
 
     
     let newEntryController = NewEntryController()
-//    let managedObjectContext = AppDelegate().managedObjectContainer
+    let managedObjectContext = AppDelegate().managedObjectContext
     
     // Empty array of entries with a didSet observer
-    // If a new value is added the collectionview will be reloaded
-//    public var entries = [Entry]() {
-//        didSet {
-//            savedEntries.collectedBitsView.reloadData()
-//        }
-//    }
+    // If a new value is added the collectionview will be reloaded automatically
+    public var entries = [Entry]() {
+        didSet {
+            savedEntries.reloadData()
+        }
+    }
     
     let cellId = "cellId"
+    
+//    lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
+//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,16 +38,14 @@ class ViewController: UIViewController {
         setupViews()
         setupSortButton()
         
+        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
 
-        
-//        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-//
-//
-//        do {
-//            entries = try managedObjectContext.fetch(request)
-//        } catch {
-//            print("Error fetching Item objects: \(error.localizedDescription)")
-//        }
+
+        do {
+            entries = try managedObjectContext.fetch(request)
+        } catch {
+            print("Error fetching Item objects: \(error.localizedDescription)")
+        }
 
 
     }
@@ -71,7 +72,6 @@ class ViewController: UIViewController {
         savedEntries.register(SavedEntryCell.self, forCellWithReuseIdentifier: cellId)
         savedEntries.dataSource = self
         savedEntries.delegate = self
-        
         return savedEntries
     }()
     
@@ -143,12 +143,17 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // Set as entries.count
     // This sets the amount of cells inse the collectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12
+//        return 12
+        return entries.count
     }
-    
+
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
+        
+        let entry = entries[indexPath.row]
+        
+        cell.titleLabel.text = entry.title        
         
         cell.backgroundColor = UIColor.systemRed
         
@@ -171,8 +176,10 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // We populate the newEntryController with data from the cell that was tapped
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        newEntryController.entryTitle.text = "\(indexPath) titel of selected Entry"
-        newEntryController.entryContent.text = "\(indexPath) story of selected Entry"
+        let entry = entries[indexPath.row]
+        
+        newEntryController.entryTitle.text = entry.title // "Title: \(indexPath)"
+        newEntryController.entryContent.text = entry.story // "\(indexPath) story of selected Entry"
         navigationController?.pushViewController(newEntryController, animated: true)
         
 //        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
@@ -192,7 +199,9 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // MARK: Sort
     @objc func sortEntries(sender: UIBarButtonItem) {
         // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
-        print("Sorted!")
+        print(entries.count)
+
+//        print("Sorted!")
     }
 
 

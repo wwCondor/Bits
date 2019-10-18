@@ -14,7 +14,7 @@ class NewEntryController: UIViewController {
     let cellColor = UIColor(named: Color.suitUpSilver.rawValue) // background color of each object
     
 //    let mainController = ViewController()
-//    let managedObjectContext = AppDelegate()//.managedObjectContainer
+    let managedObjectContext = AppDelegate().managedObjectContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,8 +54,8 @@ class NewEntryController: UIViewController {
         let entryTitle = UITextField()
         entryTitle.backgroundColor = cellColor
         //            titleLabel.backgroundColor = UIColor(named: "SuitUpSilver")
-        entryTitle.textColor = UIColor(named: "WashedWhite")
-        entryTitle.text = "This is the title"
+        entryTitle.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryTitle.text = "Enter Title"
         entryTitle.textAlignment = .center
 //        entryTitle.layer.cornerRadius = 8
         entryTitle.layer.masksToBounds = true
@@ -69,7 +69,7 @@ class NewEntryController: UIViewController {
         let entryDate = UILabel()
         entryDate.backgroundColor = cellColor
         
-        entryDate.textColor = UIColor(named: "WashedWhite")
+        entryDate.textColor = UIColor(named: Color.washedWhite.rawValue)
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
         
@@ -85,12 +85,12 @@ class NewEntryController: UIViewController {
         let entryContent = UITextView()
         entryContent.backgroundColor = cellColor
         //        postContent.backgroundColor = UIColor(named: "SuitUpSilver")
-        entryContent.text = "Random Text."
+        entryContent.text = "Write your story here"
         entryContent.textAlignment = .left
         entryContent.textContainer.maximumNumberOfLines = 10
         let textInset: CGFloat = 10
         entryContent.textContainerInset = UIEdgeInsets(top: textInset, left: textInset, bottom: textInset, right: textInset)
-        entryContent.textColor = UIColor.white
+        entryContent.textColor = UIColor(named: Color.washedWhite.rawValue)
         entryContent.translatesAutoresizingMaskIntoConstraints = false
 //        entryContent.layer.cornerRadius = 8
 //        entryContent.layer.masksToBounds = true
@@ -156,6 +156,7 @@ class NewEntryController: UIViewController {
     @objc func saveEntry(sender: UIButton!) {
         // In here we check each property that we want to store and if it s empty
         guard let title = entryTitle.text, !title.isEmpty else {
+            errorAlert(description: NewEntryError.titleMissing.localizedDescription)
             return
         }
         
@@ -167,15 +168,18 @@ class NewEntryController: UIViewController {
             return
         }
         
-//        let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext.managedObjectContainer) as! Entry
+        let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext) as! Entry
         
-//        entry.title = title
+        entry.title = title
 //        entry.date = date
-//        entry.story = story
+        entry.story = story
+        
+        managedObjectContext.saveChanges()
         
 //        managedObjectContext.saveContext()
-        
-        print("Item Saved")
+        print("Item Saved, with title: \(entry.title)")
+        dismiss(animated: true, completion: nil) // Saving an entry should dismiss the entryController
+
 
     }
     
@@ -186,5 +190,19 @@ class NewEntryController: UIViewController {
         dismiss(animated: true, completion: nil)
         
     }
+    
+//    func textViewDidBeginEditing(_ textView: UITextView) {
+//        if textView.textColor == UIColor.lightGray {
+//            textView.text = nil
+//            textView.textColor = UIColor(named: Color.washedWhite.rawValue)
+//        }
+//    }
+//    
+//    func textViewDidEndEditing(_ textView: UITextView) {
+//        if textView.text.isEmpty {
+//            textView.text = "Write your story here"
+//            textView.textColor = UIColor.lightGray
+//        }
+//    }
     
 }

@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Core Data stack
     
     // NSManagedObjectContext: An object space that you use to manipulate and track changes to managed objects.
-    lazy var managedObjectContainer: NSManagedObjectContext = {
+    lazy var managedObjectContext: NSManagedObjectContext = {
         let container = self.persistentContainer
         return container.viewContext
     }()
@@ -97,5 +97,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+}
+
+extension NSManagedObjectContext {
+    func saveChanges() {
+        if self.hasChanges {
+            do {
+                try save()
+            } catch {
+                fatalError("Error: \(error.localizedDescription)")
+                // Title is too long
+            }
+        }
+    }
 }
 
