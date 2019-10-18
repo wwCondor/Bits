@@ -27,31 +27,18 @@ class ViewController: UIViewController {
     
     let cellId = "cellId"
     
-    lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
-        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-
-        return controller
+    lazy var fetchedResultsController: FetchedResultsController = {
+        return FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries)
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("New Entry Controller Context: \(managedObjectContext.description)")
         
         view.backgroundColor = UIColor.blue // MARK: Set App background color
         
         setupViews()
         setupSortButton()
         
-        fetchedResultsController.delegate = self
-
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            print("Error fetching Item objects: \(error.localizedDescription)")
-        }
-
-
     }
     
     
@@ -180,29 +167,18 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             
             newEntryController.entryTitle.text = entry.title // "Title: \(indexPath)"
             newEntryController.entryContent.text = entry.story // "\(indexPath) story of selected Entry"
+            
             navigationController?.pushViewController(newEntryController, animated: true)
             
     //        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
         }
 }
 
-// MARK: FetchedResults Delegate Method
-extension ViewController: NSFetchedResultsControllerDelegate {
-    
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        savedEntries.reloadData()
-    }
-    
 
-}
 
 // MARK: Add and Sort Methods
 extension ViewController {
     
-//    func launchEntryWithIndex(index: IndexPath) {
-//        self.navigationController?.pushViewController(newEntryController, animated: true)
-//    }
     
     // MARK: Present NewEntryController Method
     @objc func presentEntryController(sender: Any?) {

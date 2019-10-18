@@ -26,11 +26,11 @@ class NewEntryController: UIViewController {
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.rawValue)?.withRenderingMode(.alwaysTemplate) // Since we have a picture we dont want to render
+        let image = UIImage(named: Icon.saveIcon.rawValue) // ?.withRenderingMode(.alwaysTemplate) // Since we have a picture we dont want to render
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
         saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        saveButton.tintColor = UIColor.red // Use when you want to render a different color than the original icon color
+//        saveButton.tintColor = UIColor.red // Use when you want to render a different color than the original icon color
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
@@ -155,11 +155,13 @@ class NewEntryController: UIViewController {
     @objc func saveEntry(sender: UIButton!) {
         // In here we check each property that we want to store and if it s empty
         guard let title = entryTitle.text, !title.isEmpty else {
+            // If it is we inform the user with an alert
             errorAlert(description: NewEntryError.titleMissing.localizedDescription)
             return
         }
    
         guard let story = entryContent.text, !story.isEmpty else {
+            errorAlert(description: NewEntryError.missingStory.localizedDescription)
             return
         }
         
