@@ -12,13 +12,12 @@ import CoreData
 class NewEntryController: UIViewController {
     
     let cellColor = UIColor(named: Color.suitUpSilver.rawValue) // background color of each object
-    
-//    let mainController = ViewController()
-    let managedObjectContext = AppDelegate().managedObjectContext
+
+    var managedObjectContext: NSManagedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = UIColor.blue
         
         setupBackButton()
@@ -27,11 +26,11 @@ class NewEntryController: UIViewController {
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.rawValue)// ?.withRenderingMode(.alwaysTemplate) // This renders a layer so you can set the image color by .tintColor
+        let image = UIImage(named: Icon.saveIcon.rawValue)?.withRenderingMode(.alwaysTemplate) // Since we have a picture we dont want to render
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
         saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        //        saveButton.tintColor = UIColor.red // Use when you want to render a different color than the original icon color
+        saveButton.tintColor = UIColor.red // Use when you want to render a different color than the original icon color
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
@@ -159,11 +158,7 @@ class NewEntryController: UIViewController {
             errorAlert(description: NewEntryError.titleMissing.localizedDescription)
             return
         }
-        
-//        guard let date = entryDate.date, !date.isEmpty else {
-//            return
-//        }
-            
+   
         guard let story = entryContent.text, !story.isEmpty else {
             return
         }
@@ -171,14 +166,15 @@ class NewEntryController: UIViewController {
         let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext) as! Entry
         
         entry.title = title
-//        entry.date = date
         entry.story = story
         
         managedObjectContext.saveChanges()
         
-//        managedObjectContext.saveContext()
         print("Item Saved, with title: \(entry.title)")
-        dismiss(animated: true, completion: nil) // Saving an entry should dismiss the entryController
+        
+        // Saving an entry should dismiss the entryController
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
 
 
     }
@@ -197,7 +193,7 @@ class NewEntryController: UIViewController {
 //            textView.textColor = UIColor(named: Color.washedWhite.rawValue)
 //        }
 //    }
-//    
+//
 //    func textViewDidEndEditing(_ textView: UITextView) {
 //        if textView.text.isEmpty {
 //            textView.text = "Write your story here"

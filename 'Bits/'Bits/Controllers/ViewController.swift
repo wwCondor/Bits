@@ -19,30 +19,34 @@ class ViewController: UIViewController {
     
     // Empty array of entries with a didSet observer
     // If a new value is added the collectionview will be reloaded automatically
-    public var entries = [Entry]() {
-        didSet {
-            savedEntries.reloadData()
-        }
-    }
+//    public var entries = [Entry]() {
+//        didSet {
+//            savedEntries.reloadData()
+//        }
+//    }
     
     let cellId = "cellId"
     
-//    lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
-//    }()
+    lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
+        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+
+        return controller
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("New Entry Controller Context: \(managedObjectContext.description)")
         
         view.backgroundColor = UIColor.blue // MARK: Set App background color
         
         setupViews()
         setupSortButton()
         
-        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-
+        fetchedResultsController.delegate = self
 
         do {
-            entries = try managedObjectContext.fetch(request)
+            try fetchedResultsController.performFetch()
         } catch {
             print("Error fetching Item objects: \(error.localizedDescription)")
         }
@@ -131,83 +135,90 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout { // }: CellTapDelegate {
+// MARK: CollectionView Delegate Methods
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+        // Sets the amount of cells
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
-    
-    func launchEntryWithIndex(index: IndexPath) {
-        self.navigationController?.pushViewController(newEntryController, animated: true)
-    }
-    
-    // MARK: CollectionView Delegate Methods
-    // Set as entries.count
-    // This sets the amount of cells inse the collectionView
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return 12
-        return entries.count
-    }
+            guard let section = fetchedResultsController.sections?[section] else {
+                return 0
+            }
+            return section.numberOfObjects
+            
+        }
 
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
+        // Sets up cell content
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
+            
+            let entry = fetchedResultsController.object(at: indexPath)
+            
+            cell.titleLabel.text = entry.title
+            
+            cell.backgroundColor = UIColor.systemRed
+            
+            return cell
+        }
         
-        let entry = entries[indexPath.row]
+        // Sets up size of the cells
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            let spacing: CGFloat = 16
+            return CGSize(width: view.frame.width - (2 * spacing), height: 90)
+        }
         
-        cell.titleLabel.text = entry.title        
+        // Sets up spacing between posts
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+            return 0
+        }
         
-        cell.backgroundColor = UIColor.systemRed
         
-        return cell
-    }
-    
-        // This set the size of the cells
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let spacing: CGFloat = 16
-        return CGSize(width: view.frame.width - (2 * spacing), height: 90)
-    }
-    
-        // This sets the spacing between the posts
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    // In here we do something when a cell has been tapped
-    // We launch the newEntryController
-    // We populate the newEntryController with data from the cell that was tapped
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let entry = entries[indexPath.row]
-        
-        newEntryController.entryTitle.text = entry.title // "Title: \(indexPath)"
-        newEntryController.entryContent.text = entry.story // "\(indexPath) story of selected Entry"
-        navigationController?.pushViewController(newEntryController, animated: true)
-        
-//        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
-    }
-    
-//    func showEntryController(for indexPath: IndexPath) {
-//        newEntryController.entryTitle.text = "\(indexPath) titel of selected Entry"
-//        newEntryController.entryContent.text = "\(indexPath) story of selected Entry"
-//        navigationController?.pushViewController(newEntryController, animated: true)
-//    }
-    
-    @objc func presentEntryController(sender: Any?) {
-
-        navigationController?.pushViewController(newEntryController, animated: true)
-    }
-    
-    // MARK: Sort
-    @objc func sortEntries(sender: UIBarButtonItem) {
-        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
-        print(entries.count)
-
-//        print("Sorted!")
-    }
-
-
-    
+        // Sets up what to do when a cell gets tapped
+        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            
+            let entry = fetchedResultsController.object(at: indexPath)
+            
+            newEntryController.entryTitle.text = entry.title // "Title: \(indexPath)"
+            newEntryController.entryContent.text = entry.story // "\(indexPath) story of selected Entry"
+            navigationController?.pushViewController(newEntryController, animated: true)
+            
+    //        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
+        }
 }
 
+// MARK: FetchedResults Delegate Method
+extension ViewController: NSFetchedResultsControllerDelegate {
+    
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        savedEntries.reloadData()
+    }
+    
 
+}
+
+// MARK: Add and Sort Methods
+extension ViewController {
+    
+//    func launchEntryWithIndex(index: IndexPath) {
+//        self.navigationController?.pushViewController(newEntryController, animated: true)
+//    }
+    
+    // MARK: Present NewEntryController Method
+    @objc func presentEntryController(sender: Any?) {
+        
+        newEntryController.managedObjectContext = self.managedObjectContext
+
+        navigationController?.pushViewController(newEntryController, animated: true)
+    }
+    
+    // MARK: Sort Method
+    @objc func sortEntries(sender: UIBarButtonItem) {
+        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
+
+
+        print("Sorted!")
+    }
+}
 
 
