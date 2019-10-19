@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-
+// Object responsible for performing fetch on the entries
 class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResultsControllerDelegate {
     
     private let collectionView: UICollectionView

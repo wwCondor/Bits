@@ -26,6 +26,7 @@
 		0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D2992359AAAE002243DA /* Alerts.swift */; };
 		0B95D29C2359AB79002243DA /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29B2359AB79002243DA /* Errors.swift */; };
 		0B95D29E2359BE89002243DA /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29D2359BE89002243DA /* FetchedResultsController.swift */; };
+		0B95D2A0235AF4C0002243DA /* EditEntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29F235AF4C0002243DA /* EditEntryController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		0B95D2992359AAAE002243DA /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		0B95D29B2359AB79002243DA /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0B95D29D2359BE89002243DA /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
+		0B95D29F235AF4C0002243DA /* EditEntryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEntryController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				0B49DEAC234DC08200613EED /* ViewController.swift */,
 				0B95D29D2359BE89002243DA /* FetchedResultsController.swift */,
 				0B7BDF5723546E1C006792B2 /* NewEntryController.swift */,
+				0B95D29F235AF4C0002243DA /* EditEntryController.swift */,
 				0B95D2992359AAAE002243DA /* Alerts.swift */,
 			);
 			path = Controllers;
@@ -242,6 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B95D2A0235AF4C0002243DA /* EditEntryController.swift in Sources */,
 				0B7BDF5E23572125006792B2 /* Entry+CoreDataProperties.swift in Sources */,
 				0B7BDF5823546E1C006792B2 /* NewEntryController.swift in Sources */,
 				0B49DEAD234DC08200613EED /* ViewController.swift in Sources */,

@@ -59,7 +59,7 @@ class ViewController: UIViewController {
     lazy var savedEntries: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         let savedEntries = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        savedEntries.backgroundColor = UIColor.systemYellow
+        savedEntries.backgroundColor = UIColor.blue
         savedEntries.register(SavedEntryCell.self, forCellWithReuseIdentifier: cellId)
         savedEntries.dataSource = self
         savedEntries.delegate = self
@@ -143,7 +143,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             
             cell.titleLabel.text = entry.title
             
-            cell.backgroundColor = UIColor.systemRed
+//            cell.backgroundColor = UIColor.systemRed
             
             return cell
         }
@@ -172,6 +172,18 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             
     //        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
         }
+    
+        // MARK: Delete Entry
+        func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
+            
+            let entry = fetchedResultsController.object(at: indexPath)
+            managedObjectContext.delete(entry)
+            managedObjectContext.saveChanges()
+            
+            print("Deleted \(entry) at \(indexPath)")
+            // In here we delete stuff when
+        }
+    
 }
 
 

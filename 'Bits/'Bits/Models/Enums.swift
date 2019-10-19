@@ -28,6 +28,7 @@ enum Color: String {
     case bowtieBlack = "BowtieBlack"
     case gentlemanGray = "GentlemanGray"
     case cufflinkCream = "CufflinkCream"
+    case roseRed = "RoseRed"
 }
 
 enum Icon: String {

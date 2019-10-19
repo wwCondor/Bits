@@ -10,11 +10,10 @@ import UIKit
 
 
 // This is the saved entry displayed inside the collectionView on the main screen
-class SavedEntryCell: BaseCell {
-
+class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
+    
     let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.backgroundColor = UIColor(named: "WashedWhite")
 //        imageView.image = UIImage(named: "BitsThumbnail") // Sets default image
         imageView.backgroundColor = UIColor.systemBlue
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -23,37 +22,56 @@ class SavedEntryCell: BaseCell {
         return imageView
     }()
     
-    // These might becomeUITextLabel instead
     let titleLabel: UILabel = {
         let titleLabel = UILabel()
-        
-        titleLabel.backgroundColor = UIColor(named: "SuitUpSilver")
+        titleLabel.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
         titleLabel.text = "This is the title"
-        titleLabel.textColor = UIColor(named: "WashedWhite")
-
+        titleLabel.textColor = UIColor(named: Color.washedWhite.rawValue)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
         return titleLabel
     }()
     
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        
-        dateLabel.backgroundColor = UIColor(named: "SuitUpSilver")
+        dateLabel.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
         dateLabel.text = "01.01.2019"
-        dateLabel.textColor = UIColor(named: "WashedWhite")
-        
+        dateLabel.textColor = UIColor(named: Color.washedWhite.rawValue)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        
         return dateLabel
     }()
+    
+    let deleteLabelOne: UILabel = {
+        let deleteLabelOne = UILabel()
+        deleteLabelOne.text = "Delete"
+        deleteLabelOne.textColor = UIColor(named: Color.washedWhite.rawValue)
+        return deleteLabelOne
+    }()
+    
+    let deleteLabelTwo: UILabel = {
+        let deleteLabelTwo = UILabel()
+        deleteLabelTwo.text = "Delete"
+        deleteLabelTwo.textColor = UIColor(named: Color.washedWhite.rawValue)
+        return deleteLabelTwo
+    }()
+    
+    var pan: UIPanGestureRecognizer! // This looks for dragging gestures
 
     override func setupViews() {
         super.setupViews()
         
-        addSubview(thumbnailImageView)
-        addSubview(titleLabel)
-        addSubview(dateLabel)
+        self.contentView.backgroundColor = UIColor.systemYellow // MARK: Cell Background Color
+        self.backgroundColor = UIColor.red // MARK: Color behind cell
+        
+        self.contentView.addSubview(thumbnailImageView)
+        self.contentView.addSubview(titleLabel)
+        self.contentView.addSubview(dateLabel)
+        
+        self.insertSubview(deleteLabelOne, belowSubview: self.contentView)
+        self.insertSubview(deleteLabelTwo, belowSubview: self.contentView)
+        
+        pan = UIPanGestureRecognizer(target: self, action: #selector(onPan(_:)))
+        pan.delegate = self
+        self.addGestureRecognizer(pan)
         
         // MARK: Thumbnail Constraints
         // Total Size = 92
@@ -78,10 +96,57 @@ class SavedEntryCell: BaseCell {
 //
 //        addConstraintsWithFormat("H:|[v0]|", views: separatorView)
 //        addConstraintsWithFormat("V:|[v0(1)]|", views: separatorView)
+        
 
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if (pan.state == UIGestureRecognizer.State.changed) {
+          let point: CGPoint = pan.translation(in: self)
+          let width = self.contentView.frame.width
+          let height = self.contentView.frame.height
+          self.contentView.frame = CGRect(x: point.x,y: 0, width: width, height: height);
+          self.deleteLabelOne.frame = CGRect(x: point.x - deleteLabelOne.frame.size.width - 10, y: 0, width: 100, height: height)
+          self.deleteLabelTwo.frame = CGRect(x: point.x + width + deleteLabelTwo.frame.size.width, y: 0, width: 100, height: height)
+        }
+    }
+    
+    @objc func onPan(_ pan: UIPanGestureRecognizer) {
+        if pan.state == UIPanGestureRecognizer.State.began {
+            
+        } else if pan.state == UIPanGestureRecognizer.State.changed {
+            self.setNeedsLayout()
+        } else {
+            if abs(pan.velocity(in: self).x) > 500 { // Here we check the swipe velocity
+                let collectionView: UICollectionView = self.superview as! UICollectionView
+                let indexPath: IndexPath = collectionView.indexPathForItem(at: self.center)!
+                collectionView.delegate?.collectionView!(collectionView, performAction: #selector(onPan(_:)), forItemAt: indexPath, withSender: nil)
+            } else {
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.setNeedsLayout()
+                    self.layoutIfNeeded()
+                })
+            }
+        }
+    }
+    
+    // This allows cell to handle multiple gesture recognizers (scroll, tap and drag in this case)
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+      return true
+    }
+    
+    // Here we make sure the gesture is only called when the velocity of movement in x > y direction
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+      return abs((pan.velocity(in: pan.view)).x) > abs((pan.velocity(in: pan.view)).y)
+    }
+    
 }
+
+
+
+
 
 
 // The superclass from which all other cells inherit
