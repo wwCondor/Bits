@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         navigationBarAppearace.barTintColor = UIColor(named: Color.gentlemanGray.rawValue) // Bar Background
         navigationBarAppearace.tintColor = UIColor(named: Color.washedWhite.rawValue) // Tintcolor title, images and back indicator
+        navigationBarAppearace.isTranslucent = false
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
@@ -99,6 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+// MARK: Todo Error handling
 extension NSManagedObjectContext {
     func saveChanges() {
         if self.hasChanges {

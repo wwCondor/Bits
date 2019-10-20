@@ -22,36 +22,51 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
         return imageView
     }()
     
-    let titleLabel: UILabel = {
-        let titleLabel = UILabel()
+    let titleLabel: UITextView = {
+        let titleLabel = UITextView()
+        titleLabel.isEditable = false
         titleLabel.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
         titleLabel.text = "This is the title"
+        titleLabel.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+        let inset: CGFloat = 3
+        titleLabel.textContainerInset = UIEdgeInsets(top: inset + 1, left: inset - 1, bottom: inset, right: inset)
         titleLabel.textColor = UIColor(named: Color.washedWhite.rawValue)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel
     }()
     
-    let dateLabel: UILabel = {
-        let dateLabel = UILabel()
+    let dateLabel: UITextView = {
+        let dateLabel = UITextView()
+        dateLabel.isEditable = false
         dateLabel.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
         dateLabel.text = "01.01.2019"
+        dateLabel.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
+        let inset: CGFloat = 3
+        dateLabel.textContainerInset = UIEdgeInsets(top: inset + 1, left: inset - 1, bottom: inset, right: inset)
         dateLabel.textColor = UIColor(named: Color.washedWhite.rawValue)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         return dateLabel
     }()
     
-    let deleteLabelOne: UILabel = {
-        let deleteLabelOne = UILabel()
-        deleteLabelOne.text = "Delete"
-        deleteLabelOne.textColor = UIColor(named: Color.washedWhite.rawValue)
-        return deleteLabelOne
+    let deleteLabelLeft: UILabel = {
+        let deleteLabelLeft = UILabel()
+        deleteLabelLeft.text = "Delete"
+        deleteLabelLeft.font = UIFont.systemFont(ofSize: 16.0, weight: .heavy)
+        deleteLabelLeft.textColor = UIColor(named: Color.washedWhite.rawValue)
+        return deleteLabelLeft
     }()
     
-    let deleteLabelTwo: UILabel = {
-        let deleteLabelTwo = UILabel()
-        deleteLabelTwo.text = "Delete"
-        deleteLabelTwo.textColor = UIColor(named: Color.washedWhite.rawValue)
-        return deleteLabelTwo
+    let deleteLabelRight: UILabel = {
+        let deleteLabelRight = UILabel()
+        deleteLabelRight.text = "Delete"
+        deleteLabelRight.font = UIFont.systemFont(ofSize: 16.0, weight: .heavy)
+        deleteLabelRight.textColor = UIColor(named: Color.washedWhite.rawValue)
+        return deleteLabelRight
+    }()
+    
+    lazy var touchScreen: UIView = {
+       let touchScreen = UIView()
+       return touchScreen
     }()
     
     var pan: UIPanGestureRecognizer! // This looks for dragging gestures
@@ -65,38 +80,28 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
         self.contentView.addSubview(thumbnailImageView)
         self.contentView.addSubview(titleLabel)
         self.contentView.addSubview(dateLabel)
+        self.contentView.addSubview(touchScreen)
         
-        self.insertSubview(deleteLabelOne, belowSubview: self.contentView)
-        self.insertSubview(deleteLabelTwo, belowSubview: self.contentView)
+        self.insertSubview(deleteLabelLeft, belowSubview: self.contentView)
+        self.insertSubview(deleteLabelRight, belowSubview: self.contentView)
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(onPan(_:)))
         pan.delegate = self
         self.addGestureRecognizer(pan)
         
         // MARK: Thumbnail Constraints
-        // Total Size = 92
-        // This sets te size of the thumbnailImageView inside the cell
-        let imageSize: CGFloat = 70 //bounds.height * (10/12) // Since it is a square we can set them both up here at the same time
-//        thumbnailImageView.heightAnchor.constraint(equalToConstant: imageViewIconSquareSide) .isActive = true
-//        thumbnailImageView.widthAnchor.constraint(equalToConstant: imageViewIconSquareSide).isActive = true
-        
+        let imageSize: CGFloat = 70
         let smallSpacing: CGFloat = 8
         let largeSpacing: CGFloat = 10
         
         addConstraintsWithFormat("H:|-\(largeSpacing)-[v0(\(imageSize))]-\(smallSpacing)-[v1]-\(largeSpacing)-|", views: thumbnailImageView, titleLabel)
         addConstraintsWithFormat("H:|-\(largeSpacing)-[v0(\(imageSize))]-\(smallSpacing)-[v1]-\(largeSpacing)-|", views: thumbnailImageView, dateLabel)
         addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(\(imageSize))]-\(largeSpacing)-|", views: thumbnailImageView)
-        addConstraintsWithFormat("V:|-\(largeSpacing)-[v0]-\(smallSpacing)-[v1]-\(largeSpacing)-|", views: titleLabel, dateLabel)
-
-
-        // MARK: Separator Contstraints
-//        separatorView.widthAnchor.constraint(equalToConstant: frame.width) .isActive = true
-//        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-//
-//
-//        addConstraintsWithFormat("H:|[v0]|", views: separatorView)
-//        addConstraintsWithFormat("V:|[v0(1)]|", views: separatorView)
+        addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(40)]-\(smallSpacing)-[v1(22)]-\(largeSpacing)-|", views: titleLabel, dateLabel)
         
+        // Touchscreen makes sure the cell can be selected as a while without user accidentally triggering editing of textViews
+        addConstraintsWithFormat("H:|[v0]|", views: touchScreen)
+        addConstraintsWithFormat("V:|[v0]|", views: touchScreen)
 
     }
     
@@ -108,8 +113,8 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
           let width = self.contentView.frame.width
           let height = self.contentView.frame.height
           self.contentView.frame = CGRect(x: point.x,y: 0, width: width, height: height);
-          self.deleteLabelOne.frame = CGRect(x: point.x - deleteLabelOne.frame.size.width - 10, y: 0, width: 100, height: height)
-          self.deleteLabelTwo.frame = CGRect(x: point.x + width + deleteLabelTwo.frame.size.width, y: 0, width: 100, height: height)
+          self.deleteLabelLeft.frame = CGRect(x: point.x - deleteLabelLeft.frame.size.width - 10, y: 0, width: 100, height: height)
+          self.deleteLabelRight.frame = CGRect(x: point.x + width + deleteLabelRight.frame.size.width, y: 0, width: 100, height: height)
         }
     }
     
@@ -143,9 +148,6 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     }
     
 }
-
-
-
 
 
 

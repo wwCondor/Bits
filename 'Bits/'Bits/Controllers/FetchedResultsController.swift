@@ -37,6 +37,4 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
         collectionView.reloadData()
     }
     
-
-    
 }

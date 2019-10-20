@@ -11,8 +11,6 @@ import CoreData
 
 class NewEntryController: UIViewController {
     
-    let cellColor = UIColor(named: Color.suitUpSilver.rawValue) // background color of each object
-
     var managedObjectContext: NSManagedObjectContext!
     
     override func viewDidLoad() {
@@ -26,11 +24,11 @@ class NewEntryController: UIViewController {
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.rawValue) // ?.withRenderingMode(.alwaysTemplate) // Since we have a picture we dont want to render
+        let image = UIImage(named: Icon.saveIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
         saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-//        saveButton.tintColor = UIColor.red // Use when you want to render a different color than the original icon color
+        saveButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
@@ -38,52 +36,48 @@ class NewEntryController: UIViewController {
         return saveButton
     }()
     
-    lazy var entryImage: UIImageView = {
+    let entryImage: UIImageView = {
         let entryImage = UIImageView()
-        entryImage.backgroundColor = cellColor
+        entryImage.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
 //        entryImage.image = UIImage(named: "BitsThumbnail") // Sets default image
         entryImage.translatesAutoresizingMaskIntoConstraints = false
 //        entryImage.layer.cornerRadius = 8
-        entryImage.layer.masksToBounds = true
+//        entryImage.layer.masksToBounds = true
         return entryImage
     }()
     
     // These might becomeUITextLabel instead
-    lazy var entryTitle: UITextField = {
+    let entryTitle: UITextField = {
         let entryTitle = UITextField()
-        entryTitle.backgroundColor = cellColor
-        //            titleLabel.backgroundColor = UIColor(named: "SuitUpSilver")
+        entryTitle.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
         entryTitle.textColor = UIColor(named: Color.washedWhite.rawValue)
-        entryTitle.text = "Enter Title"
+        entryTitle.font = UIFont.systemFont(ofSize: 16.0, weight: .medium)
+        entryTitle.text = "Title"
         entryTitle.textAlignment = .center
 //        entryTitle.layer.cornerRadius = 8
-        entryTitle.layer.masksToBounds = true
-        
+//        entryTitle.layer.masksToBounds = true
         entryTitle.translatesAutoresizingMaskIntoConstraints = false
-        
         return entryTitle
     }()
     
-    lazy var entryDate: UILabel = {
+    let entryDate: UILabel = {
         let entryDate = UILabel()
-        entryDate.backgroundColor = cellColor
-        
+        entryDate.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
         entryDate.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryDate.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
-        
 //        entryDate.layer.cornerRadius = 8
 //        entryDate.layer.masksToBounds = true
-        
         entryDate.translatesAutoresizingMaskIntoConstraints = false
         
         return entryDate
     }()
     
-    lazy var entryContent: UITextView = {
+    let entryContent: UITextView = {
         let entryContent = UITextView()
-        entryContent.backgroundColor = cellColor
-        //        postContent.backgroundColor = UIColor(named: "SuitUpSilver")
+        entryContent.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
+        entryContent.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
         entryContent.text = "Write your story here"
         entryContent.textAlignment = .left
         entryContent.textContainer.maximumNumberOfLines = 10
@@ -93,7 +87,6 @@ class NewEntryController: UIViewController {
         entryContent.translatesAutoresizingMaskIntoConstraints = false
 //        entryContent.layer.cornerRadius = 8
 //        entryContent.layer.masksToBounds = true
-        
         return entryContent
     }()
     
@@ -107,7 +100,6 @@ class NewEntryController: UIViewController {
         self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarImage
         self.navigationController?.navigationBar.backIndicatorImage = navigatonBarImage
     }
-    
     
     private func setupViews() {
         
@@ -177,7 +169,6 @@ class NewEntryController: UIViewController {
         // Saving an entry should dismiss the entryController
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
-
 
     }
     

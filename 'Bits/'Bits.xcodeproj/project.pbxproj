@@ -18,9 +18,7 @@
 		0B7BDF2C234FBBD2006792B2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF2B234FBBD2006792B2 /* Extensions.swift */; };
 		0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */; };
 		0B7BDF442351E435006792B2 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF432351E435006792B2 /* Enums.swift */; };
-		0B7BDF462351EB99006792B2 /* NewEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF452351EB99006792B2 /* NewEntryCell.swift */; };
 		0B7BDF5823546E1C006792B2 /* NewEntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF5723546E1C006792B2 /* NewEntryController.swift */; };
-		0B7BDF5A2355EB1F006792B2 /* NewEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF592355EB1F006792B2 /* NewEntry.swift */; };
 		0B7BDF5D23572125006792B2 /* Entry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF5B23572125006792B2 /* Entry+CoreDataClass.swift */; };
 		0B7BDF5E23572125006792B2 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF5C23572125006792B2 /* Entry+CoreDataProperties.swift */; };
 		0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D2992359AAAE002243DA /* Alerts.swift */; };
@@ -43,9 +41,7 @@
 		0B7BDF2B234FBBD2006792B2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEntryCell.swift; sourceTree = "<group>"; };
 		0B7BDF432351E435006792B2 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		0B7BDF452351EB99006792B2 /* NewEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryCell.swift; sourceTree = "<group>"; };
 		0B7BDF5723546E1C006792B2 /* NewEntryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryController.swift; sourceTree = "<group>"; };
-		0B7BDF592355EB1F006792B2 /* NewEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntry.swift; sourceTree = "<group>"; };
 		0B7BDF5B23572125006792B2 /* Entry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0B7BDF5C23572125006792B2 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0B95D2992359AAAE002243DA /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
@@ -84,7 +80,6 @@
 		0B49DEA7234DC08200613EED /* 'Bits */ = {
 			isa = PBXGroup;
 			children = (
-				0B7BDF492351EBF8006792B2 /* Delete? */,
 				0B7BDF32234FBE79006792B2 /* Models */,
 				0B7BDF2D234FBD69006792B2 /* Views */,
 				0B7BDF2A234FBBC1006792B2 /* Helpers */,
@@ -153,15 +148,6 @@
 				0B95D29B2359AB79002243DA /* Errors.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		0B7BDF492351EBF8006792B2 /* Delete? */ = {
-			isa = PBXGroup;
-			children = (
-				0B7BDF452351EB99006792B2 /* NewEntryCell.swift */,
-				0B7BDF592355EB1F006792B2 /* NewEntry.swift */,
-			);
-			path = "Delete?";
 			sourceTree = "<group>";
 		};
 		0B7BDF4A2351EDB9006792B2 /* Storyboards */ = {
@@ -253,10 +239,8 @@
 				0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */,
 				0B95D29C2359AB79002243DA /* Errors.swift in Sources */,
 				0B49DEAB234DC08200613EED /* SceneDelegate.swift in Sources */,
-				0B7BDF5A2355EB1F006792B2 /* NewEntry.swift in Sources */,
 				0B7BDF5D23572125006792B2 /* Entry+CoreDataClass.swift in Sources */,
 				0B49DEB3234DC08200613EED /* Bits.xcdatamodeld in Sources */,
-				0B7BDF462351EB99006792B2 /* NewEntryCell.swift in Sources */,
 				0B7BDF2C234FBBD2006792B2 /* Extensions.swift in Sources */,
 				0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */,
 				0B95D29E2359BE89002243DA /* FetchedResultsController.swift in Sources */,

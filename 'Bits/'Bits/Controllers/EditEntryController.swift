@@ -13,24 +13,25 @@ class EditEntryController: UIViewController {
     
     let cellColor = UIColor(named: Color.suitUpSilver.rawValue) // background color of each object
 
+    var entry: Entry?
     var managedObjectContext: NSManagedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.systemIndigo
+        view.backgroundColor = UIColor.systemYellow
         
-        setupBackButton()
+        setupNavigationBarItems()
         setupViews()
     }
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.rawValue) // ?.withRenderingMode(.alwaysTemplate) // Since we have a picture we dont want to render
+        let image = UIImage(named: Icon.saveIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
         saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-//        saveButton.tintColor = UIColor.red // Use when you want to render a different color than the original icon color
+        saveButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
@@ -43,13 +44,27 @@ class EditEntryController: UIViewController {
         let image = UIImage(named: Icon.deleteIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
         deleteButton.setImage(image, for: .normal)
         deleteButton.contentMode = .center
-        deleteButton.backgroundColor = UIColor(named: Color.roseRed.rawValue)
+        deleteButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
         deleteButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
-        let inset: CGFloat = 10
-        deleteButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        let inset: CGFloat = 4
+        deleteButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset + 35)
         deleteButton.imageView?.contentMode = .scaleAspectFit
         deleteButton.addTarget(self, action: #selector(deleteEntry), for: .touchUpInside)
         return deleteButton
+    }()
+    
+    lazy var cancelButton: UIButton = {
+        let cancelButton = UIButton(type: .custom)
+        let image = UIImage(named: Icon.cancelIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
+        cancelButton.setImage(image, for: .normal)
+        cancelButton.contentMode = .center
+        cancelButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
+        cancelButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
+        let inset: CGFloat = 2
+        cancelButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30)
+        cancelButton.imageView?.contentMode = .scaleAspectFit
+        cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
+        return cancelButton
     }()
     
     lazy var entryImage: UIImageView = {
@@ -62,13 +77,12 @@ class EditEntryController: UIViewController {
         return entryImage
     }()
     
-    // These might becomeUITextLabel instead
     lazy var entryTitle: UITextField = {
         let entryTitle = UITextField()
         entryTitle.backgroundColor = cellColor
-        //            titleLabel.backgroundColor = UIColor(named: "SuitUpSilver")
         entryTitle.textColor = UIColor(named: Color.washedWhite.rawValue)
-        entryTitle.text = "Enter Title"
+        entryTitle.font = UIFont.systemFont(ofSize: 16.0, weight: .medium)
+        entryTitle.text = entry?.title
         entryTitle.textAlignment = .center
 //        entryTitle.layer.cornerRadius = 8
         entryTitle.layer.masksToBounds = true
@@ -81,8 +95,8 @@ class EditEntryController: UIViewController {
     lazy var entryDate: UILabel = {
         let entryDate = UILabel()
         entryDate.backgroundColor = cellColor
-        
         entryDate.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryDate.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
         
@@ -98,7 +112,8 @@ class EditEntryController: UIViewController {
         let entryContent = UITextView()
         entryContent.backgroundColor = cellColor
         //        postContent.backgroundColor = UIColor(named: "SuitUpSilver")
-        entryContent.text = "Write your story here"
+        entryContent.text = entry?.story
+        entryContent.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
         entryContent.textAlignment = .left
         entryContent.textContainer.maximumNumberOfLines = 10
         let textInset: CGFloat = 10
@@ -111,16 +126,24 @@ class EditEntryController: UIViewController {
         return entryContent
     }()
     
-    lazy var navigatonBarImage: UIImage = {
-        let navBarImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
-        return navBarImage
-    }()
     
-    private func setupBackButton() {
+//    lazy var navigatonBarCancelImage: UIImage = {
+//        let navBarCancelImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
+//        return navBarCancelImage
+//    }()
+    
+    
+    
+    private func setupNavigationBarItems() {
         
-        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarImage
-        self.navigationController?.navigationBar.backIndicatorImage = navigatonBarImage
-//        self.navigationController?.navigationBar.setItems([navigatonBarImage, deleteButton], animated: true)
+        self.navigationItem.setHidesBackButton(true, animated: true)
+//        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarCancelImage
+//        self.navigationController?.navigationBar.backIndicatorImage = navigatonBarCancelImage
+        let cancelBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        let deleteBarButtonItem = UIBarButtonItem(customView: deleteButton)
+        self.navigationItem.leftBarButtonItem = cancelBarButtonItem
+        self.navigationItem.rightBarButtonItem = deleteBarButtonItem
+        
     }
     
     
@@ -133,7 +156,7 @@ class EditEntryController: UIViewController {
         
         view.addSubview(saveButton)
         
-        let spacing: CGFloat = 16
+        let spacing: CGFloat = 16 
         
         entryTitle.translatesAutoresizingMaskIntoConstraints = false
         entryTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacing).isActive = true
@@ -159,53 +182,50 @@ class EditEntryController: UIViewController {
         entryImage.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
         entryImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         
-        saveButton.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout
-        saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true // Height of the menuBar
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
+        saveButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)).isActive = true
+        
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)).isActive = true
+
         
         
     }
     
     
     @objc func saveEntry(sender: UIButton!) {
-        // In here we check each property that we want to store and if it s empty
-        guard let title = entryTitle.text, !title.isEmpty else {
-            // If it is we inform the user with an alert
-            errorAlert(description: NewEntryError.titleMissing.localizedDescription)
-            return
+        // In here we check if we have an entry, then save the changes
+        if let entry = entry, let newTitle = entryTitle.text, let newStory = entryContent.text {
+            entry.title = newTitle
+            entry.story = newStory
+            managedObjectContext.saveChanges()
+            print("Item Saved, with title: \(newTitle)")
+            navigationController?.popViewController(animated: true)
+//            dismiss(animated: true, completion: nil)
+            
         }
-   
-        guard let story = entryContent.text, !story.isEmpty else {
-            errorAlert(description: NewEntryError.missingStory.localizedDescription)
-            return
-        }
-        
-        let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext) as! Entry
-        
-        entry.title = title
-        entry.story = story
-        
-        managedObjectContext.saveChanges()
-        
-        print("Item Saved, with title: \(entry.title)")
-        
-        // Saving an entry should dismiss the entryController
-        navigationController?.popViewController(animated: true)
-        dismiss(animated: true, completion: nil)
-
-
     }
     
+    // MARK: BarButtonItem Methods
     @objc func deleteEntry(sender: UIButton!) {
-        
+        if let entry = entry {
+            managedObjectContext.delete(entry)
+            managedObjectContext.saveChanges()
+            navigationController?.popViewController(animated: true)
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     
     @objc func cancel() {
         // This should have some sort of check to prevent dismissing unsaved information
-        
+        navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
         
     }

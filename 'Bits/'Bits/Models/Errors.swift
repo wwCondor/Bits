@@ -15,11 +15,9 @@ enum NewEntryError: Error {
 
 extension NewEntryError: LocalizedError {
     public var localizedDescription: String {
-        
         switch self {
         case .titleMissing: return "Woops! It seems you've forgot to enter a title."
         case .missingStory: return "Woops! It seems you're trying too save an empty story"
         }
-        
     }
 }

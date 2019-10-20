@@ -4,8 +4,7 @@
 //
 //  Created by Wouter Willebrands on 09/10/2019.
 //  Copyright © 2019 Studio Willebrands. All rights reserved.
-//  https://icons8.com - Icon
-//
+//  
 
 import UIKit
 import CoreData
@@ -13,18 +12,8 @@ import CoreData
 
 class ViewController: UIViewController {
 
-    
     let newEntryController = NewEntryController()
     let managedObjectContext = AppDelegate().managedObjectContext
-    
-    // Empty array of entries with a didSet observer
-    // If a new value is added the collectionview will be reloaded automatically
-//    public var entries = [Entry]() {
-//        didSet {
-//            savedEntries.reloadData()
-//        }
-//    }
-    
     let cellId = "cellId"
     
     lazy var fetchedResultsController: FetchedResultsController = {
@@ -119,7 +108,6 @@ class ViewController: UIViewController {
 //
 //    }
     
-
 }
 
 // MARK: CollectionView Delegate Methods
@@ -127,24 +115,17 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
         // Sets the amount of cells
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
             guard let section = fetchedResultsController.sections?[section] else {
                 return 0
             }
             return section.numberOfObjects
-            
         }
 
         // Sets up cell content
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
-            
             let entry = fetchedResultsController.object(at: indexPath)
-            
             cell.titleLabel.text = entry.title
-            
-//            cell.backgroundColor = UIColor.systemRed
-            
             return cell
         }
         
@@ -159,54 +140,43 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             return 0
         }
         
-        
         // Sets up what to do when a cell gets tapped
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            
             let entry = fetchedResultsController.object(at: indexPath)
+            let editEntryController = EditEntryController()
+            editEntryController.managedObjectContext = self.managedObjectContext
+            editEntryController.entry = entry
             
-            newEntryController.entryTitle.text = entry.title // "Title: \(indexPath)"
-            newEntryController.entryContent.text = entry.story // "\(indexPath) story of selected Entry"
-            
-            navigationController?.pushViewController(newEntryController, animated: true)
-            
-    //        //        cellTapDelegate.launchEntryWithIndex(index: indexPath)
+            navigationController?.pushViewController(editEntryController, animated: true)
         }
     
         // MARK: Delete Entry
         func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-            
             let entry = fetchedResultsController.object(at: indexPath)
             managedObjectContext.delete(entry)
             managedObjectContext.saveChanges()
             
             print("Deleted \(entry) at \(indexPath)")
-            // In here we delete stuff when
         }
     
 }
 
 
-
 // MARK: Add and Sort Methods
 extension ViewController {
     
-    
     // MARK: Present NewEntryController Method
     @objc func presentEntryController(sender: Any?) {
-        
         newEntryController.managedObjectContext = self.managedObjectContext
-
         navigationController?.pushViewController(newEntryController, animated: true)
     }
     
-    // MARK: Sort Method
+    // MARK: TODO: Sort Method
     @objc func sortEntries(sender: UIBarButtonItem) {
         // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
-
-
         print("Sorted!")
     }
+    
 }
 
 

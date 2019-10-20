@@ -8,11 +8,11 @@
 
 import Foundation
 
-enum MenuOptions {
-    case sortEntry
-    case newEntry
-    case shareEntry
-}
+//enum MenuOptions {
+//    case sortEntry
+//    case newEntry
+//    case shareEntry
+//}
 
 
 //enum SortOptions {
@@ -33,8 +33,9 @@ enum Color: String {
 
 enum Icon: String {
     case addIcon = "AddIcon"
-    case saveIcon = "FloppyIcon"
+    case saveIcon = "SaveIcon"
     case cancelIcon = "CancelIcon"
     case deleteIcon = "DeleteIcon"
     case sortIcon = "SortIcon"
+    case floppyIcon = "FloppyIcon"
 }
