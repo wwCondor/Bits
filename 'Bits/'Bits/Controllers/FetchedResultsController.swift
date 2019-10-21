@@ -15,7 +15,6 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
     private let collectionView: UICollectionView
     
     init(managedObjectContext: NSManagedObjectContext, collectionView: UICollectionView) {
-        
         self.collectionView = collectionView
         super.init(fetchRequest: Entry.fetchRequest(), managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         
@@ -32,9 +31,67 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
         }
     }
     
-    // MARK: FetchedResults Delegate Method
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        collectionView.
+    }
+    
+    // Depending on the type of change that occured we perform a certain action
+    // Adding this method also implements an animation on the specific change
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            collectionView.performBatchUpdates({
+                collectionView.insertItems(at: [newIndexPath])
+            }, completion: {
+                (finished: Bool) in
+                self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+            })
+        case .delete:
+            guard let indexPath  = indexPath else { return }
+            collectionView.performBatchUpdates({
+                collectionView.deleteItems(at: [indexPath])
+            }, completion: {
+                (finished: Bool) in
+                self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+            })
+        case .update, .move:
+            guard let indexPath = indexPath else { return }
+            collectionView.performBatchUpdates({
+                collectionView.reloadItems(at: [indexPath])
+            }, completion: nil)
+        @unknown default:
+            return
+        }
+    }
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        collectionView.reloadData()
+//        collectionView.reloadData()
     }
     
 }
+
+
+/*
+
+func remove(index: Int) {
+    myObjectList.remove(at: index)
+
+    let indexPath = IndexPath(row: index, section: 0)
+    collectionView.performBatchUpdates({
+        self.collectionView.deleteItems(at: [indexPath])
+    }, completion: {
+        (finished: Bool) in
+        self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+    })
+}
+ 
+ collecitonView.performBatchUpdates({
+     collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: 2, inSection: 0)])
+     collectionView.deleteItemsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0)])
+     collectionView.moveItemAtIndexPath(NSIndexPath(forItem: 2, inSection: 0),
+                                        toIndexPath: NSIndexPath(forItem: 1, inSection:0))
+ }, nil)
+
+
+*/

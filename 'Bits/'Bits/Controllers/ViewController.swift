@@ -153,6 +153,23 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         // MARK: Delete Entry
         func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
             let entry = fetchedResultsController.object(at: indexPath)
+            
+            /*
+             
+             self.collectionView.performBatchUpdates({
+                 self.collectionView.deleteItems(at: [indexPath])
+             }) { (finished) in
+                 self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+             }
+             
+             */
+            
+//            savedEntries.performBatchUpdates({
+//                savedEntries.deleteItems(at: [indexPath])
+//            }) { (finished) in
+//                self.savedEntries.reloadItems(at: self.savedEntries.indexPathsForVisibleItems)
+//            }
+            
             managedObjectContext.delete(entry)
             managedObjectContext.saveChanges()
             
