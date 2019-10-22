@@ -15,7 +15,7 @@
 		0B49DEB5234DC08400613EED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B49DEB4234DC08400613EED /* Assets.xcassets */; };
 		0B49DEB8234DC08400613EED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B49DEB6234DC08400613EED /* LaunchScreen.storyboard */; };
 		0B49DEC1234DC0DC00613EED /* Unicorn.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B49DEC0234DC0DC00613EED /* Unicorn.ttf */; };
-		0B7BDF2C234FBBD2006792B2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF2B234FBBD2006792B2 /* Extensions.swift */; };
+		0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF2B234FBBD2006792B2 /* Helpers.swift */; };
 		0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */; };
 		0B7BDF442351E435006792B2 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF432351E435006792B2 /* Enums.swift */; };
 		0B7BDF5823546E1C006792B2 /* NewEntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF5723546E1C006792B2 /* NewEntryController.swift */; };
@@ -38,7 +38,7 @@
 		0B49DEB7234DC08400613EED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0B49DEB9234DC08400613EED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B49DEC0234DC0DC00613EED /* Unicorn.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Unicorn.ttf; sourceTree = "<group>"; };
-		0B7BDF2B234FBBD2006792B2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0B7BDF2B234FBBD2006792B2 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEntryCell.swift; sourceTree = "<group>"; };
 		0B7BDF432351E435006792B2 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		0B7BDF5723546E1C006792B2 /* NewEntryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryController.swift; sourceTree = "<group>"; };
@@ -128,7 +128,7 @@
 		0B7BDF2A234FBBC1006792B2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				0B7BDF2B234FBBD2006792B2 /* Extensions.swift */,
+				0B7BDF2B234FBBD2006792B2 /* Helpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -241,7 +241,7 @@
 				0B49DEAB234DC08200613EED /* SceneDelegate.swift in Sources */,
 				0B7BDF5D23572125006792B2 /* Entry+CoreDataClass.swift in Sources */,
 				0B49DEB3234DC08200613EED /* Bits.xcdatamodeld in Sources */,
-				0B7BDF2C234FBBD2006792B2 /* Extensions.swift in Sources */,
+				0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */,
 				0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */,
 				0B95D29E2359BE89002243DA /* FetchedResultsController.swift in Sources */,
 				0B7BDF442351E435006792B2 /* Enums.swift in Sources */,

@@ -8,32 +8,19 @@
 
 import UIKit
 
-extension NewEntryController {
 
-    func errorAlert(description: String) {
-
+struct Alerts {
+    
+    static func presentErrorAlert(description: String, viewController: UIViewController) {
+        
         let alert = UIAlertController(title: "Woops!", message: description, preferredStyle: .alert)
-
-        let confirm = UIAlertAction(title: "Confirm", style: .default) {
+        
+        let confirmation = UIAlertAction(title: "OK", style: .default) {
             (action) in alert.dismiss(animated: true, completion: nil)
         }
-
-        alert.addAction(confirm)
-        self.present(alert, animated: true, completion: nil)
-    }
-}
-
-extension EditEntryController {
-
-    func errorAlert(description: String) {
-
-        let alert = UIAlertController(title: "Woops!", message: description, preferredStyle: .alert)
-
-        let confirm = UIAlertAction(title: "Confirm", style: .default) {
-            (action) in alert.dismiss(animated: true, completion: nil)
-        }
-
-        alert.addAction(confirm)
-        self.present(alert, animated: true, completion: nil)
+        
+//        alert.view.layoutIfNeeded() // MARK: Added
+        alert.addAction(confirmation)
+        viewController.present(alert, animated: true, completion: nil)
     }
 }

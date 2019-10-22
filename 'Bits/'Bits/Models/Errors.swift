@@ -8,16 +8,39 @@
 
 import Foundation
 
-enum NewEntryError: Error {
-    case titleMissing
-    case missingStory
+//enum EditEntryError: Error {
+//    case titleMissing
+//    case missingStory
+//}
+//
+//extension EditEntryError: LocalizedError {
+//    public var localizedDescription: String {
+//        switch self {
+//        case .titleMissing: return "Woops! It seems you've forgot to enter a title."
+//        case .missingStory: return "Woops! It seems you're trying too save an empty story"
+//        }
+//    }
+//}
+
+
+enum EntryErrors: Error {
+    case titleEmpty
+    case storyEmpty
+    case sortNotYetImplented
+    case entryNil
+
 }
 
-extension NewEntryError: LocalizedError {
+extension EntryErrors: LocalizedError {
     public var localizedDescription: String {
         switch self {
-        case .titleMissing: return "Woops! It seems you've forgot to enter a title."
-        case .missingStory: return "Woops! It seems you're trying too save an empty story"
+        case .titleEmpty: return "It seems you've forgot to enter a title."
+        case .storyEmpty: return "It seems you're trying too save an empty story"
+        case .sortNotYetImplented: return "Sort by date has not been implemented yet. Currently sorted by entry title"
+        case .entryNil: return "It seems there is no entry"
+
         }
     }
 }
+
+

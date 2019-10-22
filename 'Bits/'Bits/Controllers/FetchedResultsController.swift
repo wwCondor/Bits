@@ -31,9 +31,9 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
         }
     }
     
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        collectionView.
-    }
+//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        collectionView.reloadData()
+//    }
     
     // Depending on the type of change that occured we perform a certain action
     // Adding this method also implements an animation on the specific change
@@ -59,21 +59,25 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
             guard let indexPath = indexPath else { return }
             collectionView.performBatchUpdates({
                 collectionView.reloadItems(at: [indexPath])
-            }, completion: nil)
+            }, completion: {
+                (finished: Bool) in
+                self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+            }) // Not adding this seems to cause glitches switching between edit en new entry mode
         @unknown default:
             return
         }
     }
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 //        collectionView.reloadData()
-    }
+//    }
     
 }
 
 
 /*
-
+// Internet examples: Might need work
+ 
 func remove(index: Int) {
     myObjectList.remove(at: index)
 

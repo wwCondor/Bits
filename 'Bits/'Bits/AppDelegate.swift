@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navigationBarAppearace.barTintColor = UIColor(named: Color.gentlemanGray.rawValue) // Bar Background
         navigationBarAppearace.tintColor = UIColor(named: Color.washedWhite.rawValue) // Tintcolor title, images and back indicator
         navigationBarAppearace.isTranslucent = false
-        
+                
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = UINavigationController(rootViewController: ViewController())
@@ -81,15 +81,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     // MARK: - Core Data Saving support
-
+    // Not used, currently implemented through extensionChan
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
                 try context.save()
             } catch {
-                
-                
+
+
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
@@ -107,8 +107,10 @@ extension NSManagedObjectContext {
             do {
                 try save()
             } catch {
+                
                 fatalError("Error: \(error.localizedDescription)")
                 // Title is too long
+                // Title is too short for editing mode
             }
         }
     }

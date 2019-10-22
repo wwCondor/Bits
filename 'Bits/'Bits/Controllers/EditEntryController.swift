@@ -21,8 +21,14 @@ class EditEntryController: UIViewController {
 
         view.backgroundColor = UIColor.systemYellow
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
+        
         setupNavigationBarItems()
         setupViews()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
     
     lazy var saveButton: UIButton = {
@@ -86,9 +92,7 @@ class EditEntryController: UIViewController {
         entryTitle.textAlignment = .center
 //        entryTitle.layer.cornerRadius = 8
         entryTitle.layer.masksToBounds = true
-        
         entryTitle.translatesAutoresizingMaskIntoConstraints = false
-        
         return entryTitle
     }()
     
@@ -99,12 +103,9 @@ class EditEntryController: UIViewController {
         entryDate.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
-        
 //        entryDate.layer.cornerRadius = 8
 //        entryDate.layer.masksToBounds = true
-        
         entryDate.translatesAutoresizingMaskIntoConstraints = false
-        
         return entryDate
     }()
     
@@ -122,23 +123,12 @@ class EditEntryController: UIViewController {
         entryContent.translatesAutoresizingMaskIntoConstraints = false
 //        entryContent.layer.cornerRadius = 8
 //        entryContent.layer.masksToBounds = true
-        
         return entryContent
     }()
     
     
-//    lazy var navigatonBarCancelImage: UIImage = {
-//        let navBarCancelImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
-//        return navBarCancelImage
-//    }()
-    
-    
-    
     private func setupNavigationBarItems() {
-        
         self.navigationItem.setHidesBackButton(true, animated: true)
-//        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarCancelImage
-//        self.navigationController?.navigationBar.backIndicatorImage = navigatonBarCancelImage
         let cancelBarButtonItem = UIBarButtonItem(customView: cancelButton)
         let deleteBarButtonItem = UIBarButtonItem(customView: deleteButton)
         self.navigationItem.leftBarButtonItem = cancelBarButtonItem
@@ -146,9 +136,7 @@ class EditEntryController: UIViewController {
         
     }
     
-    
     private func setupViews() {
-        
         view.addSubview(entryTitle)
         view.addSubview(entryDate)
         view.addSubview(entryContent)
@@ -194,8 +182,6 @@ class EditEntryController: UIViewController {
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)).isActive = true
 
-        
-        
     }
     
     
@@ -208,7 +194,15 @@ class EditEntryController: UIViewController {
             print("Item Saved, with title: \(newTitle)")
             navigationController?.popViewController(animated: true)
 //            dismiss(animated: true, completion: nil)
-            
+        } else {
+            print("We are here")
+            if entry == nil {
+                Alerts.presentErrorAlert(description: EntryErrors.entryNil.localizedDescription , viewController: self)
+            } else if entry?.title == "" {
+                Alerts.presentErrorAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
+            } else if entry?.story == "" {
+                Alerts.presentErrorAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+            }
         }
     }
     
@@ -227,21 +221,14 @@ class EditEntryController: UIViewController {
         // This should have some sort of check to prevent dismissing unsaved information
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
-        
     }
     
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//        if textView.textColor == UIColor.lightGray {
-//            textView.text = nil
-//            textView.textColor = UIColor(named: Color.washedWhite.rawValue)
-//        }
-//    }
-//
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if textView.text.isEmpty {
-//            textView.text = "Write your story here"
-//            textView.textColor = UIColor.lightGray
-//        }
-//    }
+    @objc func keyboardWillShow(sender: NSNotification) {
+        entryTitle.keyboardAppearance = .dark
+        entryContent.keyboardAppearance = .dark
+        
+        entryTitle.becomeFirstResponder()
+        entryContent.becomeFirstResponder()
+    }
     
 }

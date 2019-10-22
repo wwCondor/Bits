@@ -20,7 +20,15 @@ class NewEntryController: UIViewController {
         
         setupBackButton()
         setupViews()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
     }
+    
+//     Dismiss keyboard on touch event outside textView
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
@@ -70,7 +78,6 @@ class NewEntryController: UIViewController {
 //        entryDate.layer.cornerRadius = 8
 //        entryDate.layer.masksToBounds = true
         entryDate.translatesAutoresizingMaskIntoConstraints = false
-        
         return entryDate
     }()
     
@@ -90,19 +97,17 @@ class NewEntryController: UIViewController {
         return entryContent
     }()
     
-    lazy var navigatonBarImage: UIImage = {
-        let navBarImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
-        return navBarImage
-    }()
+//    lazy var navigatonBarImage: UIImage = {
+//        return navBarImage
+//    }()
     
     private func setupBackButton() {
-        
+        let navigatonBarImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
         self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarImage
         self.navigationController?.navigationBar.backIndicatorImage = navigatonBarImage
     }
     
     private func setupViews() {
-        
         view.addSubview(entryTitle)
         view.addSubview(entryDate)
         view.addSubview(entryContent)
@@ -148,12 +153,12 @@ class NewEntryController: UIViewController {
         // In here we check each property that we want to store and if it s empty
         guard let title = entryTitle.text, !title.isEmpty else {
             // If it is we inform the user with an alert
-            errorAlert(description: NewEntryError.titleMissing.localizedDescription)
+            Alerts.presentErrorAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
         }
    
         guard let story = entryContent.text, !story.isEmpty else {
-            errorAlert(description: NewEntryError.missingStory.localizedDescription)
+            Alerts.presentErrorAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             return
         }
         
@@ -172,26 +177,17 @@ class NewEntryController: UIViewController {
 
     }
     
-    
     @objc func cancel() {
-        // This should have some sort of check to prevent dismissing unsaved information 
-        
+        // This should have some sort of check to prevent dismissing unsaved information
         dismiss(animated: true, completion: nil)
-        
     }
     
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//        if textView.textColor == UIColor.lightGray {
-//            textView.text = nil
-//            textView.textColor = UIColor(named: Color.washedWhite.rawValue)
-//        }
-//    }
-//
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if textView.text.isEmpty {
-//            textView.text = "Write your story here"
-//            textView.textColor = UIColor.lightGray
-//        }
-//    }
+    @objc func keyboardWillShow(sender: NSNotification) {
+        entryTitle.keyboardAppearance = .dark
+        entryContent.keyboardAppearance = .dark
+
+        entryTitle.becomeFirstResponder()
+        entryContent.becomeFirstResponder()
+    }
     
 }

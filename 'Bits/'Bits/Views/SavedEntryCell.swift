@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 // This is the saved entry displayed inside the collectionView on the main screen
 class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     
@@ -99,7 +98,7 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
         addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(\(imageSize))]-\(largeSpacing)-|", views: thumbnailImageView)
         addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(40)]-\(smallSpacing)-[v1(22)]-\(largeSpacing)-|", views: titleLabel, dateLabel)
         
-        // Touchscreen makes sure the cell can be selected as a while without user accidentally triggering editing of textViews
+        // Touchscreen ensures cell can only be selected as a whole without user accidentally triggering editing of textViews
         addConstraintsWithFormat("H:|[v0]|", views: touchScreen)
         addConstraintsWithFormat("V:|[v0]|", views: touchScreen)
 
@@ -127,7 +126,7 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
             if abs(pan.velocity(in: self).x) > 500 { // Here we check the swipe velocity
                 let collectionView: UICollectionView = self.superview as! UICollectionView
                 let indexPath: IndexPath = collectionView.indexPathForItem(at: self.center)!
-                collectionView.delegate?.collectionView!(collectionView, performAction: #selector(onPan(_:)), forItemAt: indexPath, withSender: nil)
+                collectionView.delegate?.collectionView!(collectionView, performAction: #selector(onPan(_:)), forItemAt: indexPath, withSender: nil) // MARK: Issue?
             } else {
                 UIView.animate(withDuration: 0.2, animations: {
                     self.setNeedsLayout()
@@ -137,7 +136,7 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
         }
     }
     
-    // This allows cell to handle multiple gesture recognizers (scroll, tap and drag in this case)
+    // This allows cell to handle multiple gesture recognizers (in this case; scroll, tap and drag )
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
       return true
     }
@@ -148,7 +147,6 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     }
     
 }
-
 
 
 // The superclass from which all other cells inherit

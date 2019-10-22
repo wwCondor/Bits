@@ -9,7 +9,6 @@
 import UIKit
 import CoreData
 
-
 class ViewController: UIViewController {
 
     let newEntryController = NewEntryController()
@@ -67,7 +66,6 @@ class ViewController: UIViewController {
         return sortButton
     }()
     
-    
 //    let bottomView: BottomView = {
 //        let bottomView = BottomView()
 //        return bottomView
@@ -79,7 +77,6 @@ class ViewController: UIViewController {
     }
     
     private func setupViews() {
-
         view.addSubview(savedEntries)
         view.addSubview(addButton)
 
@@ -154,22 +151,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
             let entry = fetchedResultsController.object(at: indexPath)
             
-            /*
-             
-             self.collectionView.performBatchUpdates({
-                 self.collectionView.deleteItems(at: [indexPath])
-             }) { (finished) in
-                 self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
-             }
-             
-             */
-            
-//            savedEntries.performBatchUpdates({
-//                savedEntries.deleteItems(at: [indexPath])
-//            }) { (finished) in
-//                self.savedEntries.reloadItems(at: self.savedEntries.indexPathsForVisibleItems)
-//            }
-            
             managedObjectContext.delete(entry)
             managedObjectContext.saveChanges()
             
@@ -190,6 +171,7 @@ extension ViewController {
     
     // MARK: TODO: Sort Method
     @objc func sortEntries(sender: UIBarButtonItem) {
+        Alerts.presentErrorAlert(description: EntryErrors.sortNotYetImplented.localizedDescription, viewController: self)
         // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
         print("Sorted!")
     }
