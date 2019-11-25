@@ -30,19 +30,19 @@ class EditEntryController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-    
-    lazy var saveButton: UIButton = {
-        let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
-        saveButton.setImage(image, for: .normal)
-        saveButton.contentMode = .center
-        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
-        saveButton.tintColor = ColorConstants.tintColor
-        let inset: CGFloat = 10
-        saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        saveButton.imageView?.contentMode = .scaleAspectFit
-        saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
-        return saveButton
+
+    lazy var cancelButton: UIButton = {
+        let cancelButton = UIButton(type: .custom)
+        let image = UIImage(named: Icon.cancelIcon.image)?.withRenderingMode(.alwaysTemplate)
+        cancelButton.setImage(image, for: .normal)
+        cancelButton.contentMode = .center
+        cancelButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        cancelButton.tintColor = ColorConstants.tintColor
+        let inset: CGFloat = 2
+        cancelButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30)
+        cancelButton.imageView?.contentMode = .scaleAspectFit
+        cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
+        return cancelButton
     }()
     
     lazy var deleteButton: UIButton = {
@@ -59,18 +59,56 @@ class EditEntryController: UIViewController {
         return deleteButton
     }()
     
-    lazy var cancelButton: UIButton = {
-        let cancelButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.cancelIcon.image)?.withRenderingMode(.alwaysTemplate)
-        cancelButton.setImage(image, for: .normal)
-        cancelButton.contentMode = .center
-        cancelButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
-        cancelButton.tintColor = ColorConstants.tintColor
-        let inset: CGFloat = 2
-        cancelButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30)
-        cancelButton.imageView?.contentMode = .scaleAspectFit
-        cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
-        return cancelButton
+
+    /// Added top marker
+    lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
+        imageView.backgroundColor = ColorConstants.labelColor
+        imageView.layer.cornerRadius = Constants.imageCornerRadius
+        imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    lazy var titleTextField: TitleTextField = {
+        let titleTextField = TitleTextField()
+        titleTextField.text = "Title"
+        return titleTextField
+    }()
+    
+    lazy var dateLabel: EntryTextField = {
+        let dateLabel = EntryTextField()
+        dateLabel.text = "01.01.2019"
+        return dateLabel
+    }()
+    
+    lazy var locationLabel: EntryTextField = {
+        let locationLabel = EntryTextField()
+        locationLabel.text = "home"
+        return locationLabel
+    }()
+    
+    lazy var storyTextView: StoryTextView = {
+        let storyTextView = StoryTextView()
+        storyTextView.text = "Write your story here"
+        return storyTextView
+    }()
+    /// Added bottom marker
+    // MARK: Remove Below
+    
+    lazy var saveButton: UIButton = {
+        let saveButton = UIButton(type: .custom)
+        let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
+        saveButton.setImage(image, for: .normal)
+        saveButton.contentMode = .center
+        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        saveButton.tintColor = ColorConstants.tintColor
+        let inset: CGFloat = 10
+        saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        saveButton.imageView?.contentMode = .scaleAspectFit
+        saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
+        return saveButton
     }()
     
     lazy var entryImage: UIImageView = {
@@ -125,7 +163,7 @@ class EditEntryController: UIViewController {
 //        entryContent.layer.masksToBounds = true
         return entryContent
     }()
-    
+     // MARK: Remove above
     
     private func setupNavigationBarItems() {
         self.navigationItem.setHidesBackButton(true, animated: true)

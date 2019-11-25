@@ -20,14 +20,13 @@ class NewEntryController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.blue
+        view.backgroundColor = ColorConstants.appBackgroundColor
         
         setupBackButton()
         setupViews()
         
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name:UIResponder.keyboardWillShowNotification, object: nil);
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
     }
     
 //     Dismiss keyboard on touch event outside textView
@@ -35,77 +34,55 @@ class NewEntryController: UIViewController {
 //        view.endEditing(true)
 //    }
     
-    
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
         let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
-        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        saveButton.backgroundColor = ColorConstants.buttonMenuColor
         saveButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
         saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
         return saveButton
     }()
     
-    let entryImage: UIImageView = {
-        let entryImage = UIImageView()
-        entryImage.backgroundColor = UIColor(named: Color.suitUpSilver.name)
-//        entryImage.image = UIImage(named: "BitsThumbnail") // Sets default image
-        entryImage.translatesAutoresizingMaskIntoConstraints = false
-//        entryImage.layer.cornerRadius = 8
-//        entryImage.layer.masksToBounds = true
-        return entryImage
+    lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
+        imageView.backgroundColor = ColorConstants.labelColor
+        imageView.layer.cornerRadius = Constants.imageCornerRadius
+        imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     // These might becomeUITextLabel instead
-    let entryTitle: UITextField = {
-        let entryTitle = UITextField()
-        entryTitle.backgroundColor = UIColor(named: Color.suitUpSilver.name)
-        entryTitle.textColor = ColorConstants.tintColor
-        entryTitle.font = UIFont.systemFont(ofSize: 16.0, weight: .medium)
-        entryTitle.text = "Title"
-        entryTitle.textAlignment = .center
-//        entryTitle.layer.cornerRadius = 8
-//        entryTitle.layer.masksToBounds = true
-        entryTitle.translatesAutoresizingMaskIntoConstraints = false
-        return entryTitle
+    lazy var titleTextField: TitleTextField = {
+        let titleTextField = TitleTextField()
+        titleTextField.text = "Title"
+        return titleTextField
     }()
     
-    let entryDate: UILabel = {
-        let entryDate = UILabel()
-        entryDate.backgroundColor = UIColor(named: Color.suitUpSilver.name)
-        entryDate.textColor = ColorConstants.tintColor
-        entryDate.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
-        entryDate.text = "01.01.2019"
-        entryDate.textAlignment = .center
-//        entryDate.layer.cornerRadius = 8
-//        entryDate.layer.masksToBounds = true
-        entryDate.translatesAutoresizingMaskIntoConstraints = false
-        return entryDate
+    lazy var dateLabel: EntryTextField = {
+        let dateLabel = EntryTextField()
+        dateLabel.text = "01.01.2019"
+        return dateLabel
     }()
     
-    let entryContent: UITextView = {
-        let entryContent = UITextView()
-        entryContent.backgroundColor = UIColor(named: Color.suitUpSilver.name)
-        entryContent.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
-        entryContent.text = "Write your story here"
-        entryContent.textAlignment = .left
-        entryContent.textContainer.maximumNumberOfLines = 10
-        let textInset: CGFloat = 10
-        entryContent.textContainerInset = UIEdgeInsets(top: textInset, left: textInset, bottom: textInset, right: textInset)
-        entryContent.textColor = ColorConstants.tintColor
-        entryContent.translatesAutoresizingMaskIntoConstraints = false
-//        entryContent.layer.cornerRadius = 8
-//        entryContent.layer.masksToBounds = true
-        return entryContent
+    lazy var locationLabel: EntryTextField = {
+        let locationLabel = EntryTextField()
+        locationLabel.text = "home"
+        return locationLabel
     }()
     
-//    lazy var navigatonBarImage: UIImage = {
-//        return navBarImage
-//    }()
+    lazy var storyTextView: StoryTextView = {
+        let storyTextView = StoryTextView()
+        storyTextView.text = "Write your story here"
+        return storyTextView
+    }()
     
     private func setupBackButton() {
         let navigatonBarImage = UIImage(named: Icon.cancelIcon.image)!.withRenderingMode(.alwaysTemplate)
@@ -114,57 +91,59 @@ class NewEntryController: UIViewController {
     }
     
     private func setupViews() {
-        view.addSubview(entryTitle)
-        view.addSubview(entryDate)
-        view.addSubview(entryContent)
-        view.addSubview(entryImage)
+        view.addSubview(imageView)
+        view.addSubview(titleTextField)
+        view.addSubview(dateLabel)
+        view.addSubview(locationLabel)
+        view.addSubview(storyTextView)
         
         view.addSubview(saveButton)
         
-        let spacing: CGFloat = 16
+        let smallSpacing: CGFloat = 8
+        let labelHeigth = (Constants.imageSize - 2 * smallSpacing) / 3
         
         // MARK: Refactor NSLayoutContstraint
-        entryTitle.translatesAutoresizingMaskIntoConstraints = false
-        entryTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacing).isActive = true
-        entryTitle.heightAnchor.constraint(equalToConstant: 2 * spacing).isActive = true
-        entryTitle.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        entryDate.translatesAutoresizingMaskIntoConstraints = false
-        entryDate.topAnchor.constraint(equalTo: entryTitle.bottomAnchor, constant: spacing).isActive = true
-        entryDate.heightAnchor.constraint(equalToConstant: 2 * spacing).isActive = true
-        entryDate.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryDate.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        entryContent.translatesAutoresizingMaskIntoConstraints = false
-        entryContent.topAnchor.constraint(equalTo: entryDate.bottomAnchor, constant: spacing).isActive = true
-        entryContent.heightAnchor.constraint(equalToConstant: 8 * spacing).isActive = true
-        entryContent.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryContent.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        entryImage.translatesAutoresizingMaskIntoConstraints = false
-        entryImage.topAnchor.constraint(equalTo: entryContent.bottomAnchor, constant: spacing).isActive = true
-        entryImage.heightAnchor.constraint(equalToConstant: 8 * spacing).isActive = true
-        entryImage.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        saveButton.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout
-        saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true // Height of the menuBar
-        saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
-        saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.contentPadding),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
+            imageView.widthAnchor.constraint(equalToConstant: Constants.imageSize),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.imageSize),
+            
+            titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.contentPadding),
+            titleTextField.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            titleTextField.heightAnchor.constraint(equalToConstant: labelHeigth),
+
+            dateLabel.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: smallSpacing),
+            dateLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            dateLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+
+            locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: smallSpacing),
+            locationLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            locationLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+
+            storyTextView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
+            storyTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
+            storyTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            storyTextView.bottomAnchor.constraint(equalTo: view.centerYAnchor), //, constant: -Constants.contentPadding)
+            
+            saveButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
+            saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
+            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
-    
     
     @objc func saveEntry(sender: UIButton!) {
         // In here we check each property that we want to store and if it s empty
-        guard let title = entryTitle.text, !title.isEmpty else {
+        guard let title = titleTextField.text, !title.isEmpty else {
             // If it is we inform the user with an alert
             Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
         }
    
-        guard let story = entryContent.text, !story.isEmpty else {
+        guard let story = storyTextView.text, !story.isEmpty else {
             Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             return
         }
@@ -189,17 +168,17 @@ class NewEntryController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func keyboardDone() {
-        self.resignFirstResponder()
-    }
+//    @objc func keyboardDone() {
+//        self.resignFirstResponder()
+//    }
     
-    @objc func keyboardWillShow(_ notification: Notification) {
-        entryTitle.keyboardAppearance = .dark
-        entryContent.keyboardAppearance = .dark
-
-        entryTitle.becomeFirstResponder()
-        entryContent.becomeFirstResponder()
-    }
+//    @objc func keyboardWillShow(_ notification: Notification) {
+//        entryTitle.keyboardAppearance = .dark
+//        entryContent.keyboardAppearance = .dark
+//
+//        entryTitle.becomeFirstResponder()
+//        entryContent.becomeFirstResponder()
+//    }
     
 //    @objc func keyboardWillHide(_ notification: Notification) {
 //        KeyboardManager.keyboardWillHide(notification: notification, rootView: view)

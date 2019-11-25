@@ -35,5 +35,6 @@ struct ColorConstants {
     static let buttonMenuColor: UIColor = UIColor(named: Color.gentlemanGray.name)!
     static let tintColor: UIColor = UIColor(named: Color.washedWhite.name)! // also set icon and text
     static let cellBackgroundColor: UIColor = UIColor(named: Color.grumpyGray.name)!
+    static let entryObjectBackground: UIColor = UIColor(named: Color.grumpyGray.name)!
     static let labelColor: UIColor = UIColor(named: Color.suitUpSilver.name)!
 }

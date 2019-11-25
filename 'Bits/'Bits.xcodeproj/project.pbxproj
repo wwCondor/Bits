@@ -20,8 +20,10 @@
 		0B7394D2238C0A2F0087C95F /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394D1238C0A2F0087C95F /* Icon.swift */; };
 		0B7394D4238C15910087C95F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394D3238C15910087C95F /* Constants.swift */; };
 		0B7394D6238C23820087C95F /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394D5238C23820087C95F /* BaseCell.swift */; };
-		0B7394D8238C25300087C95F /* ContentLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394D7238C25300087C95F /* ContentLabel.swift */; };
+		0B7394D8238C25300087C95F /* EntryTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394D7238C25300087C95F /* EntryTextView.swift */; };
 		0B7394DA238C29350087C95F /* DeleteLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394D9238C29350087C95F /* DeleteLabel.swift */; };
+		0B7394DC238C35350087C95F /* ImageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394DB238C35350087C95F /* ImageContainer.swift */; };
+		0B7394DE238C5F860087C95F /* EntryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394DD238C5F860087C95F /* EntryTextField.swift */; };
 		0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF2B234FBBD2006792B2 /* Helpers.swift */; };
 		0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */; };
 		0B7BDF442351E435006792B2 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF432351E435006792B2 /* Enums.swift */; };
@@ -50,8 +52,10 @@
 		0B7394D1238C0A2F0087C95F /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
 		0B7394D3238C15910087C95F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		0B7394D5238C23820087C95F /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
-		0B7394D7238C25300087C95F /* ContentLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentLabel.swift; sourceTree = "<group>"; };
+		0B7394D7238C25300087C95F /* EntryTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTextView.swift; sourceTree = "<group>"; };
 		0B7394D9238C29350087C95F /* DeleteLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteLabel.swift; sourceTree = "<group>"; };
+		0B7394DB238C35350087C95F /* ImageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageContainer.swift; sourceTree = "<group>"; };
+		0B7394DD238C5F860087C95F /* EntryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTextField.swift; sourceTree = "<group>"; };
 		0B7BDF2B234FBBD2006792B2 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEntryCell.swift; sourceTree = "<group>"; };
 		0B7BDF432351E435006792B2 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
@@ -94,6 +98,7 @@
 		0B49DEA7234DC08200613EED /* 'Bits */ = {
 			isa = PBXGroup;
 			children = (
+				0B7394DF238C64360087C95F /* Delete */,
 				0B7BDF2A234FBBC1006792B2 /* Helpers */,
 				0B7BDF32234FBE79006792B2 /* Models */,
 				0B7BDF2D234FBD69006792B2 /* Views */,
@@ -140,6 +145,24 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		0B7394DF238C64360087C95F /* Delete */ = {
+			isa = PBXGroup;
+			children = (
+				0B7394DB238C35350087C95F /* ImageContainer.swift */,
+			);
+			path = Delete;
+			sourceTree = "<group>";
+		};
+		0B7394E2238C65CE0087C95F /* SavedEntry */ = {
+			isa = PBXGroup;
+			children = (
+				0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */,
+				0B7394D9238C29350087C95F /* DeleteLabel.swift */,
+				0B7394D5238C23820087C95F /* BaseCell.swift */,
+			);
+			path = SavedEntry;
+			sourceTree = "<group>";
+		};
 		0B7BDF2A234FBBC1006792B2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,10 +177,9 @@
 		0B7BDF2D234FBD69006792B2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */,
-				0B7394D5238C23820087C95F /* BaseCell.swift */,
-				0B7394D7238C25300087C95F /* ContentLabel.swift */,
-				0B7394D9238C29350087C95F /* DeleteLabel.swift */,
+				0B7394E2238C65CE0087C95F /* SavedEntry */,
+				0B7394D7238C25300087C95F /* EntryTextView.swift */,
+				0B7394DD238C5F860087C95F /* EntryTextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -256,13 +278,14 @@
 				0B95D2A0235AF4C0002243DA /* EditEntryController.swift in Sources */,
 				0B7394D2238C0A2F0087C95F /* Icon.swift in Sources */,
 				0B7BDF5E23572125006792B2 /* Entry+CoreDataProperties.swift in Sources */,
-				0B7394D8238C25300087C95F /* ContentLabel.swift in Sources */,
+				0B7394D8238C25300087C95F /* EntryTextView.swift in Sources */,
 				0B7394DA238C29350087C95F /* DeleteLabel.swift in Sources */,
 				0B7BDF5823546E1C006792B2 /* NewEntryController.swift in Sources */,
 				0B49DEAD234DC08200613EED /* ViewController.swift in Sources */,
 				0B49DEA9234DC08200613EED /* AppDelegate.swift in Sources */,
 				0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */,
 				0B95D29C2359AB79002243DA /* Errors.swift in Sources */,
+				0B7394DC238C35350087C95F /* ImageContainer.swift in Sources */,
 				0B12F5BB23623F7B009EDDD7 /* Keyboard.swift in Sources */,
 				0B49DEAB234DC08200613EED /* SceneDelegate.swift in Sources */,
 				0B7394D0238C0A220087C95F /* Color.swift in Sources */,
@@ -270,6 +293,7 @@
 				0B49DEB3234DC08200613EED /* Bits.xcdatamodeld in Sources */,
 				0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */,
 				0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */,
+				0B7394DE238C5F860087C95F /* EntryTextField.swift in Sources */,
 				0B95D29E2359BE89002243DA /* FetchedResultsController.swift in Sources */,
 				0B7BDF442351E435006792B2 /* Enums.swift in Sources */,
 				0B7394D4238C15910087C95F /* Constants.swift in Sources */,

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class ViewController: UIViewController {
-
+    
     let newEntryController = NewEntryController()
     let managedObjectContext = AppDelegate().managedObjectContext
     let cellId = "cellId"
@@ -28,7 +28,6 @@ class ViewController: UIViewController {
         setupSortButton()
     }
     
-    
     lazy var addButton: UIButton = {
         let addButton = UIButton(type: .custom)
         let image = UIImage(named: Icon.addIcon.image)?.withRenderingMode(.alwaysTemplate)
@@ -40,16 +39,18 @@ class ViewController: UIViewController {
         addButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         addButton.imageView?.contentMode = .scaleAspectFit
         addButton.addTarget(self, action: #selector(presentEntryController), for: .touchUpInside)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
         return addButton
     }()
     
     lazy var savedEntries: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        let savedEntries = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        let savedEntries = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         savedEntries.backgroundColor = UIColor.clear
         savedEntries.register(SavedEntryCell.self, forCellWithReuseIdentifier: cellId)
         savedEntries.dataSource = self
         savedEntries.delegate = self
+        savedEntries.translatesAutoresizingMaskIntoConstraints = false
         return savedEntries
     }()
     
@@ -73,18 +74,17 @@ class ViewController: UIViewController {
     private func setupViews() {
         view.addSubview(savedEntries)
         view.addSubview(addButton)
-
-        savedEntries.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout for menuBar
-        savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        savedEntries.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
+                
+        NSLayoutConstraint.activate([
+        savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+        savedEntries.widthAnchor.constraint(equalToConstant: view.bounds.width),
+        savedEntries.bottomAnchor.constraint(equalTo: addButton.topAnchor),
         
-        addButton.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout for menuBar
-        addButton.topAnchor.constraint(equalTo: savedEntries.bottomAnchor).isActive = true
-        addButton.heightAnchor.constraint(equalToConstant: 60).isActive = true // Height of the menuBar
-        addButton.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
-        addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        addButton.centerXAnchor.constraint(equalToSystemSpacingAfter: view.centerXAnchor, multiplier: 1).isActive = true
-
+        addButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
+        addButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
+        addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
+        addButton.centerXAnchor.constraint(equalToSystemSpacingAfter: view.centerXAnchor, multiplier: 1)
+        ])
     }
     
     // MARK: Present NewEntryController Method
@@ -96,74 +96,60 @@ class ViewController: UIViewController {
     // MARK: TODO: Sort Method
     @objc func sortEntries(sender: UIBarButtonItem) {
         Alerts.presentAlert(description: EntryErrors.sortNotYetImplented.localizedDescription, viewController: self)
-        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
+        // This method should sort the entries. Ideally switching between sortBy-states: e.g Title & Date
         print("Sorted!")
     }
-    
-    // This can be used to cover the bottom safe area
-//    private func setupSafeAreaView() {
-//        view.addSubview(bottomView)
-//
-//        bottomView.translatesAutoresizingMaskIntoConstraints = false // enabels autoLayout
-//        bottomView.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
-//        bottomView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-//        bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-//        bottomView.backgroundColor = UIColor(named: "CufflinkCream")
-//
-//    }
-    
 }
 
 // MARK: CollectionView Delegate Methods
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-        // Sets the amount of cells
-        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            guard let section = fetchedResultsController.sections?[section] else {
-                return 0
-            }
-            return section.numberOfObjects
-        }
-
-        // Sets up cell content
-        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
-            let entry = fetchedResultsController.object(at: indexPath)
-            cell.titleLabel.text = entry.title
-            cell.storyLabel.text = entry.story
-            return cell
-        }
-        
-        // Sets up size of the cells
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return CGSize(width: view.frame.width, height: 160)
-        }
-        
-        // Sets up spacing between posts
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    // Sets the amount of cells
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let section = fetchedResultsController.sections?[section] else {
             return 0
         }
+        return section.numberOfObjects
+    }
+    
+    // Sets up cell content
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
+        let entry = fetchedResultsController.object(at: indexPath)
+        cell.titleLabel.text = entry.title
+        cell.storyLabel.text = entry.story
+        return cell
+    }
+    
+    // Sets up size of the cells
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: Constants.cellHeight)
+    }
+    
+    // Sets up spacing between posts
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    // Sets up what to do when a cell gets tapped
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let entry = fetchedResultsController.object(at: indexPath)
+        let editEntryController = EditEntryController()
+        editEntryController.managedObjectContext = self.managedObjectContext
+        editEntryController.entry = entry
         
-        // Sets up what to do when a cell gets tapped
-        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            let entry = fetchedResultsController.object(at: indexPath)
-            let editEntryController = EditEntryController()
-            editEntryController.managedObjectContext = self.managedObjectContext
-            editEntryController.entry = entry
-            
-            navigationController?.pushViewController(editEntryController, animated: true)
-        }
+        navigationController?.pushViewController(editEntryController, animated: true)
+    }
     
-        // MARK: Delete Entry
-        func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-            let entry = fetchedResultsController.object(at: indexPath)
-            
-            managedObjectContext.delete(entry)
-            managedObjectContext.saveChanges()
-            
-            print("Deleted \(entry) at \(indexPath)")
-        }
-    
+    // MARK: Delete Entry
+    func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
+        let entry = fetchedResultsController.object(at: indexPath)
+        
+        managedObjectContext.delete(entry)
+        managedObjectContext.saveChanges()
+        
+        print("Deleted \(entry) at \(indexPath)")
+    }
 }
 
 

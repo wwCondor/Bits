@@ -9,9 +9,15 @@
 import UIKit
 
 struct Constants {
-    static let thumbNailSize: CGFloat       = 60
-    static let contentPadding: CGFloat      = 16
-    static let cellSpacing: CGFloat         = 12 // spacing between saved entry cells 
-    static let cellContentSpacing: CGFloat  = 8
-    static let textInset: CGFloat           = 2
+    static let cellHeight: CGFloat            = 200
+    static let buttonBarHeight: CGFloat       = 60
+    static let thumbNailSize: CGFloat         = 60
+    static let imageSize: CGFloat             = 120
+    static let contentPadding: CGFloat        = 16
+    static let cellSpacing: CGFloat           = 12 // spacing between saved entry cells
+    static let cellContentSpacing: CGFloat    = 8
+    static let textInset: CGFloat             = 2 // Inset for cell content
+    static let largeTextInset: CGFloat        = 6
+    static let thumbnailCornerRadius: CGFloat = 5
+    static let imageCornerRadius: CGFloat     = 10
 }
