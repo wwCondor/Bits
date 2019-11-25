@@ -11,7 +11,7 @@ import CoreData
 
 class EditEntryController: UIViewController {
     
-    let cellColor = UIColor(named: Color.suitUpSilver.rawValue) // background color of each object
+    let cellColor = UIColor(named: Color.suitUpSilver.name) // background color of each object
 
     var entry: Entry?
     var managedObjectContext: NSManagedObjectContext!
@@ -33,11 +33,11 @@ class EditEntryController: UIViewController {
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
-        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        saveButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
+        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        saveButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
@@ -47,11 +47,11 @@ class EditEntryController: UIViewController {
     
     lazy var deleteButton: UIButton = {
         let deleteButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.deleteIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: Icon.deleteIcon.image)?.withRenderingMode(.alwaysTemplate)
         deleteButton.setImage(image, for: .normal)
         deleteButton.contentMode = .center
-        deleteButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        deleteButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
+        deleteButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        deleteButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 4
         deleteButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset + 35)
         deleteButton.imageView?.contentMode = .scaleAspectFit
@@ -61,11 +61,11 @@ class EditEntryController: UIViewController {
     
     lazy var cancelButton: UIButton = {
         let cancelButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.cancelIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: Icon.cancelIcon.image)?.withRenderingMode(.alwaysTemplate)
         cancelButton.setImage(image, for: .normal)
         cancelButton.contentMode = .center
-        cancelButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        cancelButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
+        cancelButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        cancelButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 2
         cancelButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30)
         cancelButton.imageView?.contentMode = .scaleAspectFit
@@ -86,7 +86,7 @@ class EditEntryController: UIViewController {
     lazy var entryTitle: UITextField = {
         let entryTitle = UITextField()
         entryTitle.backgroundColor = cellColor
-        entryTitle.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryTitle.textColor = ColorConstants.tintColor
         entryTitle.font = UIFont.systemFont(ofSize: 16.0, weight: .medium)
         entryTitle.text = entry?.title
         entryTitle.textAlignment = .center
@@ -99,7 +99,7 @@ class EditEntryController: UIViewController {
     lazy var entryDate: UILabel = {
         let entryDate = UILabel()
         entryDate.backgroundColor = cellColor
-        entryDate.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryDate.textColor = ColorConstants.tintColor
         entryDate.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
@@ -119,7 +119,7 @@ class EditEntryController: UIViewController {
         entryContent.textContainer.maximumNumberOfLines = 10
         let textInset: CGFloat = 10
         entryContent.textContainerInset = UIEdgeInsets(top: textInset, left: textInset, bottom: textInset, right: textInset)
-        entryContent.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryContent.textColor = ColorConstants.tintColor
         entryContent.translatesAutoresizingMaskIntoConstraints = false
 //        entryContent.layer.cornerRadius = 8
 //        entryContent.layer.masksToBounds = true
@@ -144,8 +144,9 @@ class EditEntryController: UIViewController {
         
         view.addSubview(saveButton)
         
-        let spacing: CGFloat = 16 
+        let spacing: CGFloat = 16 // MARK: Make global constant
         
+        // MARK: Refactor NSLayoutContstraint
         entryTitle.translatesAutoresizingMaskIntoConstraints = false
         entryTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacing).isActive = true
         entryTitle.heightAnchor.constraint(equalToConstant: 2 * spacing).isActive = true
@@ -197,11 +198,11 @@ class EditEntryController: UIViewController {
         } else {
             print("We are here")
             if entry == nil {
-                Alerts.presentErrorAlert(description: EntryErrors.entryNil.localizedDescription , viewController: self)
+                Alerts.presentAlert(description: EntryErrors.entryNil.localizedDescription , viewController: self)
             } else if entry?.title == "" {
-                Alerts.presentErrorAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
+                Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
             } else if entry?.story == "" {
-                Alerts.presentErrorAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+                Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             }
         }
     }

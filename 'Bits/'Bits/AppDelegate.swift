@@ -16,11 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        let navigationBarAppearace = UINavigationBar.appearance()
+        let navigationBarAppearance = UINavigationBar.appearance()
 
-        navigationBarAppearace.barTintColor = UIColor(named: Color.gentlemanGray.rawValue) // Bar Background
-        navigationBarAppearace.tintColor = UIColor(named: Color.washedWhite.rawValue) // Tintcolor title, images and back indicator
-        navigationBarAppearace.isTranslucent = false
+        navigationBarAppearance.barTintColor = ColorConstants.buttonMenuColor // Bar Background
+        navigationBarAppearance.tintColor = ColorConstants.tintColor // Tintcolor title, images and back indicator
+        navigationBarAppearance.isTranslucent = false
                 
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()

@@ -13,6 +13,10 @@ class NewEntryController: UIViewController {
     
     var managedObjectContext: NSManagedObjectContext!
     
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,22 +25,24 @@ class NewEntryController: UIViewController {
         setupBackButton()
         setupViews()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name:UIResponder.keyboardWillShowNotification, object: nil);
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
     
 //     Dismiss keyboard on touch event outside textView
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//    }
     
     
     lazy var saveButton: UIButton = {
         let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
         saveButton.setImage(image, for: .normal)
         saveButton.contentMode = .center
-        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        saveButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
+        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
+        saveButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         saveButton.imageView?.contentMode = .scaleAspectFit
@@ -46,7 +52,7 @@ class NewEntryController: UIViewController {
     
     let entryImage: UIImageView = {
         let entryImage = UIImageView()
-        entryImage.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
+        entryImage.backgroundColor = UIColor(named: Color.suitUpSilver.name)
 //        entryImage.image = UIImage(named: "BitsThumbnail") // Sets default image
         entryImage.translatesAutoresizingMaskIntoConstraints = false
 //        entryImage.layer.cornerRadius = 8
@@ -57,8 +63,8 @@ class NewEntryController: UIViewController {
     // These might becomeUITextLabel instead
     let entryTitle: UITextField = {
         let entryTitle = UITextField()
-        entryTitle.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
-        entryTitle.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryTitle.backgroundColor = UIColor(named: Color.suitUpSilver.name)
+        entryTitle.textColor = ColorConstants.tintColor
         entryTitle.font = UIFont.systemFont(ofSize: 16.0, weight: .medium)
         entryTitle.text = "Title"
         entryTitle.textAlignment = .center
@@ -70,8 +76,8 @@ class NewEntryController: UIViewController {
     
     let entryDate: UILabel = {
         let entryDate = UILabel()
-        entryDate.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
-        entryDate.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryDate.backgroundColor = UIColor(named: Color.suitUpSilver.name)
+        entryDate.textColor = ColorConstants.tintColor
         entryDate.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
         entryDate.text = "01.01.2019"
         entryDate.textAlignment = .center
@@ -83,14 +89,14 @@ class NewEntryController: UIViewController {
     
     let entryContent: UITextView = {
         let entryContent = UITextView()
-        entryContent.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
+        entryContent.backgroundColor = UIColor(named: Color.suitUpSilver.name)
         entryContent.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
         entryContent.text = "Write your story here"
         entryContent.textAlignment = .left
         entryContent.textContainer.maximumNumberOfLines = 10
         let textInset: CGFloat = 10
         entryContent.textContainerInset = UIEdgeInsets(top: textInset, left: textInset, bottom: textInset, right: textInset)
-        entryContent.textColor = UIColor(named: Color.washedWhite.rawValue)
+        entryContent.textColor = ColorConstants.tintColor
         entryContent.translatesAutoresizingMaskIntoConstraints = false
 //        entryContent.layer.cornerRadius = 8
 //        entryContent.layer.masksToBounds = true
@@ -102,7 +108,7 @@ class NewEntryController: UIViewController {
 //    }()
     
     private func setupBackButton() {
-        let navigatonBarImage = UIImage(named: Icon.cancelIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
+        let navigatonBarImage = UIImage(named: Icon.cancelIcon.image)!.withRenderingMode(.alwaysTemplate)
         self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarImage
         self.navigationController?.navigationBar.backIndicatorImage = navigatonBarImage
     }
@@ -117,6 +123,7 @@ class NewEntryController: UIViewController {
         
         let spacing: CGFloat = 16
         
+        // MARK: Refactor NSLayoutContstraint
         entryTitle.translatesAutoresizingMaskIntoConstraints = false
         entryTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacing).isActive = true
         entryTitle.heightAnchor.constraint(equalToConstant: 2 * spacing).isActive = true
@@ -153,12 +160,12 @@ class NewEntryController: UIViewController {
         // In here we check each property that we want to store and if it s empty
         guard let title = entryTitle.text, !title.isEmpty else {
             // If it is we inform the user with an alert
-            Alerts.presentErrorAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
+            Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
         }
    
         guard let story = entryContent.text, !story.isEmpty else {
-            Alerts.presentErrorAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+            Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             return
         }
         
@@ -182,12 +189,20 @@ class NewEntryController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func keyboardWillShow(sender: NSNotification) {
+    @objc func keyboardDone() {
+        self.resignFirstResponder()
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
         entryTitle.keyboardAppearance = .dark
         entryContent.keyboardAppearance = .dark
 
         entryTitle.becomeFirstResponder()
         entryContent.becomeFirstResponder()
     }
+    
+//    @objc func keyboardWillHide(_ notification: Notification) {
+//        KeyboardManager.keyboardWillHide(notification: notification, rootView: view)
+//    }
     
 }

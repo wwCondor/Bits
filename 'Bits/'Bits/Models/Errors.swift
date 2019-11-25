@@ -34,8 +34,8 @@ enum EntryErrors: Error {
 extension EntryErrors: LocalizedError {
     public var localizedDescription: String {
         switch self {
-        case .titleEmpty: return "It seems you've forgot to enter a title."
-        case .storyEmpty: return "It seems you're trying too save an empty story"
+        case .titleEmpty: return "It seems you've forgot to enter a title"
+        case .storyEmpty: return "It seems the story content of your current entry is emptry"
         case .sortNotYetImplented: return "Sort by date has not been implemented yet. Currently sorted by entry title"
         case .entryNil: return "It seems there is no entry"
 

@@ -22,21 +22,20 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.blue // MARK: Set App background color
+        view.backgroundColor = ColorConstants.appBackgroundColor // MARK: Set App background color
         
         setupViews()
         setupSortButton()
-        
     }
     
     
     lazy var addButton: UIButton = {
         let addButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.addIcon.rawValue)?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: Icon.addIcon.image)?.withRenderingMode(.alwaysTemplate)
         addButton.setImage(image, for: .normal)
         addButton.contentMode = .center
-        addButton.backgroundColor = UIColor(named: Color.gentlemanGray.rawValue)
-        addButton.tintColor = UIColor(named: Color.washedWhite.rawValue)
+        addButton.backgroundColor = ColorConstants.buttonMenuColor
+        addButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 15
         addButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         addButton.imageView?.contentMode = .scaleAspectFit
@@ -47,7 +46,7 @@ class ViewController: UIViewController {
     lazy var savedEntries: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         let savedEntries = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        savedEntries.backgroundColor = UIColor.blue
+        savedEntries.backgroundColor = UIColor.clear
         savedEntries.register(SavedEntryCell.self, forCellWithReuseIdentifier: cellId)
         savedEntries.dataSource = self
         savedEntries.delegate = self
@@ -56,7 +55,7 @@ class ViewController: UIViewController {
     
     lazy var sortButton: UIButton = {
         let sortButton = UIButton(type: .custom)
-        let sortImage = UIImage(named: Icon.sortIcon.rawValue)!.withRenderingMode(.alwaysTemplate)
+        let sortImage = UIImage(named: Icon.sortIcon.image)!.withRenderingMode(.alwaysTemplate)
         sortButton.setImage(sortImage, for: .normal)
         let inset: CGFloat = 5
         sortButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset)
@@ -65,11 +64,6 @@ class ViewController: UIViewController {
         sortButton.addTarget(self, action: #selector(sortEntries), for: .touchUpInside)
         return sortButton
     }()
-    
-//    let bottomView: BottomView = {
-//        let bottomView = BottomView()
-//        return bottomView
-//    }()
     
     private func setupSortButton() {
         let barButton = UIBarButtonItem(customView: sortButton)
@@ -91,6 +85,19 @@ class ViewController: UIViewController {
         addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         addButton.centerXAnchor.constraint(equalToSystemSpacingAfter: view.centerXAnchor, multiplier: 1).isActive = true
 
+    }
+    
+    // MARK: Present NewEntryController Method
+    @objc func presentEntryController(sender: Any?) {
+        newEntryController.managedObjectContext = self.managedObjectContext
+        navigationController?.pushViewController(newEntryController, animated: true)
+    }
+    
+    // MARK: TODO: Sort Method
+    @objc func sortEntries(sender: UIBarButtonItem) {
+        Alerts.presentAlert(description: EntryErrors.sortNotYetImplented.localizedDescription, viewController: self)
+        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
+        print("Sorted!")
     }
     
     // This can be used to cover the bottom safe area
@@ -123,13 +130,13 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
             let entry = fetchedResultsController.object(at: indexPath)
             cell.titleLabel.text = entry.title
+            cell.storyLabel.text = entry.story
             return cell
         }
         
         // Sets up size of the cells
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let spacing: CGFloat = 16
-            return CGSize(width: view.frame.width - (2 * spacing), height: 90)
+            return CGSize(width: view.frame.width, height: 160)
         }
         
         // Sets up spacing between posts
@@ -156,25 +163,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             
             print("Deleted \(entry) at \(indexPath)")
         }
-    
-}
-
-
-// MARK: Add and Sort Methods
-extension ViewController {
-    
-    // MARK: Present NewEntryController Method
-    @objc func presentEntryController(sender: Any?) {
-        newEntryController.managedObjectContext = self.managedObjectContext
-        navigationController?.pushViewController(newEntryController, animated: true)
-    }
-    
-    // MARK: TODO: Sort Method
-    @objc func sortEntries(sender: UIBarButtonItem) {
-        Alerts.presentErrorAlert(description: EntryErrors.sortNotYetImplented.localizedDescription, viewController: self)
-        // This method should sort the entries. Ideally switching between 2 "sortBy"-states: Title & Date
-        print("Sorted!")
-    }
     
 }
 

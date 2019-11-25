@@ -10,18 +10,15 @@ import UIKit
 
 // This extension saves us from having to retype the 255's and the alpha values for each Color used
 // Another way to do this is use the Color catalog, although that is subject to typo's
-extension UIColor {
-    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
-        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
-    }
-    
-}
+//extension UIColor {
+//    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
+//        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+//    }
+//    
+//}
 
-// MARK: Constraints Method
-// This extension allows for easy construction of constraints in order to compress code and increase readability
 extension UIView {
-
-    // This method allows us to easily set constraints
+    // Set constraints
     public func addConstraintsWithFormat(_ format: String, views: UIView...) {
         var viewsDictionary = [String: UIView]()
 
@@ -35,9 +32,9 @@ extension UIView {
     }
 }
 
-// This allows padding around image within a UIView)
-extension UIImage {
 
+extension UIImage {
+    // Image padding
     func addPadding(x: CGFloat, y: CGFloat) -> UIImage? {
         let width: CGFloat = size.width + x
         let height: CGFloat = size.height + y

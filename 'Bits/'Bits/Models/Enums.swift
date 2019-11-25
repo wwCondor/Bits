@@ -21,21 +21,5 @@ import Foundation
 //}
 
 
-// Adding a little bit of typesafety to the colors
-enum Color: String {
-    case suitUpSilver = "SuitUpSilver"
-    case washedWhite = "WashedWhite"
-    case bowtieBlack = "BowtieBlack"
-    case gentlemanGray = "GentlemanGray"
-    case cufflinkCream = "CufflinkCream"
-    case roseRed = "RoseRed"
-}
 
-enum Icon: String {
-    case addIcon = "AddIcon"
-    case saveIcon = "SaveIcon"
-    case cancelIcon = "CancelIcon"
-    case deleteIcon = "DeleteIcon"
-    case sortIcon = "SortIcon"
-    case floppyIcon = "FloppyIcon"
-}
+

@@ -73,29 +73,3 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
 //    }
     
 }
-
-
-/*
-// Internet examples: Might need work
- 
-func remove(index: Int) {
-    myObjectList.remove(at: index)
-
-    let indexPath = IndexPath(row: index, section: 0)
-    collectionView.performBatchUpdates({
-        self.collectionView.deleteItems(at: [indexPath])
-    }, completion: {
-        (finished: Bool) in
-        self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
-    })
-}
- 
- collecitonView.performBatchUpdates({
-     collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: 2, inSection: 0)])
-     collectionView.deleteItemsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0)])
-     collectionView.moveItemAtIndexPath(NSIndexPath(forItem: 2, inSection: 0),
-                                        toIndexPath: NSIndexPath(forItem: 1, inSection:0))
- }, nil)
-
-
-*/

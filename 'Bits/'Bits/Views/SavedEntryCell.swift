@@ -11,55 +11,50 @@ import UIKit
 // This is the saved entry displayed inside the collectionView on the main screen
 class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     
+    var pan: UIPanGestureRecognizer! // Looks for swipe gestures
+    
     let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.image = UIImage(named: "BitsThumbnail") // Sets default image
-        imageView.backgroundColor = UIColor.systemBlue
+        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
+        imageView.backgroundColor = ColorConstants.labelColor
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.layer.cornerRadius = 8
-//        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 5
+        imageView.layer.masksToBounds = true
         return imageView
     }()
     
-    let titleLabel: UITextView = {
-        let titleLabel = UITextView()
-        titleLabel.isEditable = false
-        titleLabel.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
+    let titleLabel: TitleLabel = {
+        let titleLabel = TitleLabel()
         titleLabel.text = "This is the title"
-        titleLabel.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
-        let inset: CGFloat = 3
-        titleLabel.textContainerInset = UIEdgeInsets(top: inset + 1, left: inset - 1, bottom: inset, right: inset)
-        titleLabel.textColor = UIColor(named: Color.washedWhite.rawValue)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel
     }()
     
-    let dateLabel: UITextView = {
-        let dateLabel = UITextView()
-        dateLabel.isEditable = false
-        dateLabel.backgroundColor = UIColor(named: Color.suitUpSilver.rawValue)
+    let dateLabel: ContentLabel = {
+        let dateLabel = ContentLabel()
         dateLabel.text = "01.01.2019"
-        dateLabel.font = UIFont.systemFont(ofSize: 12.0, weight: .medium)
-        let inset: CGFloat = 3
-        dateLabel.textContainerInset = UIEdgeInsets(top: inset + 1, left: inset - 1, bottom: inset, right: inset)
-        dateLabel.textColor = UIColor(named: Color.washedWhite.rawValue)
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
         return dateLabel
     }()
     
-    let deleteLabelLeft: UILabel = {
-        let deleteLabelLeft = UILabel()
-        deleteLabelLeft.text = "Delete"
-        deleteLabelLeft.font = UIFont.systemFont(ofSize: 16.0, weight: .heavy)
-        deleteLabelLeft.textColor = UIColor(named: Color.washedWhite.rawValue)
+    let locationLabel: ContentLabel = {
+        let locationLabel = ContentLabel()
+        locationLabel.text = "Location"
+        return locationLabel
+    }()
+    
+    let storyLabel: ContentLabel = {
+        let storyLabel = ContentLabel()
+        storyLabel.text = "This is the story"
+        return storyLabel
+    }()
+
+    // MARK: Refactor superclass
+    let deleteLabelLeft: DeleteLabel = {
+        let deleteLabelLeft = DeleteLabel()
         return deleteLabelLeft
     }()
     
-    let deleteLabelRight: UILabel = {
-        let deleteLabelRight = UILabel()
-        deleteLabelRight.text = "Delete"
-        deleteLabelRight.font = UIFont.systemFont(ofSize: 16.0, weight: .heavy)
-        deleteLabelRight.textColor = UIColor(named: Color.washedWhite.rawValue)
+    let deleteLabelRight: DeleteLabel = {
+        let deleteLabelRight = DeleteLabel()
         return deleteLabelRight
     }()
     
@@ -68,37 +63,58 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
        return touchScreen
     }()
     
-    var pan: UIPanGestureRecognizer! // This looks for dragging gestures
-
     override func setupViews() {
         super.setupViews()
         
-        self.contentView.backgroundColor = UIColor.systemYellow // MARK: Cell Background Color
-        self.backgroundColor = UIColor.red // MARK: Color behind cell
+        backgroundColor = ColorConstants.appBackgroundColor // Color behind cell
+        contentView.backgroundColor = ColorConstants.cellBackgroundColor
         
-        self.contentView.addSubview(thumbnailImageView)
-        self.contentView.addSubview(titleLabel)
-        self.contentView.addSubview(dateLabel)
-        self.contentView.addSubview(touchScreen)
+        contentView.addSubview(thumbnailImageView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(locationLabel)
+        contentView.addSubview(storyLabel)
+        contentView.addSubview(touchScreen)
         
-        self.insertSubview(deleteLabelLeft, belowSubview: self.contentView)
-        self.insertSubview(deleteLabelRight, belowSubview: self.contentView)
+        insertSubview(deleteLabelLeft, belowSubview: contentView)
+        insertSubview(deleteLabelRight, belowSubview: contentView)
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(onPan(_:)))
         pan.delegate = self
-        self.addGestureRecognizer(pan)
-        
-        // MARK: Thumbnail Constraints
-        let imageSize: CGFloat = 70
+        addGestureRecognizer(pan)
+
         let smallSpacing: CGFloat = 8
-        let largeSpacing: CGFloat = 10
+        let labelHeigth = Constants.thumbNailSize / 3
         
-        addConstraintsWithFormat("H:|-\(largeSpacing)-[v0(\(imageSize))]-\(smallSpacing)-[v1]-\(largeSpacing)-|", views: thumbnailImageView, titleLabel)
-        addConstraintsWithFormat("H:|-\(largeSpacing)-[v0(\(imageSize))]-\(smallSpacing)-[v1]-\(largeSpacing)-|", views: thumbnailImageView, dateLabel)
-        addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(\(imageSize))]-\(largeSpacing)-|", views: thumbnailImageView)
-        addConstraintsWithFormat("V:|-\(largeSpacing)-[v0(40)]-\(smallSpacing)-[v1(22)]-\(largeSpacing)-|", views: titleLabel, dateLabel)
+        NSLayoutConstraint.activate([
+            thumbnailImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.contentPadding),
+            thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentPadding),
+            thumbnailImageView.bottomAnchor.constraint(equalTo: contentView.topAnchor),
+            thumbnailImageView.widthAnchor.constraint(equalToConstant: Constants.thumbNailSize),
+            thumbnailImageView.heightAnchor.constraint(equalToConstant: Constants.thumbNailSize),
+            
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.contentPadding),
+            titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: smallSpacing),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
+            titleLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0), //
+            dateLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: smallSpacing),
+            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
+            dateLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 0),
+            locationLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: smallSpacing),
+            locationLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
+            locationLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            storyLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
+            storyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentPadding),
+            storyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
+            storyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.contentPadding)
+        ])
         
-        // Touchscreen ensures cell can only be selected as a whole without user accidentally triggering editing of textViews
+        // Touchscreen ensures cell can only be interacted with as a whole and prevent triggering textView editing
         addConstraintsWithFormat("H:|[v0]|", views: touchScreen)
         addConstraintsWithFormat("V:|[v0]|", views: touchScreen)
 
@@ -147,22 +163,3 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     }
     
 }
-
-
-// The superclass from which all other cells inherit
-class BaseCell: UICollectionViewCell {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    func setupViews() {
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-}
-

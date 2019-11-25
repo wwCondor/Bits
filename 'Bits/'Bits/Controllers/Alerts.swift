@@ -11,7 +11,7 @@ import UIKit
 
 struct Alerts {
     
-    static func presentErrorAlert(description: String, viewController: UIViewController) {
+    static func presentAlert(description: String, viewController: UIViewController) {
         
         let alert = UIAlertController(title: "Woops!", message: description, preferredStyle: .alert)
         
