@@ -11,6 +11,9 @@ import CoreData
 
 class NewEntryController: UIViewController {
     
+    let imageController = ImageController()
+    let datePickerManager = DatePickerManager()
+    let locationManager = LocationManager()
     var managedObjectContext: NSManagedObjectContext!
     
 //    deinit {
@@ -41,6 +44,9 @@ class NewEntryController: UIViewController {
         imageView.layer.cornerRadius = Constants.imageCornerRadius
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(presentImageController(tapGestureRecognizer:)))
+        imageView.addGestureRecognizer(tapGestureRecognizer)
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -52,14 +58,34 @@ class NewEntryController: UIViewController {
     
     lazy var dateLabel: EntryTextField = {
         let dateLabel = EntryTextField()
-        dateLabel.text = "01.01.2019"
+        dateLabel.text = "Tap to set date"
         return dateLabel
+    }()
+    
+    lazy var dateTapScreen: UIView = {
+        let dateTapScreen = UIView()
+        dateTapScreen.backgroundColor = UIColor.clear
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(presentDatePicker(tapGestureRecognizer:)))
+        dateTapScreen.addGestureRecognizer(tapGesture)
+        dateTapScreen.isUserInteractionEnabled = true
+        dateTapScreen.translatesAutoresizingMaskIntoConstraints = false
+        return dateTapScreen
     }()
     
     lazy var locationLabel: EntryTextField = {
         let locationLabel = EntryTextField()
-        locationLabel.text = "home"
+        locationLabel.text = "Tap to add location"
         return locationLabel
+    }()
+    
+    lazy var locationTapScreen: UIView = {
+        let locationTapScreen = UIView()
+        locationTapScreen.backgroundColor = UIColor.clear
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(presentLocationManager(tapGestureRecognizer:)))
+        locationTapScreen.addGestureRecognizer(tapGesture)
+        locationTapScreen.isUserInteractionEnabled = true
+        locationTapScreen.translatesAutoresizingMaskIntoConstraints = false
+        return locationTapScreen
     }()
     
     lazy var storyTextView: StoryTextView = {
@@ -88,7 +114,9 @@ class NewEntryController: UIViewController {
         view.addSubview(imageView)
         view.addSubview(titleTextField)
         view.addSubview(dateLabel)
+        view.addSubview(dateTapScreen)
         view.addSubview(locationLabel)
+        view.addSubview(locationTapScreen)
         view.addSubview(storyTextView)
         
         view.addSubview(saveButton)
@@ -111,11 +139,21 @@ class NewEntryController: UIViewController {
             dateLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
             dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
             dateLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            dateTapScreen.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: smallSpacing),
+            dateTapScreen.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            dateTapScreen.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            dateTapScreen.heightAnchor.constraint(equalToConstant: labelHeigth),
 
             locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: smallSpacing),
             locationLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
             locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
             locationLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            locationTapScreen.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: smallSpacing),
+            locationTapScreen.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            locationTapScreen.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            locationTapScreen.heightAnchor.constraint(equalToConstant: labelHeigth),
 
             storyTextView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
             storyTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
@@ -156,8 +194,22 @@ class NewEntryController: UIViewController {
     }
     
     @objc func cancel() {
-        // This should have some sort of check to prevent dismissing unsaved information
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
+        imageController.managedObjectContext = self.managedObjectContext
+        navigationController?.pushViewController(imageController, animated: true)
+    }
+    
+    @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
+        datePickerManager.presentDatePicker()
+        print("Present datePicker")
+    }
+    
+    @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
+        locationManager.presentLocationManager()
+        print("Present locationManager")
     }
     
 //    @objc func keyboardDone() {

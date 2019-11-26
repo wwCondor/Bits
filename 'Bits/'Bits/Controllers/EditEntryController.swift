@@ -12,6 +12,8 @@ import CoreData
 class EditEntryController: UIViewController {
     
     var entry: Entry?
+    let datePickerManager = DatePickerManager()
+    let locationManager = LocationManager()
     var managedObjectContext: NSManagedObjectContext!
     
     override func viewDidLoad() {
@@ -25,9 +27,9 @@ class EditEntryController: UIViewController {
         setupViews()
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//    }
 
     lazy var cancelButton: CustomButton = {
         let cancelButton = CustomButton(type: .custom)
@@ -61,25 +63,45 @@ class EditEntryController: UIViewController {
     
     lazy var titleTextField: TitleTextField = {
         let titleTextField = TitleTextField()
-        titleTextField.text = "Title"
+        titleTextField.text = entry?.title
         return titleTextField
     }()
     
     lazy var dateLabel: EntryTextField = {
         let dateLabel = EntryTextField()
-        dateLabel.text = "01.01.2019"
+        dateLabel.text = "01.01.2019"  // MARK: entry?.date
         return dateLabel
+    }()
+    
+    lazy var dateTapScreen: UIView = {
+        let dateTapScreen = UIView()
+        dateTapScreen.backgroundColor = UIColor.clear
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(presentDatePicker(tapGestureRecognizer:)))
+        dateTapScreen.addGestureRecognizer(tapGesture)
+        dateTapScreen.isUserInteractionEnabled = true
+        dateTapScreen.translatesAutoresizingMaskIntoConstraints = false
+        return dateTapScreen
     }()
     
     lazy var locationLabel: EntryTextField = {
         let locationLabel = EntryTextField()
-        locationLabel.text = "home"
+        locationLabel.text = "home" // MARK: entry?.location
         return locationLabel
+    }()
+    
+    lazy var locationTapScreen: UIView = {
+        let locationTapScreen = UIView()
+        locationTapScreen.backgroundColor = UIColor.clear
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(presentLocationManager(tapGestureRecognizer:)))
+        locationTapScreen.addGestureRecognizer(tapGesture)
+        locationTapScreen.isUserInteractionEnabled = true
+        locationTapScreen.translatesAutoresizingMaskIntoConstraints = false
+        return locationTapScreen
     }()
     
     lazy var storyTextView: StoryTextView = {
         let storyTextView = StoryTextView()
-        storyTextView.text = "Write your story here"
+        storyTextView.text = entry?.story
         return storyTextView
     }()
     
@@ -105,7 +127,9 @@ class EditEntryController: UIViewController {
         view.addSubview(imageView)
         view.addSubview(titleTextField)
         view.addSubview(dateLabel)
+        view.addSubview(dateTapScreen)
         view.addSubview(locationLabel)
+        view.addSubview(locationTapScreen)
         view.addSubview(storyTextView)
         
         view.addSubview(saveButton)
@@ -131,11 +155,21 @@ class EditEntryController: UIViewController {
             dateLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
             dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
             dateLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            dateTapScreen.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: smallSpacing),
+            dateTapScreen.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            dateTapScreen.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            dateTapScreen.heightAnchor.constraint(equalToConstant: labelHeigth),
 
             locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: smallSpacing),
             locationLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
             locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
             locationLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+            
+            locationTapScreen.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: smallSpacing),
+            locationTapScreen.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            locationTapScreen.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            locationTapScreen.heightAnchor.constraint(equalToConstant: labelHeigth),
 
             storyTextView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
             storyTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
@@ -146,6 +180,32 @@ class EditEntryController: UIViewController {
             saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
             saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+    
+    // MARK: BarButtonItem Methods
+    @objc func deleteEntry(sender: UIButton!) {
+        if let entry = entry {
+            managedObjectContext.delete(entry)
+            managedObjectContext.saveChanges()
+            navigationController?.popViewController(animated: true)
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @objc func cancel() {
+        // This should have some sort of check to prevent dismissing unsaved information
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
+        datePickerManager.presentDatePicker()
+        print("Present datePicker")
+    }
+    
+    @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
+        locationManager.presentLocationManager()
+        print("Present locationManager")
     }
     
     @objc func saveEntry(sender: UIButton!) {
@@ -169,22 +229,7 @@ class EditEntryController: UIViewController {
         }
     }
     
-    // MARK: BarButtonItem Methods
-    @objc func deleteEntry(sender: UIButton!) {
-        if let entry = entry {
-            managedObjectContext.delete(entry)
-            managedObjectContext.saveChanges()
-            navigationController?.popViewController(animated: true)
-            dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    
-    @objc func cancel() {
-        // This should have some sort of check to prevent dismissing unsaved information
-        navigationController?.popViewController(animated: true)
-        dismiss(animated: true, completion: nil)
-    }
+
     
 //    @objc func keyboardWillShow(sender: NSNotification) {
 //        titleTextField.keyboardAppearance = .dark

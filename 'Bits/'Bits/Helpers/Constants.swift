@@ -20,4 +20,6 @@ struct Constants {
     static let largeTextInset: CGFloat        = 6
     static let thumbnailCornerRadius: CGFloat = 5
     static let imageCornerRadius: CGFloat     = 10
+    
+    static let fadeViewAlpha: CGFloat = 0.4 
 }

@@ -17,6 +17,12 @@ class EntryTextView: UITextView {
         additionalSetup()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupViews()
+        additionalSetup()
+    }
+    
     func setupViews() {
         textColor = ColorConstants.tintColor
         translatesAutoresizingMaskIntoConstraints = false
@@ -28,12 +34,6 @@ class EntryTextView: UITextView {
         isEditable = false
         let inset: CGFloat = Constants.textInset
         textContainerInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupViews()
-        additionalSetup()
     }
 }
 
