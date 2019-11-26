@@ -22,24 +22,19 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = ColorConstants.appBackgroundColor // MARK: Set App background color
+        view.backgroundColor = ColorConstants.appBackgroundColor
         
         setupViews()
         setupSortButton()
     }
     
-    lazy var addButton: UIButton = {
-        let addButton = UIButton(type: .custom)
+    lazy var addButton: CustomButton = {
+        let addButton = CustomButton(type: .custom)
         let image = UIImage(named: Icon.addIcon.image)?.withRenderingMode(.alwaysTemplate)
         addButton.setImage(image, for: .normal)
-        addButton.contentMode = .center
-        addButton.backgroundColor = ColorConstants.buttonMenuColor
-        addButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 15
         addButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        addButton.imageView?.contentMode = .scaleAspectFit
         addButton.addTarget(self, action: #selector(presentEntryController), for: .touchUpInside)
-        addButton.translatesAutoresizingMaskIntoConstraints = false
         return addButton
     }()
     
@@ -54,14 +49,12 @@ class ViewController: UIViewController {
         return savedEntries
     }()
     
-    lazy var sortButton: UIButton = {
-        let sortButton = UIButton(type: .custom)
+    lazy var sortButton: CustomButton = {
+        let sortButton = CustomButton(type: .custom)
         let sortImage = UIImage(named: Icon.sortIcon.image)!.withRenderingMode(.alwaysTemplate)
         sortButton.setImage(sortImage, for: .normal)
         let inset: CGFloat = 5
         sortButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset)
-        sortButton.frame = CGRect(x: 0, y: 0, width: sortImage.size.width, height: sortImage.size.height) // Actually not needed?
-        sortButton.imageView?.contentMode = .scaleAspectFit
         sortButton.addTarget(self, action: #selector(sortEntries), for: .touchUpInside)
         return sortButton
     }()
@@ -76,14 +69,13 @@ class ViewController: UIViewController {
         view.addSubview(addButton)
                 
         NSLayoutConstraint.activate([
-        savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+        savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         savedEntries.widthAnchor.constraint(equalToConstant: view.bounds.width),
         savedEntries.bottomAnchor.constraint(equalTo: addButton.topAnchor),
         
         addButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
         addButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
-        addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
-        addButton.centerXAnchor.constraint(equalToSystemSpacingAfter: view.centerXAnchor, multiplier: 1)
+        addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     

@@ -11,17 +11,15 @@ import CoreData
 
 class EditEntryController: UIViewController {
     
-    let cellColor = UIColor(named: Color.suitUpSilver.name) // background color of each object
-
     var entry: Entry?
     var managedObjectContext: NSManagedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.systemYellow
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
+        view.backgroundColor = ColorConstants.appBackgroundColor
+
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
         
         setupNavigationBarItems()
         setupViews()
@@ -31,36 +29,26 @@ class EditEntryController: UIViewController {
         view.endEditing(true)
     }
 
-    lazy var cancelButton: UIButton = {
-        let cancelButton = UIButton(type: .custom)
+    lazy var cancelButton: CustomButton = {
+        let cancelButton = CustomButton(type: .custom)
         let image = UIImage(named: Icon.cancelIcon.image)?.withRenderingMode(.alwaysTemplate)
         cancelButton.setImage(image, for: .normal)
-        cancelButton.contentMode = .center
-        cancelButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
-        cancelButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 2
         cancelButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30)
-        cancelButton.imageView?.contentMode = .scaleAspectFit
         cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         return cancelButton
     }()
     
-    lazy var deleteButton: UIButton = {
-        let deleteButton = UIButton(type: .custom)
+    lazy var deleteButton: CustomButton = {
+        let deleteButton = CustomButton(type: .custom)
         let image = UIImage(named: Icon.deleteIcon.image)?.withRenderingMode(.alwaysTemplate)
         deleteButton.setImage(image, for: .normal)
-        deleteButton.contentMode = .center
-        deleteButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
-        deleteButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 4
         deleteButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset + 35)
-        deleteButton.imageView?.contentMode = .scaleAspectFit
         deleteButton.addTarget(self, action: #selector(deleteEntry), for: .touchUpInside)
         return deleteButton
     }()
     
-
-    /// Added top marker
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
@@ -94,76 +82,16 @@ class EditEntryController: UIViewController {
         storyTextView.text = "Write your story here"
         return storyTextView
     }()
-    /// Added bottom marker
-    // MARK: Remove Below
     
-    lazy var saveButton: UIButton = {
-        let saveButton = UIButton(type: .custom)
+    lazy var saveButton: CustomButton = {
+        let saveButton = CustomButton(type: .custom)
         let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
         saveButton.setImage(image, for: .normal)
-        saveButton.contentMode = .center
-        saveButton.backgroundColor = UIColor(named: Color.gentlemanGray.name)
-        saveButton.tintColor = ColorConstants.tintColor
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        saveButton.imageView?.contentMode = .scaleAspectFit
         saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
         return saveButton
     }()
-    
-    lazy var entryImage: UIImageView = {
-        let entryImage = UIImageView()
-        entryImage.backgroundColor = cellColor
-//        entryImage.image = UIImage(named: "BitsThumbnail") // Sets default image
-        entryImage.translatesAutoresizingMaskIntoConstraints = false
-//        entryImage.layer.cornerRadius = 8
-        entryImage.layer.masksToBounds = true
-        return entryImage
-    }()
-    
-    lazy var entryTitle: UITextField = {
-        let entryTitle = UITextField()
-        entryTitle.backgroundColor = cellColor
-        entryTitle.textColor = ColorConstants.tintColor
-        entryTitle.font = UIFont.systemFont(ofSize: 16.0, weight: .medium)
-        entryTitle.text = entry?.title
-        entryTitle.textAlignment = .center
-//        entryTitle.layer.cornerRadius = 8
-        entryTitle.layer.masksToBounds = true
-        entryTitle.translatesAutoresizingMaskIntoConstraints = false
-        return entryTitle
-    }()
-    
-    lazy var entryDate: UILabel = {
-        let entryDate = UILabel()
-        entryDate.backgroundColor = cellColor
-        entryDate.textColor = ColorConstants.tintColor
-        entryDate.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
-        entryDate.text = "01.01.2019"
-        entryDate.textAlignment = .center
-//        entryDate.layer.cornerRadius = 8
-//        entryDate.layer.masksToBounds = true
-        entryDate.translatesAutoresizingMaskIntoConstraints = false
-        return entryDate
-    }()
-    
-    lazy var entryContent: UITextView = {
-        let entryContent = UITextView()
-        entryContent.backgroundColor = cellColor
-        //        postContent.backgroundColor = UIColor(named: "SuitUpSilver")
-        entryContent.text = entry?.story
-        entryContent.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
-        entryContent.textAlignment = .left
-        entryContent.textContainer.maximumNumberOfLines = 10
-        let textInset: CGFloat = 10
-        entryContent.textContainerInset = UIEdgeInsets(top: textInset, left: textInset, bottom: textInset, right: textInset)
-        entryContent.textColor = ColorConstants.tintColor
-        entryContent.translatesAutoresizingMaskIntoConstraints = false
-//        entryContent.layer.cornerRadius = 8
-//        entryContent.layer.masksToBounds = true
-        return entryContent
-    }()
-     // MARK: Remove above
     
     private func setupNavigationBarItems() {
         self.navigationItem.setHidesBackButton(true, animated: true)
@@ -171,62 +99,58 @@ class EditEntryController: UIViewController {
         let deleteBarButtonItem = UIBarButtonItem(customView: deleteButton)
         self.navigationItem.leftBarButtonItem = cancelBarButtonItem
         self.navigationItem.rightBarButtonItem = deleteBarButtonItem
-        
     }
     
     private func setupViews() {
-        view.addSubview(entryTitle)
-        view.addSubview(entryDate)
-        view.addSubview(entryContent)
-        view.addSubview(entryImage)
+        view.addSubview(imageView)
+        view.addSubview(titleTextField)
+        view.addSubview(dateLabel)
+        view.addSubview(locationLabel)
+        view.addSubview(storyTextView)
         
         view.addSubview(saveButton)
         
-        let spacing: CGFloat = 16 // MARK: Make global constant
+        let smallSpacing: CGFloat = 8
+        let labelHeigth = (Constants.imageSize - 2 * smallSpacing) / 3
         
-        // MARK: Refactor NSLayoutContstraint
-        entryTitle.translatesAutoresizingMaskIntoConstraints = false
-        entryTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacing).isActive = true
-        entryTitle.heightAnchor.constraint(equalToConstant: 2 * spacing).isActive = true
-        entryTitle.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        entryDate.translatesAutoresizingMaskIntoConstraints = false
-        entryDate.topAnchor.constraint(equalTo: entryTitle.bottomAnchor, constant: spacing).isActive = true
-        entryDate.heightAnchor.constraint(equalToConstant: 2 * spacing).isActive = true
-        entryDate.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryDate.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        entryContent.translatesAutoresizingMaskIntoConstraints = false
-        entryContent.topAnchor.constraint(equalTo: entryDate.bottomAnchor, constant: spacing).isActive = true
-        entryContent.heightAnchor.constraint(equalToConstant: 8 * spacing).isActive = true
-        entryContent.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryContent.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        entryImage.translatesAutoresizingMaskIntoConstraints = false
-        entryImage.topAnchor.constraint(equalTo: entryContent.bottomAnchor, constant: spacing).isActive = true
-        entryImage.heightAnchor.constraint(equalToConstant: 8 * spacing).isActive = true
-        entryImage.widthAnchor.constraint(equalToConstant: view.bounds.width - (2 * spacing)).isActive = true
-        entryImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        saveButton.translatesAutoresizingMaskIntoConstraints = false
-        saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width).isActive = true
-        saveButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        
-        deleteButton.translatesAutoresizingMaskIntoConstraints = false
-        deleteButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)).isActive = true
-        
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)).isActive = true
+        NSLayoutConstraint.activate([
+            cancelButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)),
+            deleteButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)),
+            
+            imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.contentPadding),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
+            imageView.widthAnchor.constraint(equalToConstant: Constants.imageSize),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.imageSize),
+            
+            titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.contentPadding),
+            titleTextField.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            titleTextField.heightAnchor.constraint(equalToConstant: labelHeigth),
 
+            dateLabel.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: smallSpacing),
+            dateLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            dateLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+
+            locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: smallSpacing),
+            locationLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: smallSpacing),
+            locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            locationLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
+
+            storyTextView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
+            storyTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
+            storyTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
+            storyTextView.bottomAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            saveButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
+            saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
+            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
-    
     
     @objc func saveEntry(sender: UIButton!) {
         // In here we check if we have an entry, then save the changes
-        if let entry = entry, let newTitle = entryTitle.text, let newStory = entryContent.text {
+        if let entry = entry, let newTitle = titleTextField.text, let newStory = storyTextView.text {
             entry.title = newTitle
             entry.story = newStory
             managedObjectContext.saveChanges()
@@ -262,12 +186,12 @@ class EditEntryController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func keyboardWillShow(sender: NSNotification) {
-        entryTitle.keyboardAppearance = .dark
-        entryContent.keyboardAppearance = .dark
-        
-        entryTitle.becomeFirstResponder()
-        entryContent.becomeFirstResponder()
-    }
+//    @objc func keyboardWillShow(sender: NSNotification) {
+//        titleTextField.keyboardAppearance = .dark
+//        entryContent.keyboardAppearance = .dark
+//
+//        entryTitle.becomeFirstResponder()
+//        entryContent.becomeFirstResponder()
+//    }
     
 }

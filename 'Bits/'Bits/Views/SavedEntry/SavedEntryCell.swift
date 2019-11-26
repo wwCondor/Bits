@@ -89,7 +89,6 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
         NSLayoutConstraint.activate([
             thumbnailImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.contentPadding),
             thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentPadding),
-            thumbnailImageView.bottomAnchor.constraint(equalTo: contentView.topAnchor),
             thumbnailImageView.widthAnchor.constraint(equalToConstant: Constants.thumbNailSize),
             thumbnailImageView.heightAnchor.constraint(equalToConstant: Constants.thumbNailSize),
             
@@ -98,12 +97,12 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
             titleLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
             
-            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0), //
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: smallSpacing),
             dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
             dateLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
             
-            locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 0),
+            locationLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor),
             locationLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: smallSpacing),
             locationLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
             locationLabel.heightAnchor.constraint(equalToConstant: labelHeigth),
@@ -114,7 +113,7 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
             storyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.contentPadding)
         ])
         
-        // Touchscreen ensures cell can only be interacted with as a whole and prevent triggering textView editing
+        // ensures cell can only be interacted with as a whole preventing triggering textView editing
         addConstraintsWithFormat("H:|[v0]|", views: touchScreen)
         addConstraintsWithFormat("V:|[v0]|", views: touchScreen)
     }

@@ -22,7 +22,7 @@ class NewEntryController: UIViewController {
 
         view.backgroundColor = ColorConstants.appBackgroundColor
         
-        setupBackButton()
+        setupNavigationBarItems()
         setupViews()
         
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name:UIResponder.keyboardWillShowNotification, object: nil);
@@ -33,22 +33,7 @@ class NewEntryController: UIViewController {
 //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        view.endEditing(true)
 //    }
-    
-    lazy var saveButton: UIButton = {
-        let saveButton = UIButton(type: .custom)
-        let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
-        saveButton.setImage(image, for: .normal)
-        saveButton.contentMode = .center
-        saveButton.backgroundColor = ColorConstants.buttonMenuColor
-        saveButton.tintColor = ColorConstants.tintColor
-        let inset: CGFloat = 10
-        saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        saveButton.imageView?.contentMode = .scaleAspectFit
-        saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
-        saveButton.translatesAutoresizingMaskIntoConstraints = false
-        return saveButton
-    }()
-    
+
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
@@ -59,7 +44,6 @@ class NewEntryController: UIViewController {
         return imageView
     }()
     
-    // These might becomeUITextLabel instead
     lazy var titleTextField: TitleTextField = {
         let titleTextField = TitleTextField()
         titleTextField.text = "Title"
@@ -84,7 +68,17 @@ class NewEntryController: UIViewController {
         return storyTextView
     }()
     
-    private func setupBackButton() {
+    lazy var saveButton: CustomButton = {
+        let saveButton = CustomButton(type: .custom)
+        let image = UIImage(named: Icon.saveIcon.image)?.withRenderingMode(.alwaysTemplate)
+        saveButton.setImage(image, for: .normal)
+        let inset: CGFloat = 10
+        saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
+        return saveButton
+    }()
+    
+    private func setupNavigationBarItems() {
         let navigatonBarImage = UIImage(named: Icon.cancelIcon.image)!.withRenderingMode(.alwaysTemplate)
         self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = navigatonBarImage
         self.navigationController?.navigationBar.backIndicatorImage = navigatonBarImage
@@ -102,7 +96,6 @@ class NewEntryController: UIViewController {
         let smallSpacing: CGFloat = 8
         let labelHeigth = (Constants.imageSize - 2 * smallSpacing) / 3
         
-        // MARK: Refactor NSLayoutContstraint
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.contentPadding),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
@@ -127,7 +120,7 @@ class NewEntryController: UIViewController {
             storyTextView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
             storyTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.contentPadding),
             storyTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.contentPadding),
-            storyTextView.bottomAnchor.constraint(equalTo: view.centerYAnchor), //, constant: -Constants.contentPadding)
+            storyTextView.bottomAnchor.constraint(equalTo: view.centerYAnchor), 
             
             saveButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
             saveButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
@@ -160,7 +153,6 @@ class NewEntryController: UIViewController {
         // Saving an entry should dismiss the entryController
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
-
     }
     
     @objc func cancel() {

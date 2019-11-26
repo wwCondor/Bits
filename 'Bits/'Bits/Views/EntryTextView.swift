@@ -38,6 +38,7 @@ class EntryTextView: UITextView {
 }
 
 class TitleTextView: EntryTextView {
+    // TextView for cell title
     override func additionalSetup() {
         backgroundColor = ColorConstants.labelColor
         font = UIFont.systemFont(ofSize: 14.0, weight: .bold)
@@ -48,6 +49,7 @@ class TitleTextView: EntryTextView {
 }
 
 class StoryTextView: EntryTextView {
+    // New/Edit Entry TextView for story input
     override func additionalSetup() {
         backgroundColor = ColorConstants.cellBackgroundColor
         font = UIFont.systemFont(ofSize: 13.0, weight: .light)
