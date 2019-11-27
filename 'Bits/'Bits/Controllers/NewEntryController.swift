@@ -167,21 +167,24 @@ class NewEntryController: UIViewController {
     }
     
     @objc func saveEntry(sender: UIButton!) {
-        // In here we check each property that we want to store and if it s empty
+        
         guard let title = titleTextField.text, !title.isEmpty else {
-            // If it is we inform the user with an alert
             Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
         }
-   
         guard let story = storyTextView.text, !story.isEmpty else {
             Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+            return
+        }
+        guard let date = dateLabel.text, !date.isEmpty else {
+            Alerts.presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
             return
         }
         
         let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext) as! Entry
         
         entry.title = title
+        entry.date = date
         entry.story = story
         
         managedObjectContext.saveChanges()
@@ -203,12 +206,15 @@ class NewEntryController: UIViewController {
     }
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
+        datePickerManager.modeSelected = .newEntryMode
         datePickerManager.presentDatePicker()
+        datePickerManager.newDateDelegate = self
         print("Present datePicker")
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
         locationManager.presentLocationManager()
+        locationManager.modeSelected = .newEntryMode
         print("Present locationManager")
     }
     
@@ -227,5 +233,13 @@ class NewEntryController: UIViewController {
 //    @objc func keyboardWillHide(_ notification: Notification) {
 //        KeyboardManager.keyboardWillHide(notification: notification, rootView: view)
 //    }
+    
+}
+
+extension NewEntryController: NewDateDelegate {
+    func didSelectDate(date: String) {
+        dateLabel.text = date
+    }
+    
     
 }

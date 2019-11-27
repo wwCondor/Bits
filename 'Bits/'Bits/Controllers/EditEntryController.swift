@@ -69,7 +69,7 @@ class EditEntryController: UIViewController {
     
     lazy var dateLabel: EntryTextField = {
         let dateLabel = EntryTextField()
-        dateLabel.text = "01.01.2019"  // MARK: entry?.date
+        dateLabel.text = entry?.date
         return dateLabel
     }()
     
@@ -199,19 +199,24 @@ class EditEntryController: UIViewController {
     }
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
+        datePickerManager.editDateDelegate = self
+        datePickerManager.modeSelected = .editEntryMode
+//        datePickerManager.dateEdited = entry?.date ?? "Tap to select date"
         datePickerManager.presentDatePicker()
         print("Present datePicker")
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
         locationManager.presentLocationManager()
+        locationManager.modeSelected = .editEntryMode
         print("Present locationManager")
     }
     
     @objc func saveEntry(sender: UIButton!) {
         // In here we check if we have an entry, then save the changes
-        if let entry = entry, let newTitle = titleTextField.text, let newStory = storyTextView.text {
+        if let entry = entry, let newTitle = titleTextField.text, let newDate = dateLabel.text, let newStory = storyTextView.text {
             entry.title = newTitle
+            entry.date = newDate
             entry.story = newStory
             managedObjectContext.saveChanges()
             print("Item Saved, with title: \(newTitle)")
@@ -223,6 +228,8 @@ class EditEntryController: UIViewController {
                 Alerts.presentAlert(description: EntryErrors.entryNil.localizedDescription , viewController: self)
             } else if entry?.title == "" {
                 Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
+            } else if entry?.date == "" {
+                Alerts.presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
             } else if entry?.story == "" {
                 Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             }
@@ -239,4 +246,10 @@ class EditEntryController: UIViewController {
 //        entryContent.becomeFirstResponder()
 //    }
     
+}
+
+extension EditEntryController: EditDateDelegate {
+    func didEditDate(date: String) {
+        dateLabel.text = date
+    }
 }

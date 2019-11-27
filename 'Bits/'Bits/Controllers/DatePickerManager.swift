@@ -8,19 +8,49 @@
 
 import UIKit
 
+protocol NewDateDelegate {
+    func didSelectDate(date: String)
+}
+
+protocol EditDateDelegate {
+    func didEditDate(date: String)
+}
+
 class DatePickerManager: NSObject {
     
-    let fadeView = UIView()
+    var newDateDelegate: NewDateDelegate!
+    var editDateDelegate: EditDateDelegate!
     
-    lazy var datePickerView: UIView = {
-        let datePickerView = UIView()
-        datePickerView.backgroundColor = ColorConstants.entryObjectBackground
-//        let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(dismissScoreboard(sender:)))
-//        swipeDownGesture.direction = .down
-//        datePicker.addGestureRecognizer(swipeDownGesture)
-//        datePicker.backgroundColor = UIColor(named: Colors.scoreBoardBG.name)
-        datePickerView.translatesAutoresizingMaskIntoConstraints = false
-        return datePickerView
+    let fadeView = UIView()
+    var modeSelected: ModeSelected = .newEntryMode
+    
+    func getCurrentDate() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        let dateString = formatter.string(from: date)
+        return dateString
+    }
+
+    lazy var dateSelected: String = getCurrentDate()
+    
+    lazy var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.backgroundColor = ColorConstants.entryObjectBackground
+        datePicker.calendar = .current
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(dateChanged(datePicker:)), for: .valueChanged)
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.year = 100
+        let maxDate = calendar.date(byAdding: components, to: Date())
+        components.year = -100
+        let minDate = calendar.date(byAdding: components, to: Date())
+        datePicker.minimumDate = minDate
+        datePicker.maximumDate = maxDate
+        datePicker.timeZone = NSTimeZone.local
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        return datePicker
     }()
     
     lazy var dismissButton: CustomButton = {
@@ -32,6 +62,13 @@ class DatePickerManager: NSObject {
         dismissButton.addTarget(self, action: #selector(dismissDatePicker(sender:)), for: .touchUpInside)
         return dismissButton
     }()
+
+    @objc func dateChanged(datePicker: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        print(dateFormatter.string(from: datePicker.date))
+        dateSelected = dateFormatter.string(from: datePicker.date)
+    }
         
     func presentDatePicker() {
         
@@ -40,7 +77,7 @@ class DatePickerManager: NSObject {
         if let window = window {
 
             window.addSubview(fadeView)
-            window.addSubview(datePickerView)
+            window.addSubview(datePicker)
             window.addSubview(dismissButton)
             
             fadeView.frame = window.frame
@@ -51,10 +88,10 @@ class DatePickerManager: NSObject {
             let viewWidth = window.frame.width
             let pickerViewHeight = window.frame.height / 2 - Constants.buttonBarHeight
             let yOffset: CGFloat = window.frame.height
-            datePickerView.frame = CGRect(x: 0, y: yOffset, width: viewWidth, height: pickerViewHeight)
+            datePicker.frame = CGRect(x: 0, y: yOffset, width: viewWidth, height: pickerViewHeight)
             
-            let dismissbuttonHeight = Constants.buttonBarHeight
-            dismissButton.frame = CGRect(x: 0, y: yOffset, width: viewWidth, height: dismissbuttonHeight)
+            let buttonHeight = Constants.buttonBarHeight
+            dismissButton.frame = CGRect(x: 0, y: yOffset, width: viewWidth, height: buttonHeight)
             
             UIView.animate(
                 withDuration: 0.5,
@@ -62,8 +99,8 @@ class DatePickerManager: NSObject {
                 options: .curveEaseOut,
                 animations: {
                     self.fadeView.alpha = Constants.fadeViewAlpha
-                    self.datePickerView.center.y -= self.datePickerView.bounds.height
-                    self.dismissButton.center.y -= self.datePickerView.bounds.height
+                    self.datePicker.center.y -= self.datePicker.bounds.height
+                    self.dismissButton.center.y -= self.datePicker.bounds.height
 
             },
                 completion: nil)
@@ -71,14 +108,19 @@ class DatePickerManager: NSObject {
     }
         
     @objc private func dismissDatePicker(sender: UISwipeGestureRecognizer) {
+        if modeSelected == .newEntryMode {
+            newDateDelegate.didSelectDate(date: dateSelected)
+        } else if modeSelected == .editEntryMode {
+            editDateDelegate.didEditDate(date: dateSelected)
+        }
         UIView.animate(
             withDuration: 0.3,
             delay: 0,
             options: .curveEaseIn,
             animations: {
                 self.fadeView.alpha = 0
-                self.datePickerView.center.y += self.datePickerView.bounds.height
-                self.dismissButton.center.y += self.datePickerView.bounds.height
+                self.datePicker.center.y += self.datePicker.bounds.height
+                self.dismissButton.center.y += self.datePicker.bounds.height
         },
             completion: nil)
         
@@ -87,29 +129,4 @@ class DatePickerManager: NSObject {
     override init() {
         super.init()
     }
-    
-}
-
-class DatePickerView: UIView {
-    
-    lazy var datePicker: UIDatePicker = {
-       let datePicker = UIDatePicker()
-       return datePicker
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupViews()
-    }
-    
-    func setupViews() {
-        
-    }
-    
-
 }

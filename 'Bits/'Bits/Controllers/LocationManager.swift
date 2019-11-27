@@ -11,6 +11,7 @@ import UIKit
 class LocationManager: NSObject {
     
     let fadeView = UIView()
+    var modeSelected: ModeSelected = .newEntryMode
     
     lazy var locationView: UIView = {
         let locationView = UIView()
@@ -71,6 +72,11 @@ class LocationManager: NSObject {
     }
         
     @objc private func dismissLocationManager(sender: UISwipeGestureRecognizer) {
+        if modeSelected == .newEntryMode {
+            
+        } else if modeSelected == .editEntryMode {
+            
+        }
         UIView.animate(
             withDuration: 0.3,
             delay: 0,

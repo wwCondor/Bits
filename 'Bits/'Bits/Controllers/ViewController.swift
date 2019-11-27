@@ -109,6 +109,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
         let entry = fetchedResultsController.object(at: indexPath)
         cell.titleLabel.text = entry.title
+        cell.dateLabel.text = entry.date
         cell.storyLabel.text = entry.story
         return cell
     }

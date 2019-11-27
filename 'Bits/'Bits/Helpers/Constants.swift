@@ -10,10 +10,11 @@ import UIKit
 
 struct Constants {
     static let cellHeight: CGFloat            = 200
-    static let buttonBarHeight: CGFloat       = 60
-    static let thumbNailSize: CGFloat         = 60
-    static let imageSize: CGFloat             = 120
-    static let contentPadding: CGFloat        = 16
+    static let buttonBarHeight: CGFloat       = 60 // height of buttons/buttonbars
+    static let thumbNailSize: CGFloat         = 60 // savedEntryImage thumbnail size
+    static let imageSize: CGFloat             = 120 // imageSize for new- and editEntry screens
+    
+    static let contentPadding: CGFloat        = 16 // used for side padding
     static let cellSpacing: CGFloat           = 12 // spacing between saved entry cells
     static let cellContentSpacing: CGFloat    = 8
     static let textInset: CGFloat             = 2 // Inset for cell content

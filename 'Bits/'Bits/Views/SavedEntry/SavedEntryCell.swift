@@ -110,7 +110,7 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
             storyLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: smallSpacing),
             storyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentPadding),
             storyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
-            storyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.contentPadding)
+            storyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.contentPadding),
         ])
         
         // ensures cell can only be interacted with as a whole preventing triggering textView editing

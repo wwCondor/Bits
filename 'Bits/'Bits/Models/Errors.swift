@@ -26,6 +26,7 @@ import Foundation
 enum EntryErrors: Error {
     case titleEmpty
     case storyEmpty
+    case dateEmpty
     case sortNotYetImplented
     case entryNil
 
@@ -36,6 +37,7 @@ extension EntryErrors: LocalizedError {
         switch self {
         case .titleEmpty: return "It seems you've forgot to enter a title"
         case .storyEmpty: return "It seems the story content of your current entry is emptry"
+        case .dateEmpty: return "It seems you haven't entered a date"
         case .sortNotYetImplented: return "Sort by date has not been implemented yet. Currently sorted by entry title"
         case .entryNil: return "It seems there is no entry"
 

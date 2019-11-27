@@ -30,6 +30,7 @@
 		0B7394EA238D2B320087C95F /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394E9238D2B320087C95F /* ImageCell.swift */; };
 		0B7394EC238D46280087C95F /* DatePickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394EB238D46270087C95F /* DatePickerManager.swift */; };
 		0B7394EE238D54630087C95F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394ED238D54630087C95F /* LocationManager.swift */; };
+		0B7394F0238D69340087C95F /* ModeSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394EF238D69340087C95F /* ModeSelected.swift */; };
 		0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF2B234FBBD2006792B2 /* Helpers.swift */; };
 		0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */; };
 		0B7BDF442351E435006792B2 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF432351E435006792B2 /* Enums.swift */; };
@@ -68,6 +69,7 @@
 		0B7394E9238D2B320087C95F /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		0B7394EB238D46270087C95F /* DatePickerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerManager.swift; sourceTree = "<group>"; };
 		0B7394ED238D54630087C95F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		0B7394EF238D69340087C95F /* ModeSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeSelected.swift; sourceTree = "<group>"; };
 		0B7BDF2B234FBBD2006792B2 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEntryCell.swift; sourceTree = "<group>"; };
 		0B7BDF432351E435006792B2 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				0B7BDF2B234FBBD2006792B2 /* Helpers.swift */,
+				0B7394EF238D69340087C95F /* ModeSelected.swift */,
 				0B7394CF238C0A220087C95F /* Color.swift */,
 				0B7394D1238C0A2F0087C95F /* Icon.swift */,
 				0B7394D3238C15910087C95F /* Constants.swift */,
@@ -321,6 +324,7 @@
 				0B7394EC238D46280087C95F /* DatePickerManager.swift in Sources */,
 				0B7BDF442351E435006792B2 /* Enums.swift in Sources */,
 				0B7394D4238C15910087C95F /* Constants.swift in Sources */,
+				0B7394F0238D69340087C95F /* ModeSelected.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
