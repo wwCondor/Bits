@@ -24,19 +24,19 @@ class DatePickerManager: NSObject {
     let fadeView = UIView()
     var modeSelected: ModeSelected = .newEntryMode
     
-    func getCurrentDate() -> String {
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        let dateString = formatter.string(from: date)
-        return dateString
-    }
-
     lazy var dateSelected: String = getCurrentDate()
+    
+    lazy var datePickerBackgroundView: UIView = {
+        let datePickerBackgroundView = UIView()
+        datePickerBackgroundView.backgroundColor = ColorConstants.entryObjectBackground
+        datePickerBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        return datePickerBackgroundView
+    }()
     
     lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
-        datePicker.backgroundColor = ColorConstants.entryObjectBackground
+        datePicker.backgroundColor = UIColor.systemTeal
+        datePicker.setValue(ColorConstants.tintColor, forKey: "textColor")
         datePicker.calendar = .current
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(dateChanged(datePicker:)), for: .valueChanged)
@@ -69,6 +69,14 @@ class DatePickerManager: NSObject {
         print(dateFormatter.string(from: datePicker.date))
         dateSelected = dateFormatter.string(from: datePicker.date)
     }
+    
+    private func getCurrentDate() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        let dateString = formatter.string(from: date)
+        return dateString
+    }
         
     func presentDatePicker() {
         
@@ -77,6 +85,7 @@ class DatePickerManager: NSObject {
         if let window = window {
 
             window.addSubview(fadeView)
+            window.addSubview(datePickerBackgroundView)
             window.addSubview(datePicker)
             window.addSubview(dismissButton)
             
@@ -84,14 +93,28 @@ class DatePickerManager: NSObject {
             fadeView.alpha = 0
             fadeView.backgroundColor = UIColor.black
             fadeView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissDatePicker(sender:))))
-
-            let viewWidth = window.frame.width
-            let pickerViewHeight = window.frame.height / 2 - Constants.buttonBarHeight
-            let yOffset: CGFloat = window.frame.height
-            datePicker.frame = CGRect(x: 0, y: yOffset, width: viewWidth, height: pickerViewHeight)
             
             let buttonHeight = Constants.buttonBarHeight
-            dismissButton.frame = CGRect(x: 0, y: yOffset, width: viewWidth, height: buttonHeight)
+            let padding = Constants.contentPadding
+            let yOffset = window.frame.height
+            let pickerHeight = window.frame.height / 4
+
+            NSLayoutConstraint.activate([
+                datePickerBackgroundView.leadingAnchor.constraint(equalTo: window.leadingAnchor),
+                datePickerBackgroundView.trailingAnchor.constraint(equalTo: window.trailingAnchor),
+                datePickerBackgroundView.topAnchor.constraint(equalTo: window.centerYAnchor, constant: buttonHeight),
+                datePickerBackgroundView.bottomAnchor.constraint(equalTo: window.bottomAnchor),
+
+                dismissButton.leadingAnchor.constraint(equalTo: window.leadingAnchor),
+                dismissButton.trailingAnchor.constraint(equalTo: window.trailingAnchor),
+                dismissButton.topAnchor.constraint(equalTo: datePickerBackgroundView.topAnchor),
+                dismissButton.heightAnchor.constraint(equalToConstant: buttonHeight),
+
+                datePicker.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: padding),
+                datePicker.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -padding),
+                datePicker.topAnchor.constraint(equalTo: dismissButton.bottomAnchor, constant: padding),
+                datePicker.heightAnchor.constraint(equalToConstant: pickerHeight)//,
+            ])
             
             UIView.animate(
                 withDuration: 0.5,
@@ -99,9 +122,9 @@ class DatePickerManager: NSObject {
                 options: .curveEaseOut,
                 animations: {
                     self.fadeView.alpha = Constants.fadeViewAlpha
-                    self.datePicker.center.y -= self.datePicker.bounds.height
-                    self.dismissButton.center.y -= self.datePicker.bounds.height
-
+                    self.datePickerBackgroundView.center.y -= yOffset
+                    self.datePicker.center.y -= yOffset
+                    self.dismissButton.center.y -= yOffset
             },
                 completion: nil)
         }
@@ -113,17 +136,29 @@ class DatePickerManager: NSObject {
         } else if modeSelected == .editEntryMode {
             editDateDelegate.didEditDate(date: dateSelected)
         }
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0,
-            options: .curveEaseIn,
-            animations: {
-                self.fadeView.alpha = 0
-                self.datePicker.center.y += self.datePicker.bounds.height
-                self.dismissButton.center.y += self.datePicker.bounds.height
-        },
-            completion: nil)
         
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
+
+        if let window = window {
+            let yOffset = window.frame.height
+            
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseIn,
+                animations: {
+                    self.fadeView.alpha = 0
+                    self.datePickerBackgroundView.center.y += yOffset
+                    self.datePicker.center.y += yOffset
+                    self.dismissButton.center.y += yOffset
+            },
+                completion: { _ in
+                    self.fadeView.removeFromSuperview()
+                    self.datePickerBackgroundView.removeFromSuperview()
+                    self.datePicker.removeFromSuperview()
+                    self.dismissButton.removeFromSuperview()
+            })
+        }
     }
     
     override init() {

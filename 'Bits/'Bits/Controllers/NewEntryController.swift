@@ -14,6 +14,11 @@ class NewEntryController: UIViewController {
     let imageController = ImageController()
     let datePickerManager = DatePickerManager()
     let locationManager = LocationManager()
+    
+//    lazy var locationManager: LocationManager = {
+//        return LocationManager(locationManagerDelegate: self)
+//    }()
+    
     var managedObjectContext: NSManagedObjectContext!
     
 //    deinit {
@@ -207,16 +212,28 @@ class NewEntryController: UIViewController {
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
         datePickerManager.modeSelected = .newEntryMode
-        datePickerManager.presentDatePicker()
         datePickerManager.newDateDelegate = self
+        datePickerManager.presentDatePicker()
         print("Present datePicker")
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
-        locationManager.presentLocationManager()
-        locationManager.modeSelected = .newEntryMode
-        print("Present locationManager")
+        
+        if locationManager.locationAuthorizationReceived == false {
+            if locationManager.locationAuthorizationRequested == false {
+                locationManager.requestLocationAuthorization()
+            } else if locationManager.locationAuthorizationRequested == true {
+                Alerts.presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
+            }
+        } else if locationManager.locationAuthorizationReceived == true {
+            locationManager.modeSelected = .newEntryMode
+            locationManager.newLocationDelegate = self
+            locationManager.presentLocationManager()
+            print("Present locationManager")
+        }
     }
+    
+
     
 //    @objc func keyboardDone() {
 //        self.resignFirstResponder()
@@ -236,10 +253,12 @@ class NewEntryController: UIViewController {
     
 }
 
-extension NewEntryController: NewDateDelegate {
+extension NewEntryController: NewDateDelegate, NewLocationDelegate {
     func didSelectDate(date: String) {
         dateLabel.text = date
     }
     
-    
+    func didSelectLocation(location: String) {
+        locationLabel.text = location
+    }
 }

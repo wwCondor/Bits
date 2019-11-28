@@ -85,7 +85,7 @@ class EditEntryController: UIViewController {
     
     lazy var locationLabel: EntryTextField = {
         let locationLabel = EntryTextField()
-        locationLabel.text = "home" // MARK: entry?.location
+        locationLabel.text = entry?.location
         return locationLabel
     }()
     
@@ -199,25 +199,35 @@ class EditEntryController: UIViewController {
     }
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
-        datePickerManager.editDateDelegate = self
         datePickerManager.modeSelected = .editEntryMode
-//        datePickerManager.dateEdited = entry?.date ?? "Tap to select date"
+        datePickerManager.editDateDelegate = self
         datePickerManager.presentDatePicker()
         print("Present datePicker")
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
-        locationManager.presentLocationManager()
-        locationManager.modeSelected = .editEntryMode
-        print("Present locationManager")
+        if locationManager.locationAuthorizationReceived == false {
+            if locationManager.locationAuthorizationRequested == false {
+                locationManager.requestLocationAuthorization()
+            } else if locationManager.locationAuthorizationRequested == true {
+                Alerts.presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
+            }
+        } else if locationManager.locationAuthorizationReceived == true {
+            locationManager.modeSelected = .editEntryMode
+            locationManager.editLocationDelegate = self
+            locationManager.presentLocationManager()
+            print("Present locationManager")
+        }
     }
     
     @objc func saveEntry(sender: UIButton!) {
         // In here we check if we have an entry, then save the changes
-        if let entry = entry, let newTitle = titleTextField.text, let newDate = dateLabel.text, let newStory = storyTextView.text {
+        if let entry = entry, let newTitle = titleTextField.text, let newDate = dateLabel.text, let newStory = storyTextView.text, let newLocation = locationLabel.text {
             entry.title = newTitle
             entry.date = newDate
             entry.story = newStory
+            entry.location = newLocation
+    
             managedObjectContext.saveChanges()
             print("Item Saved, with title: \(newTitle)")
             navigationController?.popViewController(animated: true)
@@ -230,6 +240,8 @@ class EditEntryController: UIViewController {
                 Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
             } else if entry?.date == "" {
                 Alerts.presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
+            } else if entry?.location == "" {
+                Alerts.presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
             } else if entry?.story == "" {
                 Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             }
@@ -248,8 +260,12 @@ class EditEntryController: UIViewController {
     
 }
 
-extension EditEntryController: EditDateDelegate {
+extension EditEntryController: EditDateDelegate, EditLocationDelegate {
     func didEditDate(date: String) {
         dateLabel.text = date
+    }
+    
+    func didEditLocation(location: String) {
+        locationLabel.text = location
     }
 }

@@ -8,10 +8,12 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
 class ViewController: UIViewController {
     
     let newEntryController = NewEntryController()
+    let locationManager = LocationManager()
     let managedObjectContext = AppDelegate().managedObjectContext
     let cellId = "cellId"
     
@@ -111,6 +113,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         cell.titleLabel.text = entry.title
         cell.dateLabel.text = entry.date
         cell.storyLabel.text = entry.story
+        cell.locationLabel.text = entry.location
         return cell
     }
     
@@ -144,5 +147,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         print("Deleted \(entry) at \(indexPath)")
     }
 }
+
 
 

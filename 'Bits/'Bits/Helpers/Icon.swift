@@ -15,7 +15,8 @@ enum Icon {
     case cancelIcon
     case deleteIcon
     case sortIcon
-//    case floppyIcon
+    case locationIcon // not used yet
+    case settingsIcon
     
     var image: String {
         switch self {
@@ -25,7 +26,8 @@ enum Icon {
         case .cancelIcon:  return "CancelIcon"
         case .deleteIcon:  return "DeleteIcon"
         case .sortIcon:    return "SortIcon"
-//        case .floppyIcon:  return "FloppyIcon"
+        case .locationIcon: return "LocationIcon"
+        case .settingsIcon: return "SettingsIcon"
         }
     }
 }
