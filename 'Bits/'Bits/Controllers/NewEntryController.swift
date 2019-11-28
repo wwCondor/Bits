@@ -33,8 +33,21 @@ class NewEntryController: UIViewController {
         setupNavigationBarItems()
         setupViews()
         
+        resetLabels()
+        
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name:UIResponder.keyboardWillShowNotification, object: nil);
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func resetLabels() {
+        titleTextField.text = "Enter Title"
+        dateLabel.text = "Tap to set date"
+        locationLabel.text = "Tap to add location"
+        storyTextView.text = "Write your story here"
+        datePickerManager.datePicker.setDate(Date(), animated: false) // resets date inside picker wheel
+        datePickerManager.dateSelected = String(describing: datePickerManager.getCurrentDate()) // resets date for label, after dismissing picker without interaction
+        locationManager.locationLabel.text = "Tap to add location"
+        
     }
     
 //     Dismiss keyboard on touch event outside textView
@@ -57,7 +70,7 @@ class NewEntryController: UIViewController {
     
     lazy var titleTextField: TitleTextField = {
         let titleTextField = TitleTextField()
-        titleTextField.text = "Title"
+        titleTextField.text = "Enter Title"
         return titleTextField
     }()
     
@@ -186,10 +199,16 @@ class NewEntryController: UIViewController {
             return
         }
         
+        guard let location = locationLabel.text, !location.isEmpty else {
+            Alerts.presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
+            return
+        }
+        
         let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext) as! Entry
         
         entry.title = title
         entry.date = date
+        entry.location = location
         entry.story = story
         
         managedObjectContext.saveChanges()

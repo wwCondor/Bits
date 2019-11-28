@@ -43,7 +43,7 @@ class LocationManager: NSObject {
     var newLocationDelegate: NewLocationDelegate!
     var editLocationDelegate: EditLocationDelegate!
     
-    lazy var locationString: String = ""
+    lazy var locationString: String = "Tap to add location"
 //    var locationPermissionDelegate: LocationPermissionDelegate!
 //    weak var locationManagerDelegate: LocationManagerDelegate?
     

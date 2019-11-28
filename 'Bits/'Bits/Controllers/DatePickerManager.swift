@@ -35,7 +35,7 @@ class DatePickerManager: NSObject {
     
     lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
-        datePicker.backgroundColor = UIColor.systemTeal
+        datePicker.backgroundColor = UIColor.clear
         datePicker.setValue(ColorConstants.tintColor, forKey: "textColor")
         datePicker.calendar = .current
         datePicker.datePickerMode = .date
@@ -70,7 +70,7 @@ class DatePickerManager: NSObject {
         dateSelected = dateFormatter.string(from: datePicker.date)
     }
     
-    private func getCurrentDate() -> String {
+    func getCurrentDate() -> String {
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"

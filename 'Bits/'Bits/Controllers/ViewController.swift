@@ -84,6 +84,7 @@ class ViewController: UIViewController {
     // MARK: Present NewEntryController Method
     @objc func presentEntryController(sender: Any?) {
         newEntryController.managedObjectContext = self.managedObjectContext
+        newEntryController.resetLabels()
         navigationController?.pushViewController(newEntryController, animated: true)
     }
     
