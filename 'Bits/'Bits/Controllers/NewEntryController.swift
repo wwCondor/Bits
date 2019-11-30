@@ -237,19 +237,26 @@ class NewEntryController: UIViewController {
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
+        let reachability = Reachability.checkReachable()
         
-        if locationManager.locationAuthorizationReceived == false {
-            if locationManager.locationAuthorizationRequested == false {
-                locationManager.requestLocationAuthorization()
-            } else if locationManager.locationAuthorizationRequested == true {
-                Alerts.presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
+        if reachability == true {
+            if locationManager.locationAuthorizationReceived == false {
+                if locationManager.locationAuthorizationRequested == false {
+                    locationManager.requestLocationAuthorization()
+                } else if locationManager.locationAuthorizationRequested == true {
+                    Alerts.presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
+                }
+            } else if locationManager.locationAuthorizationReceived == true {
+                locationManager.modeSelected = .newEntryMode
+                locationManager.newLocationDelegate = self
+                locationManager.presentLocationManager()
+                print("Present locationManager")
             }
-        } else if locationManager.locationAuthorizationReceived == true {
-            locationManager.modeSelected = .newEntryMode
-            locationManager.newLocationDelegate = self
-            locationManager.presentLocationManager()
-            print("Present locationManager")
+        } else if reachability == false {
+            Alerts.presentAlert(description: ConnectionError.noInternet.localizedDescription, viewController: self)
         }
+        
+
     }
     
 

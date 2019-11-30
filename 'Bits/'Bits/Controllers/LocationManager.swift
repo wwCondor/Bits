@@ -39,23 +39,23 @@ class LocationManager: NSObject {
     
     var locationAuthorizationRequested: Bool = false
     var locationAuthorizationReceived: Bool = false
-        
+    
     var newLocationDelegate: NewLocationDelegate!
     var editLocationDelegate: EditLocationDelegate!
     
     lazy var locationString: String = "Tap to add location"
-//    var locationPermissionDelegate: LocationPermissionDelegate!
-//    weak var locationManagerDelegate: LocationManagerDelegate?
+    //    var locationPermissionDelegate: LocationPermissionDelegate!
+    //    weak var locationManagerDelegate: LocationManagerDelegate?
     
-//    var locationName: String? {
-//        didSet {
-//            if let name = locationName {
-////                addLocationButton.setTitle(name, for: .normal)
-//            } else {
-////                addLocationButton.setTitle("Add location", for: .normal)
-//            }
-//        }
-//    }
+    //    var locationName: String? {
+    //        didSet {
+    //            if let name = locationName {
+    ////                addLocationButton.setTitle(name, for: .normal)
+    //            } else {
+    ////                addLocationButton.setTitle("Add location", for: .normal)
+    //            }
+    //        }
+    //    }
     
     let fadeView = UIView()
     var modeSelected: ModeSelected = .newEntryMode
@@ -109,57 +109,70 @@ class LocationManager: NSObject {
                 self.settingsShortcut.alpha = 0
         },
             completion: { _ in
-            if let settingsURL = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
-            UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-            }
+                if let settingsURL = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
+                    UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+                }
         })
     }
-        
+    
+    private func showSettingShortcut() {
+        UIView.animate(
+            withDuration: 1.0,
+            delay: 0,
+            options: .curveEaseOut,
+            animations: {
+                self.settingsShortcut.alpha = 1.0
+        },
+            completion: { _ in
+                self.settingsShortcut.isEnabled = true
+        })
+    }
+    
     func presentLocationManager() {
         locationLabel.text = "Requesting Location"
         requestLocation() // MARK: Move?
-
+        
         let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
-
+        
         if let window = window {
-
+            
             window.addSubview(fadeView)
             window.addSubview(locationView)
             window.addSubview(dismissButton)
             window.addSubview(locationLabel)
             window.addSubview(settingsShortcut)
-
+            
             fadeView.frame = window.frame
             fadeView.alpha = 0
             fadeView.backgroundColor = UIColor.black
             fadeView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissLocationManager(sender:))))
-
+            
             let buttonHeight = Constants.buttonBarHeight
             let padding = Constants.contentPadding
             let yOffset = window.frame.height
-
+            
             NSLayoutConstraint.activate([
                 locationView.leadingAnchor.constraint(equalTo: window.leadingAnchor),
                 locationView.trailingAnchor.constraint(equalTo: window.trailingAnchor),
                 locationView.topAnchor.constraint(equalTo: window.centerYAnchor, constant: buttonHeight),
                 locationView.bottomAnchor.constraint(equalTo: window.bottomAnchor),
-
+                
                 dismissButton.leadingAnchor.constraint(equalTo: window.leadingAnchor),
                 dismissButton.trailingAnchor.constraint(equalTo: window.trailingAnchor),
                 dismissButton.topAnchor.constraint(equalTo: locationView.topAnchor),
                 dismissButton.heightAnchor.constraint(equalToConstant: buttonHeight),
-
+                
                 locationLabel.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: padding),
                 locationLabel.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -padding),
                 locationLabel.topAnchor.constraint(equalTo: dismissButton.bottomAnchor, constant: padding),
                 locationLabel.heightAnchor.constraint(equalToConstant: 2 * buttonHeight),
-
+                
                 settingsShortcut.leadingAnchor.constraint(equalTo: window.leadingAnchor),
                 settingsShortcut.trailingAnchor.constraint(equalTo: window.trailingAnchor),
                 settingsShortcut.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: padding),
                 settingsShortcut.heightAnchor.constraint(equalToConstant: buttonHeight),
             ])
-
+            
             UIView.animate(
                 withDuration: 0.5,
                 delay: 0,
@@ -174,13 +187,13 @@ class LocationManager: NSObject {
                 completion: nil)
         }
     }
-        
+    
     @objc private func dismissLocationManager(sender: UISwipeGestureRecognizer) {
         let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
-
+        
         if let window = window {
             let yOffset = window.frame.height
-
+            
             UIView.animate(
                 withDuration: 0.3,
                 delay: 0,
@@ -200,20 +213,20 @@ class LocationManager: NSObject {
                     self.settingsShortcut.removeFromSuperview()
             })
         }
-
+        
         if modeSelected == .newEntryMode {
             newLocationDelegate.didSelectLocation(location: locationString)
         } else if modeSelected == .editEntryMode {
             editLocationDelegate.didEditLocation(location: locationString)
         }
-
+        
     }
 }
 
 extension LocationManager: CLLocationManagerDelegate {
     func requestLocationAuthorization() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-
+        
         switch authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
@@ -247,16 +260,7 @@ extension LocationManager: CLLocationManagerDelegate {
         case .restricted, .denied   :
             locationAuthorizationReceived = false
             locationLabel.text = "'Bits needs authorization to get a location. Press button if you would like to go to settings."
-            UIView.animate(
-                withDuration: 1.0,
-                delay: 0,
-                options: .curveEaseOut,
-                animations: {
-                    self.settingsShortcut.alpha = 1.0
-            },
-                completion: { _ in
-                    self.settingsShortcut.isEnabled = true
-            })
+            showSettingShortcut()
         @unknown default:
             fatalError("Fatal Error")
         }
@@ -268,79 +272,73 @@ extension LocationManager: CLLocationManagerDelegate {
         //            }
         //        }
         
-//        if status == .authorizedWhenInUse || status == .authorizedAlways {
-//            locationAuthorizationReceived = true
-//            print("Location Permission Autorized: \(locationAuthorizationReceived)")
-//        } else {
-//            locationAuthorizationReceived = false
-////            print(locationPermissionReceived)
-//        }
+        //        if status == .authorizedWhenInUse || status == .authorizedAlways {
+        //            locationAuthorizationReceived = true
+        //            print("Location Permission Autorized: \(locationAuthorizationReceived)")
+        //        } else {
+        //            locationAuthorizationReceived = false
+        ////            print(locationPermissionReceived)
+        //        }
     }
     
     // Called if we ask for a location fix, but cannot obtain one
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        // MARK: Show Alert
-        //        Alerts.presentAlert(description: T##String, viewController: T##UIViewController)
-
-//        guard let error = error as? CLError else {
-//            self.failedWithError(.unknownError))
-//            return
-//        }
-//
-//        switch error.code {
-//        case .locationUnknown, .network: locationManagerDelegate?.failedWithError(.unableToFindLocation)
-//        case .denied: locationManagerDelegate?.failedWithError(.notAllowedByUser)
-//        default: return
-//        }
+        
+        guard let error = error as? CLError else {
+            //            self.failedWithError(.unknownError))
+            // MARK: Inform user
+            return
+        }
+        
+        switch error.code {
+        case .locationUnknown:
+            locationLabel.text = "Unable to obtain a location value"
+        case .network:
+            locationLabel.text = "Check your internet connection. Close tab and try again."
+        case .denied:
+            locationLabel.text = "Access to the location service was denied. 'Bits needs authorization to get a location. Press button if you would like to go to settings."
+            showSettingShortcut()
+        default:
+            return
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        guard let location: CLLocationCoordinate2D = manager.location?.coordinate else {
-//            // MARK: Inform User
-//            return
-//        }
-
-//        print("\(location.latitude) \(location.longitude)")
-
         
-        guard let location = locations.last else {
+        guard let location = locations.first else {
             print("Could not find location")
             return
         }
         locationLabel.text = "Location coordinate: \(location)"
         getLocationName(location: location)
-
         
-//        let coordinate = Coordinate(location: location)
-//
-//        entryCoordinate = coordinate
     }
     
-    func getLocationName(location: CLLocation) {
+    private func getLocationName(location: CLLocation) {
         locationLabel.text = "Getting name for coordinate"
         let geographicCoder = CLGeocoder()
-
+        
         geographicCoder.reverseGeocodeLocation(location) { (placemark, error) in
             guard error == nil else {
-                self.locationLabel.text = "Could not convert coordinates into locationName"
+                self.locationLabel.text = "Could not convert coordinates into a location name"
                 return
             }
-
+            
             guard let placemark = placemark?.first else {
                 print("Could not obtain placemark")
                 return
             }
-
+            
             guard let street = placemark.thoroughfare else {
                 print("Could not obtain street")
                 return
             }
-
+            
             guard let city = placemark.locality else {
                 print("Could not obtain street")
                 return
             }
-
+            
             let locationName = "\(street), \(city)"
             self.locationLabel.text = locationName
             self.locationString = locationName

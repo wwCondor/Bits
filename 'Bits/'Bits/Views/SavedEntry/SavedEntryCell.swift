@@ -59,9 +59,15 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     }()
     
     lazy var touchScreen: UIView = {
-       let touchScreen = UIView()
-       return touchScreen
+        let touchScreen = UIView()
+        let swipeRightGesture = UIGestureRecognizer(target: self, action: #selector(deleteEntry(sender:)))
+        touchScreen.addGestureRecognizer(swipeRightGesture)
+        return touchScreen
     }()
+    
+    @objc func deleteEntry(sender: UISwipeGestureRecognizer) {
+        print("Removing Entry")
+    }
     
     override func setupViews() {
         super.setupViews()
@@ -111,6 +117,11 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
             storyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentPadding),
             storyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentPadding),
             storyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.contentPadding),
+            
+//            touchScreen.topAnchor.constraint(equalTo: contentView.topAnchor),
+//            touchScreen.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+//            touchScreen.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            touchScreen.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
         // ensures cell can only be interacted with as a whole preventing triggering textView editing
@@ -133,7 +144,7 @@ class SavedEntryCell: BaseCell, UIGestureRecognizerDelegate {
     
     @objc func onPan(_ pan: UIPanGestureRecognizer) {
         if pan.state == UIPanGestureRecognizer.State.began {
-            
+
         } else if pan.state == UIPanGestureRecognizer.State.changed {
             self.setNeedsLayout()
         } else {

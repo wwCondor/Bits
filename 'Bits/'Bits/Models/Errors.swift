@@ -22,6 +22,18 @@ import Foundation
 //    }
 //}
 
+enum ConnectionError: Error {
+    case noInternet
+}
+
+extension ConnectionError: LocalizedError {
+    public var localizedDescription: String {
+        switch self {
+        case .noInternet:               return "Seems there is no connection. Reconnect and try again"
+        }
+    }
+}
+
 enum EntryErrors: Error {
     case titleEmpty
     case storyEmpty
@@ -57,7 +69,7 @@ extension LocationError: LocalizedError {
         case .unknownError:             return "Unknown Error"
         case .notAllowedByUser:         return "Location services are not allowed by user. 'Bits can't be used without this."
         case .unableToFindLocation:     return "Unable to find location"
-        case .changeSettings:            return "Location permissions can be changed in phone settings. Would you like to go to settings?"
+        case .changeSettings:           return "Location permissions can be changed in phone settings. Would you like to go to settings?"
         }
     }
 }
