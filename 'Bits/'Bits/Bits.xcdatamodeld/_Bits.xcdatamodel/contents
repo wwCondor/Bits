@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15400" systemVersion="18G1012" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Entry" representedClassName=".Entry" syncable="YES">
         <attribute name="date" optional="YES" attributeType="String"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="location" optional="YES" attributeType="String"/>
         <attribute name="story" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String" minValueString="1" maxValueString="30" defaultValueString="Collected 'Bit"/>
@@ -16,7 +17,7 @@
         <relationship name="fullResolution" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FullResolution" inverseName="thumbnail" inverseEntity="FullResolution"/>
     </entity>
     <elements>
-        <element name="Entry" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="Entry" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="FullResolution" positionX="-36" positionY="27" width="128" height="73"/>
         <element name="Thumbnail" positionX="-54" positionY="18" width="128" height="88"/>
     </elements>

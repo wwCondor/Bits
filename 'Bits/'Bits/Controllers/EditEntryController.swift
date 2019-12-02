@@ -12,6 +12,7 @@ import CoreData
 class EditEntryController: UIViewController {
     
     var entry: Entry?
+    let imageController = ImageController()
     let datePickerManager = DatePickerManager()
     let locationManager = LocationManager()
     var managedObjectContext: NSManagedObjectContext!
@@ -58,6 +59,9 @@ class EditEntryController: UIViewController {
         imageView.layer.cornerRadius = Constants.imageCornerRadius
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(presentImageController(tapGestureRecognizer:)))
+        imageView.addGestureRecognizer(tapGestureRecognizer)
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -198,6 +202,13 @@ class EditEntryController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
+        imageController.modeSelected = .editEntryMode
+        imageController.managedObjectContext = self.managedObjectContext
+        navigationController?.pushViewController(imageController, animated: true)
+        print("Present imageController")
+    }
+    
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
         datePickerManager.modeSelected = .editEntryMode
         datePickerManager.editDateDelegate = self
@@ -260,7 +271,11 @@ class EditEntryController: UIViewController {
     
 }
 
-extension EditEntryController: EditDateDelegate, EditLocationDelegate {
+extension EditEntryController: EditDateDelegate, EditLocationDelegate, EditImageDelegate {
+    func didEditImage(image: UIImage) {
+        imageView.image = image
+    }
+    
     func didEditDate(date: String) {
         dateLabel.text = date
     }

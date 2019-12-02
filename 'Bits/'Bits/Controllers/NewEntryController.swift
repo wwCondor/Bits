@@ -225,8 +225,11 @@ class NewEntryController: UIViewController {
     }
     
     @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
+        imageController.modeSelected = .newEntryMode
+//        imageController.imageView.image = UIImage(named: Icon.bitsThumb.image)
         imageController.managedObjectContext = self.managedObjectContext
         navigationController?.pushViewController(imageController, animated: true)
+        print("Present imageController")
     }
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
@@ -279,7 +282,11 @@ class NewEntryController: UIViewController {
     
 }
 
-extension NewEntryController: NewDateDelegate, NewLocationDelegate {
+extension NewEntryController: NewDateDelegate, NewLocationDelegate, NewImageDelegate {
+    func didSelectImage(image: UIImage) {
+        imageView.image = image
+    }
+    
     func didSelectDate(date: String) {
         dateLabel.text = date
     }

@@ -18,7 +18,6 @@ extension Entry {
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        
         return request
     }
     
@@ -26,5 +25,6 @@ extension Entry {
     @NSManaged public var date: String
     @NSManaged public var story: String
     @NSManaged public var location: String
+    @NSManaged public var image: Data
 
 }

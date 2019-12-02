@@ -23,7 +23,7 @@ struct Alerts {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    static func presentFailedPermissionAlert(description: String, viewController: ViewController) {
+    static func presentFailedPermissionActionSheet(description: String, viewController: UIViewController) {
         let actionSheet = UIAlertController(title: nil, message: description, preferredStyle: .actionSheet)
         
         actionSheet.addAction(UIAlertAction(title: "Yes, take me to Settings", style: .default, handler: { (action) in

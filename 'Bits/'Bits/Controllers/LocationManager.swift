@@ -219,7 +219,6 @@ class LocationManager: NSObject {
         } else if modeSelected == .editEntryMode {
             editLocationDelegate.didEditLocation(location: locationString)
         }
-        
     }
 }
 
