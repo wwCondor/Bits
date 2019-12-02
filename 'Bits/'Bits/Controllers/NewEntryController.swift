@@ -226,8 +226,9 @@ class NewEntryController: UIViewController {
     
     @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
         imageController.modeSelected = .newEntryMode
-//        imageController.imageView.image = UIImage(named: Icon.bitsThumb.image)
+        imageController.newImageDelegate = self
         imageController.managedObjectContext = self.managedObjectContext
+        imageController.imageView.image = UIImage(named: Icon.bitsThumb.image)!
         navigationController?.pushViewController(imageController, animated: true)
         print("Present imageController")
     }

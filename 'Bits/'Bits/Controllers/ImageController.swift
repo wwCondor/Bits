@@ -34,7 +34,7 @@ class ImageController: UIViewController {
 //    var photoAccessAuthorizationRequested: Bool = false
     
     var imageArray = [UIImage]()
-    var selectedEntryImage = UIImage(named: Icon.bitsThumb.image)!
+//    var selectedEntryImage = UIImage(named: Icon.bitsThumb.image)!
     
     let libraryAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
     
@@ -47,16 +47,13 @@ class ImageController: UIViewController {
         view.backgroundColor = ColorConstants.appBackgroundColor
         
         setupNavigationBarItems()
-        setDefaultImage()
         setupViews()
         
         checkLibraryAccessAuthorization()
         
 //        imageCollection.dragDelegate = self
     }
-    func setDefaultImage() {
-        selectedEntryImage = UIImage(named: Icon.bitsThumb.image)!
-    }
+
     
     func checkLibraryAccessAuthorization() {
         if libraryAuthorizationStatus == .notDetermined {
@@ -215,11 +212,8 @@ class ImageController: UIViewController {
     }
     
     @objc func saveImage(sender: UIButton!) {
-//        guard selectedEntryImage != nil else {
-//            Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
-//            return
-//        }
         guard let image = imageView.image else {
+            Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             print("imageView is empty")
             return
         }
@@ -289,7 +283,7 @@ extension ImageController: UICollectionViewDataSource, UICollectionViewDelegate,
         
         let imageSelected = imageArray[indexPath.row]
         imageView.image = imageSelected
-        selectedEntryImage = imageSelected
+//        selectedEntryImage = imageSelected
     }
 }
 

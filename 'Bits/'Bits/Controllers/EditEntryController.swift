@@ -198,12 +198,15 @@ class EditEntryController: UIViewController {
     
     @objc func cancel() {
         // This should have some sort of check to prevent dismissing unsaved information
+        // Check for changes. If there a no changes: dismiss, otherwise: warning?
+    
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     
     @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
         imageController.modeSelected = .editEntryMode
+        imageController.editImageDelegate = self
         imageController.managedObjectContext = self.managedObjectContext
         navigationController?.pushViewController(imageController, animated: true)
         print("Present imageController")
