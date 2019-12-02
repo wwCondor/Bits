@@ -16,6 +16,7 @@ class EditEntryController: UIViewController {
     let datePickerManager = DatePickerManager()
     let locationManager = LocationManager()
     var managedObjectContext: NSManagedObjectContext!
+    let thumbImageData = UIImage(named: Icon.bitsThumb.image)?.pngData()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +55,7 @@ class EditEntryController: UIViewController {
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
+        imageView.image = UIImage(data: entry?.image ?? thumbImageData!)
         imageView.backgroundColor = ColorConstants.labelColor
         imageView.layer.cornerRadius = Constants.imageCornerRadius
         imageView.layer.masksToBounds = true
@@ -236,11 +237,12 @@ class EditEntryController: UIViewController {
     
     @objc func saveEntry(sender: UIButton!) {
         // In here we check if we have an entry, then save the changes
-        if let entry = entry, let newTitle = titleTextField.text, let newDate = dateLabel.text, let newStory = storyTextView.text, let newLocation = locationLabel.text {
+        if let entry = entry, let newTitle = titleTextField.text, let newDate = dateLabel.text, let newStory = storyTextView.text, let newLocation = locationLabel.text, let newImage = imageView.image?.pngData() {
             entry.title = newTitle
             entry.date = newDate
             entry.story = newStory
             entry.location = newLocation
+            entry.image = newImage
     
             managedObjectContext.saveChanges()
             print("Item Saved, with title: \(newTitle)")
@@ -258,6 +260,8 @@ class EditEntryController: UIViewController {
                 Alerts.presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
             } else if entry?.story == "" {
                 Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+            } else if entry?.image == nil {
+                Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             }
         }
     }

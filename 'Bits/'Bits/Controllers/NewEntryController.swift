@@ -47,7 +47,7 @@ class NewEntryController: UIViewController {
         datePickerManager.datePicker.setDate(Date(), animated: false) // resets date inside picker wheel
         datePickerManager.dateSelected = String(describing: datePickerManager.getCurrentDate()) // resets date for label, after dismissing picker without interaction
         locationManager.locationLabel.text = "Tap to add location"
-        
+        imageController.imageView.image = UIImage(named: Icon.bitsThumb.image)
     }
     
 //     Dismiss keyboard on touch event outside textView
@@ -118,7 +118,7 @@ class NewEntryController: UIViewController {
         saveButton.setImage(image, for: .normal)
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        saveButton.addTarget(self, action: #selector(saveEntry), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveEntry(sender:)), for: .touchUpInside)
         return saveButton
     }()
     
@@ -185,7 +185,6 @@ class NewEntryController: UIViewController {
     }
     
     @objc func saveEntry(sender: UIButton!) {
-        
         guard let title = titleTextField.text, !title.isEmpty else {
             Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
@@ -204,12 +203,18 @@ class NewEntryController: UIViewController {
             return
         }
         
+        guard let image = imageView.image, let imageData = image.pngData() else {
+            Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
+            return
+        }
+            
         let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: managedObjectContext) as! Entry
         
         entry.title = title
         entry.date = date
         entry.location = location
         entry.story = story
+        entry.image = imageData // MARK: Causes Error
         
         managedObjectContext.saveChanges()
         

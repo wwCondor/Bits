@@ -115,6 +115,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         cell.dateLabel.text = entry.date
         cell.storyLabel.text = entry.story
         cell.locationLabel.text = entry.location
+        cell.thumbnailImageView.image = UIImage(data: entry.image)
         return cell
     }
     

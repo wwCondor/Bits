@@ -26,5 +26,4 @@ extension Entry {
     @NSManaged public var story: String
     @NSManaged public var location: String
     @NSManaged public var image: Data
-
 }

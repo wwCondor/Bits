@@ -31,7 +31,7 @@ class ImageController: UIViewController {
     var newImageDelegate: NewImageDelegate!
     var editImageDelegate: EditImageDelegate!
     
-//    var photoAccessAuthorizationRequested: Bool = false
+    var photoAccessAuthorizationRequested: Bool = false
     
     var imageArray = [UIImage]()
 //    var selectedEntryImage = UIImage(named: Icon.bitsThumb.image)!
@@ -50,17 +50,20 @@ class ImageController: UIViewController {
         setupViews()
         
         checkLibraryAccessAuthorization()
-        
 //        imageCollection.dragDelegate = self
     }
-
     
     func checkLibraryAccessAuthorization() {
         if libraryAuthorizationStatus == .notDetermined {
             print("Authorization not determined")
             PHPhotoLibrary.requestAuthorization { (status) in
-                if status == .authorized {
-                    
+                DispatchQueue.main.async {
+                    if status == .authorized {
+                        self.getPhotos()
+                        self.imageCollection.reloadData()
+                    } else {
+                        Alerts.presentFailedPermissionActionSheet(description: EntryErrors.noPhotoAuthorization.localizedDescription, viewController: self)
+                    }
                 }
             }
         } else if libraryAuthorizationStatus == .denied || libraryAuthorizationStatus == .restricted {
@@ -72,20 +75,6 @@ class ImageController: UIViewController {
         } else {
             Alerts.presentAlert(description: EntryErrors.unknownAuthorizationError.localizedDescription, viewController: self)
         }
-        
-//        PHPhotoLibrary.requestAuthorization { (status) in
-//            switch status {
-//            case .authorized:
-//                print("Authorization granted")
-//                self.getPhotos()
-//            case .notDetermined:
-//                print("Here we ask for permission")
-//            case .denied, .restricted:
-//                print("Authorization denied or restricted")
-//            @unknown default:
-//                break
-//            }
-//        }
     }
         
     func getPhotos() {
@@ -126,7 +115,7 @@ class ImageController: UIViewController {
 
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
+//        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
         imageView.backgroundColor = ColorConstants.labelColor
         imageView.layer.cornerRadius = Constants.imageCornerRadius
         imageView.layer.masksToBounds = true
@@ -167,7 +156,7 @@ class ImageController: UIViewController {
         saveButton.setImage(image, for: .normal)
         let inset: CGFloat = 10
         saveButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        saveButton.addTarget(self, action: #selector(saveImage(sender:)), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(setImage(sender:)), for: .touchUpInside)
         return saveButton
     }()
     
@@ -211,7 +200,7 @@ class ImageController: UIViewController {
         ])
     }
     
-    @objc func saveImage(sender: UIButton!) {
+    @objc func setImage(sender: UIButton!) {
         guard let image = imageView.image else {
             Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             print("imageView is empty")
@@ -224,22 +213,19 @@ class ImageController: UIViewController {
             editImageDelegate.didEditImage(image: image)
         }
 
-        print("Saving Image")
+        print("Setting Image")
 //
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     
     @objc func cancel() {
-        // This should have some sort of check to prevent dismissing unsaved information
         dismiss(animated: true, completion: nil)
     }
 }
 
 //
 extension ImageController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    
     
     // Sets the amount of cells
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -283,14 +269,13 @@ extension ImageController: UICollectionViewDataSource, UICollectionViewDelegate,
         
         let imageSelected = imageArray[indexPath.row]
         imageView.image = imageSelected
-//        selectedEntryImage = imageSelected
     }
 }
 
 extension UIImage {
-    func convertedToString() -> String? {
+    func convertedToData() -> Data? {
         let data: Data? = self.pngData()
-        return data?.base64EncodedString(options: .endLineWithLineFeed)
+        return data
     }
 }
 

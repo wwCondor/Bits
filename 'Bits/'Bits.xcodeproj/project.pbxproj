@@ -158,9 +158,9 @@
 				0B49DEAC234DC08200613EED /* ViewController.swift */,
 				0B7BDF5723546E1C006792B2 /* NewEntryController.swift */,
 				0B95D29F235AF4C0002243DA /* EditEntryController.swift */,
-				0B7394E7238D24720087C95F /* ImageController.swift */,
 				0B7394EB238D46270087C95F /* DatePickerManager.swift */,
 				0B7394ED238D54630087C95F /* LocationManager.swift */,
+				0B7394E7238D24720087C95F /* ImageController.swift */,
 				0B95D29D2359BE89002243DA /* FetchedResultsController.swift */,
 				0B95D2992359AAAE002243DA /* Alerts.swift */,
 			);
