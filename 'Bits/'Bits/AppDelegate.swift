@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+//        (UITextField.appearanceWhenContainedInInstancesOfClasses([UISearchBar.self]) as AnyObject).backgroundColor = UIColor.redColor()
+        
         let navigationBarAppearance = UINavigationBar.appearance()
 
         navigationBarAppearance.barTintColor = ColorConstants.buttonMenuColor // Bar Background

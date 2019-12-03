@@ -10,14 +10,22 @@ import UIKit
 import CoreData
 import CoreLocation
 
-class ViewController: UIViewController, UISearchBarDelegate {
+class ViewController: UIViewController {
     
+    let searchController = UISearchController(searchResultsController: nil)
     let newEntryController = NewEntryController()
     let locationManager = LocationManager()
     let managedObjectContext = AppDelegate().managedObjectContext
     let cellId = "cellId"
     
     var searchBarIsPresented: Bool = false
+    var isSearching: Bool = false
+    var filteredEntries = [Entry]()
+    var entries = [Entry]()
+    
+    var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
     
     lazy var fetchedResultsController: FetchedResultsController = {
         return FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries)
@@ -26,13 +34,37 @@ class ViewController: UIViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.delegate = self
+
+
         
         view.backgroundColor = ColorConstants.appBackgroundColor
         
+        let fetchRequest = NSFetchRequest<Entry>(entityName: "Entry")
+        
+        do {
+            entries = try managedObjectContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print(error.userInfo)
+        }
+        
         setupViews()
+//        setupSearchBar()
         setupNavigationBarItems()
     }
+    
+//    func setupSearchBar() {
+//
+//        searchController.searchResultsUpdater = self
+//        searchController.obscuresBackgroundDuringPresentation = true
+//        searchController.searchBar.barTintColor = UIColor.blue
+//        searchController.searchBar.backgroundColor = ColorConstants.buttonMenuColor
+//        searchController.searchBar.placeholder = "Search Entries"
+//        searchController.searchBar.isHidden = false
+//        navigationItem.searchController = searchController
+//        definesPresentationContext = true
+//
+////        searchBar.delegate = self
+//    }
     
     lazy var searchBarBackground: UIView = {
         let searchBarBackground = UIView()
@@ -45,8 +77,18 @@ class ViewController: UIViewController, UISearchBarDelegate {
         let searchBar = UISearchBar()
         searchBar.backgroundColor = ColorConstants.buttonMenuColor
         searchBar.isTranslucent = true
-        searchBar.tintColor = ColorConstants.buttonMenuColor
+        searchBar.tintColor = ColorConstants.appBackgroundColor // sets color of vertical bar
+        let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField
+        textFieldInsideSearchBar?.textColor = ColorConstants.tintColor // sets text color
         searchBar.placeholder = "Search Entries"
+        searchBar.keyboardAppearance = .dark
+        searchBar.delegate = self
+//        searchBar.barTintColor = ColorConstants.tintColor // search bar input background color
+        searchBar.scopeBarBackgroundImage = .none
+        searchBar.returnKeyType = UIReturnKeyType.done
+        searchBar.layer.cornerRadius = Constants.thumbnailCornerRadius
+        searchBar.layer.masksToBounds = true
+        searchBar.backgroundImage = UIImage() // removes
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
@@ -134,6 +176,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: Present NewEntryController Method
     @objc func presentEntryController(sender: Any?) {
+        if searchBarIsPresented == true {
+            hideSearchBar()
+        }
         newEntryController.managedObjectContext = self.managedObjectContext
         newEntryController.resetLabels()
         navigationController?.pushViewController(newEntryController, animated: true)
@@ -148,15 +193,14 @@ class ViewController: UIViewController, UISearchBarDelegate {
     
     @objc func searchEntries(sender: UIBarButtonItem) {
         if searchBarIsPresented == false {
-            searchBarIsPresented = true
             presentSearchBar()
         } else if searchBarIsPresented == true {
-            searchBarIsPresented = false
             hideSearchBar()
         }
     }
     
     func presentSearchBar() {
+        searchBarIsPresented = true
         UIView.animate(
             withDuration: 0.3,
             delay: 0,
@@ -170,8 +214,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
                 print("Animation completed")
         })
     }
-    
+
     func hideSearchBar() {
+        searchBarIsPresented = false
         UIView.animate(
             withDuration: 0.3,
             delay: 0,
@@ -195,13 +240,29 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         guard let section = fetchedResultsController.sections?[section] else {
             return 0
         }
-        return section.numberOfObjects
+        
+//        return section.numberOfObjects
+        
+        if isSearching == true {
+            return filteredEntries.count
+        } else {
+            return section.numberOfObjects
+        }
     }
     
     // Sets up cell content
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let entry: Entry
+        
+        if isSearching == true {
+            entry = filteredEntries[indexPath.row]
+        } else {
+            entry = fetchedResultsController.object(at: indexPath)
+        }
+        
+        
         let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
-        let entry = fetchedResultsController.object(at: indexPath)
+//        let entry = fetchedResultsController.object(at: indexPath)
         cell.titleLabel.text = entry.title
         cell.dateLabel.text = entry.date
         cell.storyLabel.text = entry.story
@@ -223,6 +284,9 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     // Sets up what to do when a cell gets tapped
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if searchBarIsPresented == true {
+            hideSearchBar()
+        }
         let entry = fetchedResultsController.object(at: indexPath)
         let editEntryController = EditEntryController()
         editEntryController.managedObjectContext = self.managedObjectContext
@@ -239,6 +303,40 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         managedObjectContext.saveChanges()
         
         print("Deleted \(entry) at \(indexPath)")
+    }
+}
+
+    // MARK: SearchBarDelegate
+extension ViewController: UISearchBarDelegate {//}, UISearchResultsUpdating {
+//    func updateSearchResults(for searchController: UISearchController) {
+//        let searchBar = searchController.searchBar
+//        filterContentForSearchText(searchBar.text!)
+//    }
+//
+//    func filterContentForSearchText(_ searchText: String) {
+//        filteredEntries = entries.filter({ (entry: Entry) -> Bool in
+//            return entry.title.lowercased().contains(searchText.lowercased()) || entry.story.lowercased().contains(searchText.lowercased())
+//        })
+//        savedEntries.reloadData()
+//    }
+    
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            isSearching = false
+            view.endEditing(true)
+            savedEntries.reloadData()
+        } else {
+            isSearching = false
+//            searchEntries = entries.filter({$0.range(of: searchText, options: .caseInsensitive) != nil})
+            filteredEntries = entries.filter({ (entry: Entry) -> Bool in
+                return entry.title.lowercased().contains(searchText.lowercased()) || entry.story.lowercased().contains(searchText.lowercased())
+            })
+            savedEntries.reloadData()
+
+                //(of: searchBar.text!, options: .caseInsensitive) != nil})
+        }
     }
 }
 

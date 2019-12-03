@@ -14,3 +14,16 @@ import CoreData
 public class Entry: NSManagedObject {
 
 }
+
+//extension Entry: Comparable {
+//    
+//    public static func < (lhs: Entry, rhs: Entry) -> Bool {
+//        if lhs.title != rhs.title {
+//            return lhs.title < rhs.title
+//        } else if lhs.date != rhs.date {
+//            return lhs.date < rhs.date
+//        } else {
+//            return lhs.story < rhs.story
+//        }
+//    }
+//}
