@@ -15,19 +15,21 @@ enum Icon {
     case cancelIcon
     case deleteIcon
     case sortIcon
+    case searchIcon
     case locationIcon // not used yet
     case settingsIcon
     
     var image: String {
         switch self {
-        case .bitsThumb:   return "BitsThumb"
-        case .addIcon:     return "AddIcon"
-        case .saveIcon:    return "SaveIcon"
-        case .cancelIcon:  return "CancelIcon"
-        case .deleteIcon:  return "DeleteIcon"
-        case .sortIcon:    return "SortIcon"
+        case .bitsThumb:    return "BitsThumb"
+        case .addIcon:      return "AddIcon"
+        case .saveIcon:     return "SaveIcon"
+        case .cancelIcon:   return "CancelIcon"
+        case .deleteIcon:   return "DeleteIcon"
+        case .sortIcon:     return "SortIcon"
         case .locationIcon: return "LocationIcon"
         case .settingsIcon: return "SettingsIcon"
+        case .searchIcon:   return "SearchIcon"
         }
     }
 }

@@ -31,7 +31,6 @@
 		0B7394EE238D54630087C95F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394ED238D54630087C95F /* LocationManager.swift */; };
 		0B7394F0238D69340087C95F /* ModeSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394EF238D69340087C95F /* ModeSelected.swift */; };
 		0B7394F2238EC9E60087C95F /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394F1238EC9E60087C95F /* Coordinate.swift */; };
-		0B7394F4238F15C30087C95F /* LocationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394F3238F15C30087C95F /* LocationLabel.swift */; };
 		0B7394F7239000580087C95F /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7394F6239000580087C95F /* Reachability.swift */; };
 		0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF2B234FBBD2006792B2 /* Helpers.swift */; };
 		0B7BDF31234FBE40006792B2 /* SavedEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */; };
@@ -39,6 +38,7 @@
 		0B7BDF5823546E1C006792B2 /* NewEntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7BDF5723546E1C006792B2 /* NewEntryController.swift */; };
 		0B8483F42396502600D46747 /* Entry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F22396502600D46747 /* Entry+CoreDataClass.swift */; };
 		0B8483F52396502600D46747 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F32396502600D46747 /* Entry+CoreDataProperties.swift */; };
+		0B8483F723966AA900D46747 /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F623966AA900D46747 /* ToggleButton.swift */; };
 		0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D2992359AAAE002243DA /* Alerts.swift */; };
 		0B95D29C2359AB79002243DA /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29B2359AB79002243DA /* Errors.swift */; };
 		0B95D29E2359BE89002243DA /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29D2359BE89002243DA /* FetchedResultsController.swift */; };
@@ -72,7 +72,6 @@
 		0B7394ED238D54630087C95F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		0B7394EF238D69340087C95F /* ModeSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeSelected.swift; sourceTree = "<group>"; };
 		0B7394F1238EC9E60087C95F /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
-		0B7394F3238F15C30087C95F /* LocationLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationLabel.swift; sourceTree = "<group>"; };
 		0B7394F6239000580087C95F /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		0B7BDF2B234FBBD2006792B2 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		0B7BDF30234FBE40006792B2 /* SavedEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedEntryCell.swift; sourceTree = "<group>"; };
@@ -80,6 +79,7 @@
 		0B7BDF5723546E1C006792B2 /* NewEntryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryController.swift; sourceTree = "<group>"; };
 		0B8483F22396502600D46747 /* Entry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0B8483F32396502600D46747 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0B8483F623966AA900D46747 /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
 		0B95D2992359AAAE002243DA /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		0B95D29B2359AB79002243DA /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0B95D29D2359BE89002243DA /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
@@ -213,7 +213,7 @@
 				0B7394D7238C25300087C95F /* CustomTextView.swift */,
 				0B7394DD238C5F860087C95F /* CustomTextField.swift */,
 				0B7394E3238D169B0087C95F /* CustomButton.swift */,
-				0B7394F3238F15C30087C95F /* LocationLabel.swift */,
+				0B8483F623966AA900D46747 /* ToggleButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -316,7 +316,6 @@
 				0B7394D2238C0A2F0087C95F /* Icon.swift in Sources */,
 				0B7394D8238C25300087C95F /* CustomTextView.swift in Sources */,
 				0B7394DA238C29350087C95F /* DeleteLabel.swift in Sources */,
-				0B7394F4238F15C30087C95F /* LocationLabel.swift in Sources */,
 				0B7394EE238D54630087C95F /* LocationManager.swift in Sources */,
 				0B7BDF5823546E1C006792B2 /* NewEntryController.swift in Sources */,
 				0B49DEAD234DC08200613EED /* ViewController.swift in Sources */,
@@ -328,6 +327,7 @@
 				0B95D29C2359AB79002243DA /* Errors.swift in Sources */,
 				0B12F5BB23623F7B009EDDD7 /* Keyboard.swift in Sources */,
 				0B49DEAB234DC08200613EED /* SceneDelegate.swift in Sources */,
+				0B8483F723966AA900D46747 /* ToggleButton.swift in Sources */,
 				0B7394D0238C0A220087C95F /* Color.swift in Sources */,
 				0B49DEB3234DC08200613EED /* Bits.xcdatamodeld in Sources */,
 				0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */,

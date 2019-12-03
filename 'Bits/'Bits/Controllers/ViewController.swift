@@ -10,12 +10,14 @@ import UIKit
 import CoreData
 import CoreLocation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UISearchBarDelegate {
     
     let newEntryController = NewEntryController()
     let locationManager = LocationManager()
     let managedObjectContext = AppDelegate().managedObjectContext
     let cellId = "cellId"
+    
+    var searchBarIsPresented: Bool = false
     
     lazy var fetchedResultsController: FetchedResultsController = {
         return FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries)
@@ -24,11 +26,30 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        searchBar.delegate = self
+        
         view.backgroundColor = ColorConstants.appBackgroundColor
         
         setupViews()
-        setupSortButton()
+        setupNavigationBarItems()
     }
+    
+    lazy var searchBarBackground: UIView = {
+        let searchBarBackground = UIView()
+        searchBarBackground.backgroundColor = ColorConstants.buttonMenuColor
+        searchBarBackground.translatesAutoresizingMaskIntoConstraints = false
+        return searchBarBackground
+    }()
+    
+    lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.backgroundColor = ColorConstants.buttonMenuColor
+        searchBar.isTranslucent = true
+        searchBar.tintColor = ColorConstants.buttonMenuColor
+        searchBar.placeholder = "Search Entries"
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        return searchBar
+    }()
     
     lazy var addButton: CustomButton = {
         let addButton = CustomButton(type: .custom)
@@ -55,29 +76,59 @@ class ViewController: UIViewController {
         let sortButton = CustomButton(type: .custom)
         let sortImage = UIImage(named: Icon.sortIcon.image)!.withRenderingMode(.alwaysTemplate)
         sortButton.setImage(sortImage, for: .normal)
-        let inset: CGFloat = 5
-        sortButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset)
-        sortButton.addTarget(self, action: #selector(sortEntries), for: .touchUpInside)
+        let inset: CGFloat = 7
+        sortButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30)
+        sortButton.addTarget(self, action: #selector(sortEntries(sender:)), for: .touchUpInside)
         return sortButton
     }()
     
-    private func setupSortButton() {
-        let barButton = UIBarButtonItem(customView: sortButton)
-        self.navigationItem.rightBarButtonItem = barButton
+    lazy var searchButton: CustomButton = {
+        let searchButton = CustomButton(type: .custom)
+        let sortImage = UIImage(named: Icon.searchIcon.image)!.withRenderingMode(.alwaysTemplate)
+        searchButton.setImage(sortImage, for: .normal)
+        let inset: CGFloat = 5
+        searchButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset + 40)
+        searchButton.addTarget(self, action: #selector(searchEntries(sender:)), for: .touchUpInside)
+        return searchButton
+    }()
+    
+    private func setupNavigationBarItems() {
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        let sortBarButton = UIBarButtonItem(customView: sortButton)
+        let searchBarButton = UIBarButtonItem(customView: searchButton)
+        self.navigationItem.leftBarButtonItem = sortBarButton
+        self.navigationItem.rightBarButtonItem = searchBarButton
     }
     
     private func setupViews() {
         view.addSubview(savedEntries)
         view.addSubview(addButton)
+        
+        view.addSubview(searchBarBackground)
+        view.addSubview(searchBar)
+        
+        let offset = Constants.buttonBarHeight / 4
                 
         NSLayoutConstraint.activate([
-        savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-        savedEntries.widthAnchor.constraint(equalToConstant: view.bounds.width),
-        savedEntries.bottomAnchor.constraint(equalTo: addButton.topAnchor),
-        
-        addButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
-        addButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
-        addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            sortButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)),
+            searchButton.widthAnchor.constraint(equalToConstant: view.bounds.width * (1/2)),
+            
+            savedEntries.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            savedEntries.widthAnchor.constraint(equalToConstant: view.bounds.width),
+            savedEntries.bottomAnchor.constraint(equalTo: addButton.topAnchor),
+            
+            addButton.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
+            addButton.widthAnchor.constraint(equalToConstant: view.bounds.width),
+            addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            searchBarBackground.widthAnchor.constraint(equalToConstant: view.bounds.width),
+            searchBarBackground.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight),
+            searchBarBackground.bottomAnchor.constraint(equalTo: savedEntries.topAnchor),
+            
+            searchBar.widthAnchor.constraint(equalToConstant: view.bounds.width * (3/4)),
+            searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            searchBar.heightAnchor.constraint(equalToConstant: Constants.buttonBarHeight / 2),
+            searchBar.bottomAnchor.constraint(equalTo: savedEntries.topAnchor, constant: -offset)
         ])
     }
     
@@ -93,6 +144,46 @@ class ViewController: UIViewController {
         Alerts.presentAlert(description: EntryErrors.sortNotYetImplented.localizedDescription, viewController: self)
         // This method should sort the entries. Ideally switching between sortBy-states: e.g Title & Date
         print("Sorted!")
+    }
+    
+    @objc func searchEntries(sender: UIBarButtonItem) {
+        if searchBarIsPresented == false {
+            searchBarIsPresented = true
+            presentSearchBar()
+        } else if searchBarIsPresented == true {
+            searchBarIsPresented = false
+            hideSearchBar()
+        }
+    }
+    
+    func presentSearchBar() {
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            options: .curveEaseIn,
+            animations: {
+                self.searchBarBackground.center.y += Constants.buttonBarHeight
+                self.searchBar.center.y += Constants.buttonBarHeight
+                self.savedEntries.center.y += Constants.buttonBarHeight
+        },
+            completion: { _ in
+                print("Animation completed")
+        })
+    }
+    
+    func hideSearchBar() {
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            options: .curveEaseIn,
+            animations: {
+                self.searchBarBackground.center.y -= Constants.buttonBarHeight
+                self.searchBar.center.y -= Constants.buttonBarHeight
+                self.savedEntries.center.y -= Constants.buttonBarHeight
+        },
+            completion: { _ in
+                print("Animation completed")
+        })
     }
 }
 

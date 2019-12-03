@@ -244,7 +244,7 @@ extension LocationManager: CLLocationManagerDelegate {
         if connextionAvailable == true {
             locationManager.requestLocation()
         } else if connextionAvailable == false {
-            locationLabel.text = "There is not internet connection. Reconnect, close tab and try again."
+            locationLabel.text = "There is no internet connection. Reconnect, close tab and try again."
         }
     }
     

@@ -24,9 +24,9 @@ class EditEntryController: UIViewController {
         view.backgroundColor = ColorConstants.appBackgroundColor
 
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
-        
-        setupNavigationBarItems()
+    
         setupViews()
+        setupNavigationBarItems()
     }
     
 //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -48,7 +48,7 @@ class EditEntryController: UIViewController {
         let image = UIImage(named: Icon.deleteIcon.image)?.withRenderingMode(.alwaysTemplate)
         deleteButton.setImage(image, for: .normal)
         let inset: CGFloat = 4
-        deleteButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset + 35)
+        deleteButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 10, right: inset + 40)
         deleteButton.addTarget(self, action: #selector(deleteEntry), for: .touchUpInside)
         return deleteButton
     }()
@@ -128,7 +128,7 @@ class EditEntryController: UIViewController {
         self.navigationItem.rightBarButtonItem = deleteBarButtonItem
     }
     
-    private func setupViews() {
+    private func setupViews() {        
         view.addSubview(imageView)
         view.addSubview(titleTextField)
         view.addSubview(dateLabel)
