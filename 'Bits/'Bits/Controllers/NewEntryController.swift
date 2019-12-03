@@ -47,7 +47,7 @@ class NewEntryController: UIViewController {
         datePickerManager.datePicker.setDate(Date(), animated: false) // resets date inside picker wheel
         datePickerManager.dateSelected = String(describing: datePickerManager.getCurrentDate()) // resets date for label, after dismissing picker without interaction
         locationManager.locationLabel.text = "Tap to add location"
-        imageController.imageView.image = UIImage(named: Icon.bitsThumb.image)
+        imageView.image = UIImage(named: Icon.bitsThumb.image)
     }
     
 //     Dismiss keyboard on touch event outside textView
@@ -214,7 +214,7 @@ class NewEntryController: UIViewController {
         entry.date = date
         entry.location = location
         entry.story = story
-        entry.image = imageData // MARK: Causes Error
+        entry.imageData = imageData // MARK: Causes Error
         
         managedObjectContext.saveChanges()
         

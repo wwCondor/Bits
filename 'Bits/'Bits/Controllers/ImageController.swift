@@ -146,7 +146,6 @@ class ImageController: UIViewController {
 //        imageCollection.dragDelegate = self
 //        imageCollection.dropDelegate = self
         imageCollection.translatesAutoresizingMaskIntoConstraints = false
-
         return imageCollection
     }()
     

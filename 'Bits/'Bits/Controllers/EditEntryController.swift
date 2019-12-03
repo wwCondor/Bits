@@ -55,7 +55,7 @@ class EditEntryController: UIViewController {
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(data: entry?.image ?? thumbImageData!)
+        imageView.image = UIImage(data: entry?.imageData ?? thumbImageData!)
         imageView.backgroundColor = ColorConstants.labelColor
         imageView.layer.cornerRadius = Constants.imageCornerRadius
         imageView.layer.masksToBounds = true
@@ -242,7 +242,7 @@ class EditEntryController: UIViewController {
             entry.date = newDate
             entry.story = newStory
             entry.location = newLocation
-            entry.image = newImage
+            entry.imageData = newImage
     
             managedObjectContext.saveChanges()
             print("Item Saved, with title: \(newTitle)")
@@ -260,7 +260,7 @@ class EditEntryController: UIViewController {
                 Alerts.presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
             } else if entry?.story == "" {
                 Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
-            } else if entry?.image == nil {
+            } else if entry?.imageData == nil {
                 Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             }
         }
