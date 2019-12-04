@@ -15,6 +15,8 @@ class NewEntryController: UIViewController {
     let datePickerManager = DatePickerManager()
     let locationManager = LocationManager()
     
+    let updateEntriesNotification = Notification.Name(rawValue: NotificationKey.updateEntriesNotificationKey)
+
 //    lazy var locationManager: LocationManager = {
 //        return LocationManager(locationManagerDelegate: self)
 //    }()
@@ -186,25 +188,25 @@ class NewEntryController: UIViewController {
     
     @objc func saveEntry(sender: UIButton!) {
         guard let title = titleTextField.text, !title.isEmpty else {
-            Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
         }
         guard let story = storyTextView.text, !story.isEmpty else {
-            Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             return
         }
         guard let date = dateLabel.text, !date.isEmpty else {
-            Alerts.presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
             return
         }
         
         guard let location = locationLabel.text, !location.isEmpty else {
-            Alerts.presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
             return
         }
         
         guard let image = imageView.image, let imageData = image.pngData() else {
-            Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             return
         }
             
@@ -218,11 +220,13 @@ class NewEntryController: UIViewController {
         
         managedObjectContext.saveChanges()
         
+        NotificationCenter.default.post(name: updateEntriesNotification, object: nil)
         print("Item Saved, with title: \(entry.title)")
         
         // Saving an entry should dismiss the entryController
+        // Inform ViewController that there is a new entry
         navigationController?.popViewController(animated: true)
-        dismiss(animated: true, completion: nil)
+//        dismiss(animated: true, completion: nil)
     }
     
     @objc func cancel() {
@@ -253,7 +257,7 @@ class NewEntryController: UIViewController {
                 if locationManager.locationAuthorizationRequested == false {
                     locationManager.requestLocationAuthorization()
                 } else if locationManager.locationAuthorizationRequested == true {
-                    Alerts.presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
+                    presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
                 }
             } else if locationManager.locationAuthorizationReceived == true {
                 locationManager.modeSelected = .newEntryMode
@@ -262,7 +266,7 @@ class NewEntryController: UIViewController {
                 print("Present locationManager")
             }
         } else if reachability == false {
-            Alerts.presentAlert(description: ConnectionError.noInternet.localizedDescription, viewController: self)
+            presentAlert(description: ConnectionError.noInternet.localizedDescription, viewController: self)
         }
         
 

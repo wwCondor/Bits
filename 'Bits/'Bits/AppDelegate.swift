@@ -15,8 +15,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+                
+        let searchBarAppearance = UISearchBar.appearance()
         
-//        (UITextField.appearanceWhenContainedInInstancesOfClasses([UISearchBar.self]) as AnyObject).backgroundColor = UIColor.redColor()
+        searchBarAppearance.tintColor = ColorConstants.tintColor
+        searchBarAppearance.backgroundColor = ColorConstants.buttonMenuColor
+        searchBarAppearance.placeholder = "Search Entries"
+        searchBarAppearance.keyboardAppearance = .dark
+        searchBarAppearance.isTranslucent = true
+        
+
+        
+//        searchBar.searchBarStyle = .prominent
+//        searchBar.value(forKey: "searchField")
+//        let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") //as? UITextField
+//        textFieldInsideSearchBar?.textColor = ColorConstants.tintColor
+//        searchBar.barTintColor = ColorConstants.tintColor
+        
+//        searchBar.barTintColor = ColorConstants.tintColor
         
         let navigationBarAppearance = UINavigationBar.appearance()
 
@@ -57,20 +73,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // NSPersistentContainer: A container that encapsulates the Core Data stack in your app.
     lazy var persistentContainer: NSPersistentContainer = {
 
-        let container = NSPersistentContainer(name: "Bits") // This needs to match with the dataModel name, otherwise the stack cannot find it
+        let container = NSPersistentContainer(name: "Bits") // Needs to match with dataModel name, otherwise the stack cannot find it
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                 
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
+
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
@@ -85,7 +91,6 @@ extension NSManagedObjectContext {
             do {
                 try save()
             } catch {
-                
                 fatalError("Error: \(error.localizedDescription)")
                 // Title is too long
                 // Title is too short for editing mode

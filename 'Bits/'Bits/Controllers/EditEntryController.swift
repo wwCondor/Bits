@@ -18,6 +18,8 @@ class EditEntryController: UIViewController {
     var managedObjectContext: NSManagedObjectContext!
     let thumbImageData = UIImage(named: Icon.bitsThumb.image)?.pngData()
     
+    let updateEntriesNotification = Notification.Name(rawValue: NotificationKey.updateEntriesNotificationKey)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -225,7 +227,7 @@ class EditEntryController: UIViewController {
             if locationManager.locationAuthorizationRequested == false {
                 locationManager.requestLocationAuthorization()
             } else if locationManager.locationAuthorizationRequested == true {
-                Alerts.presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
+                presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
             }
         } else if locationManager.locationAuthorizationReceived == true {
             locationManager.modeSelected = .editEntryMode
@@ -245,23 +247,25 @@ class EditEntryController: UIViewController {
             entry.imageData = newImage
     
             managedObjectContext.saveChanges()
+            NotificationCenter.default.post(name: updateEntriesNotification, object: nil)
             print("Item Saved, with title: \(newTitle)")
             navigationController?.popViewController(animated: true)
+
 //            dismiss(animated: true, completion: nil)
         } else {
             print("We are here")
             if entry == nil {
-                Alerts.presentAlert(description: EntryErrors.entryNil.localizedDescription , viewController: self)
+                presentAlert(description: EntryErrors.entryNil.localizedDescription , viewController: self)
             } else if entry?.title == "" {
-                Alerts.presentAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
+                presentAlert(description: EntryErrors.titleEmpty.localizedDescription , viewController: self)
             } else if entry?.date == "" {
-                Alerts.presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
+                presentAlert(description: EntryErrors.dateEmpty.localizedDescription, viewController: self)
             } else if entry?.location == "" {
-                Alerts.presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
+                presentAlert(description: EntryErrors.locationEmpty.localizedDescription, viewController: self)
             } else if entry?.story == "" {
-                Alerts.presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
+                presentAlert(description: EntryErrors.storyEmpty.localizedDescription, viewController: self)
             } else if entry?.imageData == nil {
-                Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
+                presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             }
         }
     }

@@ -12,3 +12,8 @@ enum ModeSelected {
     case newEntryMode
     case editEntryMode
 }
+
+enum SortMode {
+    case titleAscending
+    case titleDescending
+}

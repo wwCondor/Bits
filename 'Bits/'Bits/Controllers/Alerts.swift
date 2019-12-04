@@ -8,10 +8,8 @@
 
 import UIKit
 
-
-struct Alerts {
-    
-    static func presentAlert(description: String, viewController: UIViewController) {
+extension UIViewController {
+    func presentAlert(description: String, viewController: UIViewController) {
         
         let alert = UIAlertController(title: nil, message: description, preferredStyle: .alert)
         
@@ -23,7 +21,7 @@ struct Alerts {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    static func presentFailedPermissionActionSheet(description: String, viewController: UIViewController) {
+    func presentFailedPermissionActionSheet(description: String, viewController: UIViewController) {
         let actionSheet = UIAlertController(title: nil, message: description, preferredStyle: .actionSheet)
         
         actionSheet.addAction(UIAlertAction(title: "Yes, take me to Settings", style: .default, handler: { (action) in
@@ -33,16 +31,17 @@ struct Alerts {
         }))
         
         actionSheet.addAction(UIAlertAction(title: "No, thanks.", style: .cancel, handler: { (action) in
-
+            
         }))
         
         viewController.present(actionSheet, animated: true, completion: nil)
-
-//        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-//
-//        if let window = window {
-//            window.rootViewController?.present(alertController, animated: true, completion: nil)
-//        }
+        
+        //        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        //
+        //        if let window = window {
+        //            window.rootViewController?.present(alertController, animated: true, completion: nil)
+        //        }
     }
 }
+
 

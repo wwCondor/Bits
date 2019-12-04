@@ -62,18 +62,18 @@ class ImageController: UIViewController {
                         self.getPhotos()
                         self.imageCollection.reloadData()
                     } else {
-                        Alerts.presentFailedPermissionActionSheet(description: EntryErrors.noPhotoAuthorization.localizedDescription, viewController: self)
+                        self.presentFailedPermissionActionSheet(description: EntryErrors.noPhotoAuthorization.localizedDescription, viewController: self)
                     }
                 }
             }
         } else if libraryAuthorizationStatus == .denied || libraryAuthorizationStatus == .restricted {
             print("Authorization denied or restricted")
-            Alerts.presentFailedPermissionActionSheet(description: EntryErrors.noPhotoAuthorization.localizedDescription, viewController: self)
+            presentFailedPermissionActionSheet(description: EntryErrors.noPhotoAuthorization.localizedDescription, viewController: self)
         } else if libraryAuthorizationStatus == .authorized {
             print("Authorization granted")
             getPhotos()
         } else {
-            Alerts.presentAlert(description: EntryErrors.unknownAuthorizationError.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.unknownAuthorizationError.localizedDescription, viewController: self)
         }
     }
         
@@ -102,7 +102,7 @@ class ImageController: UIViewController {
                 }
             }
         } else {
-            Alerts.presentAlert(description: EntryErrors.noPhotos.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.noPhotos.localizedDescription, viewController: self)
         }
     }
     
@@ -201,7 +201,7 @@ class ImageController: UIViewController {
     
     @objc func setImage(sender: UIButton!) {
         guard let image = imageView.image else {
-            Alerts.presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
+            presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
             print("imageView is empty")
             return
         }

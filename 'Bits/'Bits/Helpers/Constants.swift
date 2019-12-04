@@ -9,7 +9,7 @@
 import UIKit
 
 struct Constants {
-    static let cellHeight: CGFloat            = 200
+    static let cellHeight: CGFloat            = 180
     static let buttonBarHeight: CGFloat       = 60 // height of buttons/buttonbars
     static let thumbNailSize: CGFloat         = 60 // savedEntryImage thumbnail size
     static let imageSize: CGFloat             = 120 // imageSize for new- and editEntry screens
@@ -23,4 +23,8 @@ struct Constants {
     static let imageCornerRadius: CGFloat     = 10
     
     static let fadeViewAlpha: CGFloat = 0.4 
+}
+
+struct NotificationKey {
+    static let updateEntriesNotificationKey = "updateEntries"
 }

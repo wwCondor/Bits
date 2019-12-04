@@ -31,6 +31,9 @@ class FetchedResultsController: NSFetchedResultsController<Entry>, NSFetchedResu
         }
     }
     
+    
+    
+    
 //    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 //        collectionView.reloadData()
 //    }

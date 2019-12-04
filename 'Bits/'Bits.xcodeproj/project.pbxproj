@@ -39,6 +39,7 @@
 		0B8483F42396502600D46747 /* Entry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F22396502600D46747 /* Entry+CoreDataClass.swift */; };
 		0B8483F52396502600D46747 /* Entry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F32396502600D46747 /* Entry+CoreDataProperties.swift */; };
 		0B8483F723966AA900D46747 /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F623966AA900D46747 /* ToggleButton.swift */; };
+		0B8483F92397AEAD00D46747 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8483F82397AEAD00D46747 /* CoreDataManager.swift */; };
 		0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D2992359AAAE002243DA /* Alerts.swift */; };
 		0B95D29C2359AB79002243DA /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29B2359AB79002243DA /* Errors.swift */; };
 		0B95D29E2359BE89002243DA /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95D29D2359BE89002243DA /* FetchedResultsController.swift */; };
@@ -80,6 +81,7 @@
 		0B8483F22396502600D46747 /* Entry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0B8483F32396502600D46747 /* Entry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0B8483F623966AA900D46747 /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
+		0B8483F82397AEAD00D46747 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		0B95D2992359AAAE002243DA /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		0B95D29B2359AB79002243DA /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0B95D29D2359BE89002243DA /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 		0B7394DF238C64360087C95F /* Delete */ = {
 			isa = PBXGroup;
 			children = (
+				0B8483F82397AEAD00D46747 /* CoreDataManager.swift */,
 			);
 			path = Delete;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 				0B8483F723966AA900D46747 /* ToggleButton.swift in Sources */,
 				0B7394D0238C0A220087C95F /* Color.swift in Sources */,
 				0B49DEB3234DC08200613EED /* Bits.xcdatamodeld in Sources */,
+				0B8483F92397AEAD00D46747 /* CoreDataManager.swift in Sources */,
 				0B7BDF2C234FBBD2006792B2 /* Helpers.swift in Sources */,
 				0B7394E8238D24720087C95F /* ImageController.swift in Sources */,
 				0B95D29A2359AAAE002243DA /* Alerts.swift in Sources */,
