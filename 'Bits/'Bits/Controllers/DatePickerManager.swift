@@ -55,9 +55,9 @@ class DatePickerManager: NSObject {
     
     lazy var dismissButton: CustomButton = {
         let dismissButton = CustomButton(type: .custom)
-        let image = UIImage(named: Icon.cancelIcon.image)!.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: Icon.dismissIcon.image)!.withRenderingMode(.alwaysTemplate)
         dismissButton.setImage(image, for: .normal)
-        let inset: CGFloat = 14
+        let inset: CGFloat = 7
         dismissButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         dismissButton.addTarget(self, action: #selector(dismissDatePicker(sender:)), for: .touchUpInside)
         return dismissButton

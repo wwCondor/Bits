@@ -175,7 +175,7 @@ class ViewController: UIViewController {
     
     lazy var sortButton: CustomButton = {
         let sortButton = CustomButton(type: .custom)
-        let sortImage = UIImage(named: Icon.sortIcon.image)!.withRenderingMode(.alwaysTemplate)
+        let sortImage = UIImage(named: Icon.ascendingIcon.image)!.withRenderingMode(.alwaysTemplate)
         sortButton.setImage(sortImage, for: .normal)
 //        let inset: CGFloat = 7 // when paired with searchbutton
 //        sortButton.imageEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset + 8, right: inset + 30) // when paired with searchbutton
@@ -255,9 +255,11 @@ class ViewController: UIViewController {
     
     private func reverseSortOrder() {
         if sortMode == .titleAscending {
+            sortButton.setImage(UIImage(named: Icon.descendingIcon.image)!.withRenderingMode(.alwaysTemplate), for: .normal)
             sortTitlesInDecendingOrder()
             sortMode = .titleDescending
         } else if sortMode == .titleDescending {
+            sortButton.setImage(UIImage(named: Icon.ascendingIcon.image)!.withRenderingMode(.alwaysTemplate), for: .normal)
             sortTitlesInAscendingOrder()
             sortMode = .titleAscending
         }
