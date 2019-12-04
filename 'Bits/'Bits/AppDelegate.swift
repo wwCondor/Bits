@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         searchBarAppearance.keyboardAppearance = .dark
         searchBarAppearance.isTranslucent = true
         
+//        let keyboardAppearance = KeyboardManager
 
         
 //        searchBar.searchBarStyle = .prominent
@@ -43,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = UINavigationController(rootViewController: ViewController())
+//        window?.overrideUserInterfaceStyle = .dark
 
         return true
     }

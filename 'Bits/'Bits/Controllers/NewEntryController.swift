@@ -29,6 +29,8 @@ class NewEntryController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.hideKeyboardWhenTappedAround() 
 
         view.backgroundColor = ColorConstants.appBackgroundColor
         
@@ -73,6 +75,8 @@ class NewEntryController: UIViewController {
     lazy var titleTextField: TitleTextField = {
         let titleTextField = TitleTextField()
         titleTextField.text = "Enter Title"
+        titleTextField.keyboardAppearance = .dark
+        titleTextField.returnKeyType = UIReturnKeyType.done
         return titleTextField
     }()
     
@@ -111,6 +115,8 @@ class NewEntryController: UIViewController {
     lazy var storyTextView: StoryTextView = {
         let storyTextView = StoryTextView()
         storyTextView.text = "Write your story here"
+        storyTextView.keyboardAppearance = .dark
+        storyTextView.returnKeyType = UIReturnKeyType.done
         return storyTextView
     }()
     
@@ -254,11 +260,7 @@ class NewEntryController: UIViewController {
         
         if reachability == true {
             if locationManager.locationAuthorizationReceived == false {
-                if locationManager.locationAuthorizationRequested == false {
-                    locationManager.requestLocationAuthorization()
-                } else if locationManager.locationAuthorizationRequested == true {
-                    presentAlert(description: LocationError.changeSettings.localizedDescription, viewController: self)
-                }
+                presentFailedPermissionActionSheet(description: LocationError.changeSettings.localizedDescription, viewController: self)
             } else if locationManager.locationAuthorizationReceived == true {
                 locationManager.modeSelected = .newEntryMode
                 locationManager.newLocationDelegate = self
@@ -268,8 +270,6 @@ class NewEntryController: UIViewController {
         } else if reachability == false {
             presentAlert(description: ConnectionError.noInternet.localizedDescription, viewController: self)
         }
-        
-
     }
     
 

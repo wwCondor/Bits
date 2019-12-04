@@ -17,16 +17,6 @@ protocol EditLocationDelegate {
     func didEditLocation(location: String)
 }
 
-//protocol LocationPermissionDelegate: class {
-//    func authorizationSucceeded()
-//    func authorizationFailedWithStatus(_ status: CLAuthorizationStatus)
-//}
-//
-//protocol LocationManagerDelegate: class {
-//    func obtainedCoordinates(_ coordinate: Coordinate)
-//    func failedWithError(_ error: LocationError)
-//}
-
 class LocationManager: NSObject {
     
     override init() {
@@ -44,18 +34,6 @@ class LocationManager: NSObject {
     var editLocationDelegate: EditLocationDelegate!
     
     lazy var locationString: String = "Tap to add location"
-    //    var locationPermissionDelegate: LocationPermissionDelegate!
-    //    weak var locationManagerDelegate: LocationManagerDelegate?
-    
-    //    var locationName: String? {
-    //        didSet {
-    //            if let name = locationName {
-    ////                addLocationButton.setTitle(name, for: .normal)
-    //            } else {
-    ////                addLocationButton.setTitle("Add location", for: .normal)
-    //            }
-    //        }
-    //    }
     
     let fadeView = UIView()
     var modeSelected: ModeSelected = .newEntryMode
@@ -225,6 +203,13 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     func requestLocationAuthorization() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
+//
+//        if authorizationStatus  == .notDetermined {
+//            locationManager.requestWhenInUseAuthorization()
+//        } else if authorizationStatus == .denied || authorizationStatus == .restricted {
+//
+//        }
+        
         
         switch authorizationStatus {
         case .notDetermined:
@@ -240,10 +225,10 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func requestLocation() {
-        let connextionAvailable = Reachability.checkReachable()
-        if connextionAvailable == true {
+        let connectionAvailable = Reachability.checkReachable()
+        if connectionAvailable == true {
             locationManager.requestLocation()
-        } else if connextionAvailable == false {
+        } else if connectionAvailable == false {
             locationLabel.text = "There is no internet connection. Reconnect, close tab and try again."
         }
     }

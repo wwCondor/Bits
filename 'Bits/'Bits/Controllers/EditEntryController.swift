@@ -22,6 +22,8 @@ class EditEntryController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.hideKeyboardWhenTappedAround() 
 
         view.backgroundColor = ColorConstants.appBackgroundColor
 
@@ -71,6 +73,8 @@ class EditEntryController: UIViewController {
     lazy var titleTextField: TitleTextField = {
         let titleTextField = TitleTextField()
         titleTextField.text = entry?.title
+        titleTextField.keyboardAppearance = .dark
+        titleTextField.returnKeyType = UIReturnKeyType.done
         return titleTextField
     }()
     
@@ -109,6 +113,8 @@ class EditEntryController: UIViewController {
     lazy var storyTextView: StoryTextView = {
         let storyTextView = StoryTextView()
         storyTextView.text = entry?.story
+        storyTextView.keyboardAppearance = .dark
+        storyTextView.returnKeyType = UIReturnKeyType.done
         return storyTextView
     }()
     

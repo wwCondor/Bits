@@ -24,7 +24,7 @@ extension ImageController {
 
 class ImageController: UIViewController {
     
-    let imageSize = Constants.imageSize
+    let imageSize: CGFloat = 300
     
     var modeSelected: ModeSelected = .newEntryMode
     

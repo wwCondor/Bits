@@ -32,7 +32,7 @@ enum Color {
 
 struct ColorConstants {
     static let appBackgroundColor: UIColor = UIColor(named: Color.roseRed.name)!
-    static let buttonMenuColor: UIColor = UIColor(named: Color.gentlemanGray.name)!
+    static let buttonMenuColor: UIColor = UIColor(named: Color.bowtieBlack.name)!
     static let tintColor: UIColor = UIColor(named: Color.washedWhite.name)! // also set icon and text
     static let cellBackgroundColor: UIColor = UIColor(named: Color.grumpyGray.name)!
     static let entryObjectBackground: UIColor = UIColor(named: Color.grumpyGray.name)!
