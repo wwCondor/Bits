@@ -109,7 +109,7 @@ class LocationManager: NSObject {
         locationLabel.text = "Requesting Location"
         requestLocation()
         
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
         
         if let window = window {
             
@@ -166,7 +166,7 @@ class LocationManager: NSObject {
     }
     
     @objc private func dismissLocationManager(sender: UISwipeGestureRecognizer) {
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
         
         if let window = window {
             let yOffset = window.frame.height
@@ -230,7 +230,7 @@ extension LocationManager: CLLocationManagerDelegate {
             locationAuthorizationReceived = false
             locationManager.requestWhenInUseAuthorization() // location permission not asked for yet
         case .authorizedWhenInUse, .authorizedAlways:
-            locationAuthorizationReceived = true  // location authorized
+            locationAuthorizationReceived = true
         case .restricted, .denied:
             locationAuthorizationReceived = false
             locationLabel.text = "'Bits needs authorization to get a location. Press button if you would like to go to settings."

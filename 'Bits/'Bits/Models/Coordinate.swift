@@ -6,7 +6,6 @@
 //  Copyright © 2019 Studio Willebrands. All rights reserved.
 //
 
-import Foundation
 import CoreLocation
 
 struct Coordinate {

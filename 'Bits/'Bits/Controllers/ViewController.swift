@@ -20,16 +20,8 @@ class ViewController: UIViewController {
     let updateEntriesNotification = Notification.Name(rawValue: NotificationKey.updateEntriesNotificationKey)
     
     let cellId = "cellId"
-//    let request: NSFetchRequest = Entry.fetchRequest()
-    
-//    var isSearching: Bool = false
-//    var filteredEntries = [Entry]()
-//
+
     var sortMode: SortMode = .titleAscending
-        
-//    var isSearchBarEmpty: Bool {
-//        return searchController.searchBar.text?.isEmpty ?? true
-//    }
     
     lazy var fetchedResultsController: FetchedResultsController = {
         return FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
@@ -41,9 +33,7 @@ class ViewController: UIViewController {
         fetchedResultsController.delegate = self
 
         view.backgroundColor = ColorConstants.appBackgroundColor
-//        UISearchBar.appearance().backgroundColor = ColorConstants.buttonMenuColor
-//        UINavigationBar.appearance().backgroundColor = ColorConstants.buttonMenuColor
-
+        
         reloadEntries()
         addOberser()
         setupViews()
@@ -54,8 +44,6 @@ class ViewController: UIViewController {
     private func addOberser() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateEntries(notification:)), name: updateEntriesNotification, object: nil)
     }
-    
-
     
     private func searchBarIsEmpty() -> Bool {
         return searchController.isActive == true && !searchController.searchBar.text!.isEmpty == true
@@ -143,8 +131,6 @@ class ViewController: UIViewController {
     }
     
     @objc private func updateEntries(notification: NSNotification) {
-//        fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
-//        savedEntries.reloadData()
         reloadEntries()
     }
     
@@ -198,13 +184,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         }
         
         return section.numberOfObjects
-//        return filteredEntries.count
     }
     
     // Sets up cell content
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let entry = fetchedResultsController.object(at: indexPath)
-//        let entry = filteredEntries[indexPath.row]
         let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
         cell.titleLabel.text = entry.title
         cell.dateLabel.text = entry.date
@@ -228,7 +212,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // Sets up what to do when a cell gets tapped
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let entry = fetchedResultsController.object(at: indexPath)
-//        let entry = filteredEntries[indexPath.row]
         let editEntryController = EditEntryController()
         editEntryController.managedObjectContext = self.managedObjectContext
         editEntryController.entry = entry
@@ -242,9 +225,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // MARK: Delete Entry
     func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
         let entry = fetchedResultsController.object(at: indexPath)
-//        let entry = filteredEntries[indexPath.row]
-//        managedObjectContext?.delete(entry)
-//        managedObjectContext?.saveChanges()
         entry.managedObjectContext?.delete(entry)
         entry.managedObjectContext?.saveChanges()
         reloadEntries()
@@ -272,25 +252,15 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         print("User is Searching")
-//        isSearching = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterContentForSearchText(searchText)
-//        if searchText == "" {
-//            fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@", searchText)
-////            reloadEntries()
-//        } else {
-//            savedEntries.reloadData()
-//        }
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         print("User finished Searching")
-//        isSearching = false
         savedEntries.reloadData()
-
-//        reloadEntries()
     }
 }
 
@@ -303,24 +273,11 @@ extension ViewController: UISearchControllerDelegate {
         searchRequest.predicate = predicate
         
         if searchText.count == 0 || searchText.trimmingCharacters(in: .whitespaces).isEmpty {
-            //            let request = NSFetchRequest<Entry>(entityName: "Entry")
             fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
-            //            reloadEntries()
         } else {
             
             fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: searchRequest)
-
-//            reloadEntries() // reload
-//
-//            let entriesFiltered = filteredEntries.filter { (entry: Entry) -> Bool in
-//                return entry.title.replacingOccurrences(of: " ", with: "").lowercased().contains(searchText.lowercased())
             }
-//            filteredEntries = entriesFiltered
-//        } else if searchText.count == 0 {
-////            let request = NSFetchRequest<Entry>(entityName: "Entry")
-//            fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
-////            reloadEntries()
-//        }
         DispatchQueue.main.async {
             self.savedEntries.reloadData()
         }

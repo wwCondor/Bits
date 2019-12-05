@@ -22,7 +22,9 @@ struct Constants {
     static let thumbnailCornerRadius: CGFloat = 5
     static let imageCornerRadius: CGFloat     = 10
     
-    static let fadeViewAlpha: CGFloat = 0.4 
+    static let fadeViewAlpha: CGFloat = 0.4
+    
+    static let squareImageSize: Double = 300
 }
 
 struct NotificationKey {

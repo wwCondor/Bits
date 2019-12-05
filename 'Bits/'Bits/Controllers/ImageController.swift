@@ -18,10 +18,6 @@ protocol EditImageDelegate {
     func didEditImage(image: UIImage)
 }
 
-extension ImageController {
-    
-}
-
 class ImageController: UIViewController {
     
     let imageSize: CGFloat = 300
@@ -95,7 +91,11 @@ class ImageController: UIViewController {
                         return
                     }
                     if !self.imageArray.contains(image) {
-                        self.imageArray.append(image)
+                        if image.isSquare() == true {
+                            self.imageArray.append(image)
+                        } else if image.isSquare() == false {
+                            self.imageArray.append(image.cropToSquare(size: Constants.squareImageSize))
+                        }
                     }
                 }
             }

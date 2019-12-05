@@ -8,20 +8,8 @@
 
 import UIKit
 
-// This extension saves us from having to retype the 255's and the alpha values for each Color used
-// Another way to do this is use the Color catalog, although that is subject to typo's
-extension UIColor {
-    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
-        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
-    }
-    
-}
-
-// MARK: Constraints Method
-// This extension allows for easy construction of constraints in order to compress code and increase readability
 extension UIView {
-
-    // This method allows us to easily set constraints
+    // Alows setting constraint easily
     public func addConstraintsWithFormat(_ format: String, views: UIView...) {
         var viewsDictionary = [String: UIView]()
 
@@ -35,20 +23,100 @@ extension UIView {
     }
 }
 
-// This allows padding around image within a UIView)
-extension UIImage {
+extension UIViewController {
+    // Hides keyboard when view is tapped
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
 
-    func addPadding(x: CGFloat, y: CGFloat) -> UIImage? {
-        let width: CGFloat = size.width + x
-        let height: CGFloat = size.height + y
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), false, 0)
-        let origin: CGPoint = CGPoint(x: (width - size.width) / 2, y: (height - size.height) / 2)
-        draw(at: origin)
-        let imageWithPadding = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return imageWithPadding
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 
+extension UIViewController {
+    func presentAlert(description: String, viewController: UIViewController) {
+        // Alert
+        let alert = UIAlertController(title: nil, message: description, preferredStyle: .alert)
+        
+        let confirmation = UIAlertAction(title: "OK", style: .default) {
+            (action) in alert.dismiss(animated: true, completion: nil)
+        }
+        
+        alert.addAction(confirmation)
+        viewController.present(alert, animated: true, completion: nil)
+    }
+    
+    func presentFailedPermissionActionSheet(description: String, viewController: UIViewController) {
+        // Actionsheet
+        let actionSheet = UIAlertController(title: nil, message: description, preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Yes, take me to Settings", style: .default, handler: { (action) in
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+            }
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "No, thanks.", style: .cancel, handler: { (action) in
+            
+        }))
+        
+        viewController.present(actionSheet, animated: true, completion: nil)
+    }
+}
 
+extension UIImage {
+    // Converts image to data
+    func convertedToData() -> Data? {
+        let data: Data? = self.pngData()
+        return data
+    }
+}
+
+extension UIImage {
+    func isSquare() -> Bool {
+        let image: UIImage = self
+        if image.size.width == image.size.height {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+extension UIImage {
+    func cropToSquare(size: Double) -> UIImage {
+        let cgImage = self.cgImage!
+        let contextImage: UIImage = UIImage(cgImage: cgImage)
+        let contextSize: CGSize = contextImage.size
+        var posX: CGFloat = 0.0
+        var posY: CGFloat = 0.0
+        var cgWidth: CGFloat = CGFloat(size)
+        var cgHeight: CGFloat = CGFloat(size)
+
+        // See what size is longer and create the center off of that
+        if contextSize.width > contextSize.height {
+            posX = ((contextSize.width - contextSize.height) / 2)
+            posY = 0
+            cgWidth = contextSize.height
+            cgHeight = contextSize.height
+        } else {
+            posX = 0
+            posY = ((contextSize.height - contextSize.width) / 2)
+            cgWidth = contextSize.width
+            cgHeight = contextSize.width
+        }
+
+        let rect: CGRect = CGRect(x: posX, y: posY, width: cgWidth, height: cgHeight)
+
+        // Create bitmap image from context using the rect
+        let imageRef: CGImage = cgImage.cropping(to: rect)!
+
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        let image: UIImage = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+
+        return image
+    }
+}

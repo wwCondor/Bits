@@ -137,7 +137,7 @@ class DatePickerManager: NSObject {
             editDateDelegate.didEditDate(date: dateSelected)
         }
         
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
 
         if let window = window {
             let yOffset = window.frame.height

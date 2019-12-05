@@ -26,7 +26,7 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Unicorn</string>
+		<string>Unicorn.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
