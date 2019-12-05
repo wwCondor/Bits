@@ -14,9 +14,7 @@ extension Entry {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Entry> {
         let request = NSFetchRequest<Entry>(entityName: "Entry")
-        
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
-        
         return request
     }
     

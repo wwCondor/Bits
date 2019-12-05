@@ -70,7 +70,6 @@ class LocationManager: NSObject {
         return settingsShortcut
     }()
     
-    
     lazy var locationLabel: LocationTextView = {
         let locationLabel = LocationTextView()
         locationLabel.text = ""
@@ -108,7 +107,7 @@ class LocationManager: NSObject {
     
     func presentLocationManager() {
         locationLabel.text = "Requesting Location"
-        requestLocation() // MARK: Move?
+        requestLocation()
         
         let window = UIApplication.shared.windows.first { $0.isKeyWindow } // handles deprecated warning for multiple screens
         
@@ -191,7 +190,6 @@ class LocationManager: NSObject {
                     self.settingsShortcut.removeFromSuperview()
             })
         }
-        
         if modeSelected == .newEntryMode {
             newLocationDelegate.didSelectLocation(location: locationString)
         } else if modeSelected == .editEntryMode {
@@ -203,14 +201,7 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     func requestLocationAuthorization() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-//
-//        if authorizationStatus  == .notDetermined {
-//            locationManager.requestWhenInUseAuthorization()
-//        } else if authorizationStatus == .denied || authorizationStatus == .restricted {
-//
-//        }
-        
-        
+
         switch authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
@@ -234,43 +225,24 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        
         switch status {
         case .notDetermined:
             locationAuthorizationReceived = false
             locationManager.requestWhenInUseAuthorization() // location permission not asked for yet
         case .authorizedWhenInUse, .authorizedAlways:
             locationAuthorizationReceived = true  // location authorized
-        case .restricted, .denied   :
+        case .restricted, .denied:
             locationAuthorizationReceived = false
             locationLabel.text = "'Bits needs authorization to get a location. Press button if you would like to go to settings."
             showSettingShortcut()
         @unknown default:
             fatalError("Fatal Error")
         }
-        
-        //        if locationAuthorizationRequested == true {
-        //            switch status {
-        //            case .authorizedWhenInUse:
-        //                locationManager.requestLocation()
-        //            }
-        //        }
-        
-        //        if status == .authorizedWhenInUse || status == .authorizedAlways {
-        //            locationAuthorizationReceived = true
-        //            print("Location Permission Autorized: \(locationAuthorizationReceived)")
-        //        } else {
-        //            locationAuthorizationReceived = false
-        ////            print(locationPermissionReceived)
-        //        }
     }
     
     // Called if we ask for a location fix, but cannot obtain one
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        
         guard let error = error as? CLError else {
-            //            self.failedWithError(.unknownError))
-            // MARK: Inform user
             return
         }
         
@@ -288,7 +260,6 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         guard let location = locations.first else {
             print("Could not find location")
             return
@@ -328,5 +299,4 @@ extension LocationManager: CLLocationManagerDelegate {
             self.locationString = locationName
         }
     }
-    
 }

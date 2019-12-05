@@ -20,26 +20,29 @@ class ViewController: UIViewController {
     let updateEntriesNotification = Notification.Name(rawValue: NotificationKey.updateEntriesNotificationKey)
     
     let cellId = "cellId"
+//    let request: NSFetchRequest = Entry.fetchRequest()
     
-    var isSearching: Bool = false
-    var filteredEntries = [Entry]()
-    
+//    var isSearching: Bool = false
+//    var filteredEntries = [Entry]()
+//
     var sortMode: SortMode = .titleAscending
         
-    var isSearchBarEmpty: Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
+//    var isSearchBarEmpty: Bool {
+//        return searchController.searchBar.text?.isEmpty ?? true
+//    }
     
     lazy var fetchedResultsController: FetchedResultsController = {
-        return FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries)
+        return FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
                 
-//        filteredEntries = entries // they start with equal content
+        fetchedResultsController.delegate = self
 
         view.backgroundColor = ColorConstants.appBackgroundColor
+//        UISearchBar.appearance().backgroundColor = ColorConstants.buttonMenuColor
+//        UINavigationBar.appearance().backgroundColor = ColorConstants.buttonMenuColor
 
         reloadEntries()
         addOberser()
@@ -48,34 +51,17 @@ class ViewController: UIViewController {
         setupNavigationBarItems()
     }
     
-    func addOberser() {
+    private func addOberser() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateEntries(notification:)), name: updateEntriesNotification, object: nil)
     }
     
-    @objc private func updateEntries(notification: NSNotification) {
-        reloadEntries()
-    }
+
     
-    func reloadEntries() {
-        let fetchRequest = NSFetchRequest<Entry>(entityName: "Entry")
-        do {
-            filteredEntries = try managedObjectContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print(error.userInfo)
-        }
-        if sortMode == .titleAscending {
-            sortTitlesInAscendingOrder()
-        } else if sortMode == .titleDescending {
-            sortTitlesInDecendingOrder()
-        }
-        savedEntries.reloadData()
-    }
-    
-    func searchBarIsEmpty() -> Bool {
+    private func searchBarIsEmpty() -> Bool {
         return searchController.isActive == true && !searchController.searchBar.text!.isEmpty == true
     }
     
-    func setupSearchBar() {
+    private func setupSearchBar() {
         searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
@@ -126,9 +112,7 @@ class ViewController: UIViewController {
     private func setupNavigationBarItems() {
         self.navigationItem.setHidesBackButton(true, animated: true)
         let sortBarButton = UIBarButtonItem(customView: sortButton)
-//        let searchBarButton = UIBarButtonItem(customView: searchButton)
         self.navigationItem.leftBarButtonItem = sortBarButton
-//        self.navigationItem.rightBarButtonItem = searchBarButton
     }
     
     private func setupViews() {
@@ -158,6 +142,21 @@ class ViewController: UIViewController {
         reverseSortOrder()
     }
     
+    @objc private func updateEntries(notification: NSNotification) {
+//        fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
+//        savedEntries.reloadData()
+        reloadEntries()
+    }
+    
+    private func reloadEntries() {
+        if sortMode == .titleAscending {
+            sortTitlesInAscendingOrder()
+        } else if sortMode == .titleDescending {
+            sortTitlesInDecendingOrder()
+        }
+        savedEntries.reloadData()
+    }
+    
     private func reverseSortOrder() {
         if sortMode == .titleAscending {
             sortButton.setImage(UIImage(named: Icon.descendingIcon.image)!.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -173,100 +172,40 @@ class ViewController: UIViewController {
     }
     
     private func sortTitlesInAscendingOrder() {
-        filteredEntries.sort(by: { $0.title.lowercased() < $1.title.lowercased() })
+        let sortRequest = NSFetchRequest<Entry>(entityName: "Entry")
+        sortRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+        fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: sortRequest)
     }
     
     private func sortTitlesInDecendingOrder() {
-        filteredEntries.sort(by: { $0.title.lowercased() > $1.title.lowercased() })
+        let sortRequest = NSFetchRequest<Entry>(entityName: "Entry")
+        sortRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: false, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+        fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: sortRequest)
     }
-    
-    @objc func searchEntries(sender: UIBarButtonItem) {
-        print("Search")
-//        if searchBarIsPresented == false {
-//            presentSearchBar()
-//        } else if searchBarIsPresented == true {
-//            hideSearchBar()
-//        }
-    }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
-//    func presentSearchBar() {
-//        searchBarIsPresented = true
-//        UIView.animate(
-//            withDuration: 0.3,
-//            delay: 0,
-//            options: .curveEaseIn,
-//            animations: {
-//                self.searchBarContainer.center.y += Constants.buttonBarHeight
-////                self.searchBar.center.y += Constants.buttonBarHeight
-//                self.savedEntries.center.y += Constants.buttonBarHeight
-//        },
-//            completion: { _ in
-//                print("Animation completed")
-//        })
-//    }
-//
-//    func hideSearchBar() {
-//        searchBarIsPresented = false
-//        UIView.animate(
-//            withDuration: 0.3,
-//            delay: 0,
-//            options: .curveEaseIn,
-//            animations: {
-//                self.searchBarContainer.center.y -= Constants.buttonBarHeight
-////                self.searchBar.center.y -= Constants.buttonBarHeight
-//                self.savedEntries.center.y -= Constants.buttonBarHeight
-//        },
-//            completion: { _ in
-//                print("Animation completed")
-//        })
-//    }
 }
 
-// MARK: CollectionView Delegate Methods
+    // MARK: CollectionViewDelegates
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     // Sets the amount of cells
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        var cellCount: Int  = 0
-//
-//        guard let section = fetchedResultsController.sections?[section] else {
-//            return 0
-//        }
-//
-//        if isSearching == false {
-//            // If searching is false all entries all presented
-//            cellCount = section.numberOfObjects
-//        } else if isSearching == true {
-//            if isSearchBarEmpty == true {
-//                // Is searching is true, but searchbar is empty all entries are presented
-//                cellCount = section.numberOfObjects
-//            } else if isSearchBarEmpty == false {
-//                // If searching is true and
-//                cellCount = filteredEntries.count
-//            }
-//        }
-//        return cellCount
-
-        return filteredEntries.count
+        guard let section = fetchedResultsController.sections?[section] else {
+            return 0
+        }
+        
+        return section.numberOfObjects
+//        return filteredEntries.count
     }
     
     // Sets up cell content
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-//        let entry: Entry
-        let entry = filteredEntries[indexPath.row]
-//        if isSearching == false || searchBarIsEmpty() == true { //&& searchBarIsEmpty() == false {
-//            entry = fetchedResultsController.object(at: indexPath)
-//        } else {
-//            entry = filteredEntries[indexPath.row]
-//        }
-        
+        let entry = fetchedResultsController.object(at: indexPath)
+//        let entry = filteredEntries[indexPath.row]
         let cell = savedEntries.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SavedEntryCell
-//        let entry = fetchedResultsController.object(at: indexPath)
         cell.titleLabel.text = entry.title
         cell.dateLabel.text = entry.date
         cell.storyLabel.text = entry.story
@@ -288,23 +227,8 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     // Sets up what to do when a cell gets tapped
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        if searchBarIsPresented == true {
-//            hideSearchBar()
-//        }
-//        let entry: Entry
-//        if isSearching == false || searchBarIsEmpty() == true { //&& searchBarIsEmpty() == false {
-//            entry = fetchedResultsController.object(at: indexPath)
-//        } else {
-//            entry = filteredEntries[indexPath.row]
-//        }
-//        if isSearching == true {
-//            entry = filteredEntries[indexPath.row]
-//        } else {
-//            entry = fetchedResultsController.object(at: indexPath)
-//        }
-        let entry = filteredEntries[indexPath.row]
-//
-//        let entry = fetchedResultsController.object(at: indexPath)
+        let entry = fetchedResultsController.object(at: indexPath)
+//        let entry = filteredEntries[indexPath.row]
         let editEntryController = EditEntryController()
         editEntryController.managedObjectContext = self.managedObjectContext
         editEntryController.entry = entry
@@ -317,21 +241,12 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     // MARK: Delete Entry
     func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-        
-//        let entry: Entry
-//        if isSearching == false || searchBarIsEmpty() == true { //&& searchBarIsEmpty() == false {
-//            entry = fetchedResultsController.object(at: indexPath)
-//        } else {
-//            entry = filteredEntries[indexPath.row]
-//        }
-
-        
-        let entry = filteredEntries[indexPath.row]
-//        let entry = fetchedResultsController.object(at: indexPath)
-        
-        managedObjectContext.delete(entry)
-        managedObjectContext.saveChanges()
-        
+        let entry = fetchedResultsController.object(at: indexPath)
+//        let entry = filteredEntries[indexPath.row]
+//        managedObjectContext?.delete(entry)
+//        managedObjectContext?.saveChanges()
+        entry.managedObjectContext?.delete(entry)
+        entry.managedObjectContext?.saveChanges()
         reloadEntries()
         print("Deleted \(entry) at \(indexPath)")
     }
@@ -345,13 +260,10 @@ extension ViewController: UISearchResultsUpdating {
             filterContentForSearchText(searchText)
         }
     }
-    
-
-    
 }
 
+    // MARK: UISearchBarDelegate
 extension ViewController: UISearchBarDelegate {
-    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text, !searchText.isEmpty {
             reloadEntries()
@@ -360,69 +272,94 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         print("User is Searching")
-        isSearching = true
+//        isSearching = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText == "" {
-            reloadEntries()
-        } else {
-            savedEntries.reloadData()
-        }
-        
+        filterContentForSearchText(searchText)
+//        if searchText == "" {
+//            fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@", searchText)
+////            reloadEntries()
+//        } else {
+//            savedEntries.reloadData()
+//        }
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         print("User finished Searching")
-        isSearching = false
-        reloadEntries()
-//        savedEntries.reloadData()
-//        resetFilter()
+//        isSearching = false
+        savedEntries.reloadData()
+
+//        reloadEntries()
     }
-    
-    
 }
 
+    // MARK: UISearchControllerDelegate
 extension ViewController: UISearchControllerDelegate {
     func filterContentForSearchText(_ searchText: String) {
-        if searchText.count > 0 {
-            reloadEntries() // reload
-            
-            let entriesFiltered = filteredEntries.filter { (entry: Entry) -> Bool in
-                return entry.title.replacingOccurrences(of: " ", with: "").lowercased().contains(searchText.lowercased()) //.replacingOccurrences(of: " ", with: "").lowercased())
-            }
-            filteredEntries = entriesFiltered
-            savedEntries.reloadData()
-        } else if searchText.count == 0 {
-            reloadEntries()
-        }
-//        filteredEntries = entries.filter({ (entry: Entry) -> Bool in
-//            return entry.title.lowercased().contains(searchText.lowercased()) || entry.story.lowercased().contains(searchText.lowercased())
-//        })
-//        savedEntries.reloadData()
+        let searchRequest = NSFetchRequest<Entry>(entityName: "Entry")
+        let predicate = NSPredicate(format: "title contains[c] %@", searchText)
+        searchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+        searchRequest.predicate = predicate
         
+        if searchText.count == 0 || searchText.trimmingCharacters(in: .whitespaces).isEmpty {
+            //            let request = NSFetchRequest<Entry>(entityName: "Entry")
+            fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
+            //            reloadEntries()
+        } else {
+            
+            fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: searchRequest)
+
+//            reloadEntries() // reload
+//
+//            let entriesFiltered = filteredEntries.filter { (entry: Entry) -> Bool in
+//                return entry.title.replacingOccurrences(of: " ", with: "").lowercased().contains(searchText.lowercased())
+            }
+//            filteredEntries = entriesFiltered
+//        } else if searchText.count == 0 {
+////            let request = NSFetchRequest<Entry>(entityName: "Entry")
+//            fetchedResultsController = FetchedResultsController(managedObjectContext: self.managedObjectContext, collectionView: self.savedEntries, request: Entry.fetchRequest())
+////            reloadEntries()
+//        }
+        DispatchQueue.main.async {
+            self.savedEntries.reloadData()
+        }
     }
 }
-    
-    
-    
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchText == "" {
-//            isSearching = false
-//            view.endEditing(true)
-//            savedEntries.reloadData()
-//        } else {
-//            isSearching = false
-////            searchEntries = entries.filter({$0.range(of: searchText, options: .caseInsensitive) != nil})
-//            filteredEntries = entries.filter({ (entry: Entry) -> Bool in
-//                return entry.title.lowercased().contains(searchText.lowercased()) || entry.story.lowercased().contains(searchText.lowercased())
-//            })
-//            savedEntries.reloadData()
-//
-//                //(of: searchBar.text!, options: .caseInsensitive) != nil})
-//        }
-//    }
-//}
+
+extension ViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            savedEntries.performBatchUpdates({
+                savedEntries.insertItems(at: [newIndexPath])
+            }, completion: {
+                (finished: Bool) in
+                self.savedEntries.reloadItems(at: self.savedEntries.indexPathsForVisibleItems)
+            })
+        case .delete:
+            guard let indexPath  = indexPath else { return }
+            savedEntries.performBatchUpdates({
+                savedEntries.deleteItems(at: [indexPath])
+            }, completion: {
+                (finished: Bool) in
+                self.savedEntries.reloadItems(at: self.savedEntries.indexPathsForVisibleItems)
+            })
+        case .update, .move:
+            guard let indexPath = indexPath else { return }
+            savedEntries.performBatchUpdates({
+                savedEntries.reloadItems(at: [indexPath])
+            }, completion: {
+                (finished: Bool) in
+                self.savedEntries.reloadItems(at: self.savedEntries.indexPathsForVisibleItems)
+            }) // Not adding this seems to cause glitches switching between edit en new entry mode
+        @unknown default:
+            return
+        }
+    }
+}
+
 
 
 

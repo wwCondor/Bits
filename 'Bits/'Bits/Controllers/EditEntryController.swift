@@ -26,16 +26,10 @@ class EditEntryController: UIViewController {
         self.hideKeyboardWhenTappedAround() 
 
         view.backgroundColor = ColorConstants.appBackgroundColor
-
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name:UIResponder.keyboardWillShowNotification, object: nil);
     
         setupViews()
         setupNavigationBarItems()
     }
-    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        view.endEditing(true)
-//    }
 
     lazy var cancelButton: CustomButton = {
         let cancelButton = CustomButton(type: .custom)
@@ -195,8 +189,7 @@ class EditEntryController: UIViewController {
         ])
     }
     
-    // MARK: BarButtonItem Methods
-    @objc func deleteEntry(sender: UIButton!) {
+    @objc private func deleteEntry(sender: UIButton!) {
         if let entry = entry {
             managedObjectContext.delete(entry)
             managedObjectContext.saveChanges()
@@ -205,15 +198,13 @@ class EditEntryController: UIViewController {
         }
     }
     
-    @objc func cancel() {
-        // This should have some sort of check to prevent dismissing unsaved information
-        // Check for changes. If there a no changes: dismiss, otherwise: warning?
-    
+    @objc private func cancel() {
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     
     @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
         imageController.modeSelected = .editEntryMode
         imageController.editImageDelegate = self
         imageController.managedObjectContext = self.managedObjectContext
@@ -222,6 +213,7 @@ class EditEntryController: UIViewController {
     }
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
         datePickerManager.modeSelected = .editEntryMode
         datePickerManager.editDateDelegate = self
         datePickerManager.presentDatePicker()
@@ -229,6 +221,7 @@ class EditEntryController: UIViewController {
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
         if locationManager.locationAuthorizationReceived == false {
             if locationManager.locationAuthorizationRequested == false {
                 locationManager.requestLocationAuthorization()
@@ -243,7 +236,7 @@ class EditEntryController: UIViewController {
         }
     }
     
-    @objc func saveEntry(sender: UIButton!) {
+    @objc private func saveEntry(sender: UIButton!) {
         // In here we check if we have an entry, then save the changes
         if let entry = entry, let newTitle = titleTextField.text, let newDate = dateLabel.text, let newStory = storyTextView.text, let newLocation = locationLabel.text, let newImage = imageView.image?.pngData() {
             entry.title = newTitle
@@ -252,12 +245,10 @@ class EditEntryController: UIViewController {
             entry.location = newLocation
             entry.imageData = newImage
     
-            managedObjectContext.saveChanges()
+            entry.managedObjectContext?.saveChanges()
             NotificationCenter.default.post(name: updateEntriesNotification, object: nil)
             print("Item Saved, with title: \(newTitle)")
             navigationController?.popViewController(animated: true)
-
-//            dismiss(animated: true, completion: nil)
         } else {
             print("We are here")
             if entry == nil {
@@ -275,17 +266,6 @@ class EditEntryController: UIViewController {
             }
         }
     }
-    
-
-    
-//    @objc func keyboardWillShow(sender: NSNotification) {
-//        titleTextField.keyboardAppearance = .dark
-//        entryContent.keyboardAppearance = .dark
-//
-//        entryTitle.becomeFirstResponder()
-//        entryContent.becomeFirstResponder()
-//    }
-    
 }
 
 extension EditEntryController: EditDateDelegate, EditLocationDelegate, EditImageDelegate {

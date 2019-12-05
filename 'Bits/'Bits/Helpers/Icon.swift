@@ -18,8 +18,6 @@ enum Icon {
     case ascendingIcon
     case descendingIcon
     case dismissIcon
-    
-    case locationIcon // not used yet
     case settingsIcon
     
     var image: String {
@@ -32,7 +30,6 @@ enum Icon {
         case .ascendingIcon:    return "AscendingIcon"
         case .descendingIcon:   return "DescendingIcon"
         case .dismissIcon:      return "DismissIcon"
-        case .locationIcon:     return "LocationIcon"
         case .settingsIcon:     return "SettingsIcon"
         case .searchIcon:       return "SearchIcon"
         }

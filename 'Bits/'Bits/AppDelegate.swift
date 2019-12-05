@@ -24,17 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         searchBarAppearance.keyboardAppearance = .dark
         searchBarAppearance.isTranslucent = true
         
-//        let keyboardAppearance = KeyboardManager
-
-        
-//        searchBar.searchBarStyle = .prominent
-//        searchBar.value(forKey: "searchField")
-//        let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") //as? UITextField
-//        textFieldInsideSearchBar?.textColor = ColorConstants.tintColor
-//        searchBar.barTintColor = ColorConstants.tintColor
-        
-//        searchBar.barTintColor = ColorConstants.tintColor
-        
         let navigationBarAppearance = UINavigationBar.appearance()
 
         navigationBarAppearance.barTintColor = ColorConstants.buttonMenuColor // Bar Background
@@ -44,7 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = UINavigationController(rootViewController: ViewController())
-//        window?.overrideUserInterfaceStyle = .dark
 
         return true
     }
@@ -87,6 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 // MARK: Todo Error handling
+// Handled at callsite instead
 extension NSManagedObjectContext {
     func saveChanges() {
         if self.hasChanges {

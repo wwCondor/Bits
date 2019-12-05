@@ -8,9 +8,8 @@
 
 import SystemConfiguration
 
-// Object that checks internet connection
 struct Reachability {
-    
+    // Object that checks internet connection
     private static let reachability = SCNetworkReachabilityCreateWithName( kCFAllocatorDefault, "https://www.wouterwillebrands.com/")
     
     static func checkReachable() -> Bool {

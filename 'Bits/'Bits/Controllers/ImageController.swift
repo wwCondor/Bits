@@ -34,7 +34,6 @@ class ImageController: UIViewController {
     var photoAccessAuthorizationRequested: Bool = false
     
     var imageArray = [UIImage]()
-//    var selectedEntryImage = UIImage(named: Icon.bitsThumb.image)!
     
     let libraryAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
     
@@ -50,7 +49,6 @@ class ImageController: UIViewController {
         setupViews()
         
         checkLibraryAccessAuthorization()
-//        imageCollection.dragDelegate = self
     }
     
     func checkLibraryAccessAuthorization() {
@@ -115,17 +113,10 @@ class ImageController: UIViewController {
 
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.image = UIImage(named: Icon.bitsThumb.image) // Sets default image
         imageView.backgroundColor = ColorConstants.labelColor
         imageView.layer.cornerRadius = Constants.imageCornerRadius
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        let dropInteraction = UIDropInteraction(delegate: self)
-//        imageView.addInteraction(dropInteraction)
-//        imageView.isUserInteractionEnabled = true
-//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(presentImageController(tapGestureRecognizer:)))
-//        imageView.addGestureRecognizer(tapGestureRecognizer)
-//        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -143,8 +134,6 @@ class ImageController: UIViewController {
         imageCollection.register(ImageCell.self, forCellWithReuseIdentifier: cellId)
         imageCollection.dataSource = self
         imageCollection.delegate = self
-//        imageCollection.dragDelegate = self
-//        imageCollection.dropDelegate = self
         imageCollection.translatesAutoresizingMaskIntoConstraints = false
         return imageCollection
     }()
@@ -202,7 +191,6 @@ class ImageController: UIViewController {
     @objc func setImage(sender: UIButton!) {
         guard let image = imageView.image else {
             presentAlert(description: EntryErrors.photoEmpty.localizedDescription, viewController: self)
-            print("imageView is empty")
             return
         }
         
@@ -213,7 +201,6 @@ class ImageController: UIViewController {
         }
 
         print("Setting Image")
-//
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
@@ -223,7 +210,6 @@ class ImageController: UIViewController {
     }
 }
 
-//
 extension ImageController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     // Sets the amount of cells
@@ -270,53 +256,3 @@ extension ImageController: UICollectionViewDataSource, UICollectionViewDelegate,
         imageView.image = imageSelected
     }
 }
-
-extension UIImage {
-    func convertedToData() -> Data? {
-        let data: Data? = self.pngData()
-        return data
-    }
-}
-
-//extension ImageController: UICollectionViewDragDelegate { //}, UIDragInteractionDelegate { //}, UICollectionViewDropDelegate {
-//    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-//        let touchedPoint = session.location(in: self.view)
-//        if let touchedImageView = self.view.hitTest(touchedPoint, with: nil) as? UIImageView {
-//            let touchedImage = touchedImageView.image
-//
-//            let itemProvider = NSItemProvider(object: touchedImage!)
-//
-//            let dragItem = UIDragItem(itemProvider: itemProvider)
-//            return [dragItem]
-//        }
-//
-//        return []
-//
-////        let image: UIImage = imageArray[indexPath.row]
-////        let imageString = image.convertedToString()!
-////        print("String length: \(imageString.count)")
-////        let itemProvider = NSItemProvider(object: imageString as NSString)
-////        let dragItem = UIDragItem(itemProvider: itemProvider)
-////        dragItem.localObject = image
-////        return [dragItem]
-//    }
-//
-//
-//    func dragItems(for indexPath: IndexPath) -> [UIDragItem] {
-//        let image: UIImage = imageArray[indexPath.row]
-//        let imageString = image.convertedToString()!
-//        print("String length: \(imageString.count)")
-//        let itemProvider = NSItemProvider(object: imageString as NSString)
-//        let dragItem = UIDragItem(itemProvider: itemProvider)
-//        dragItem.localObject = image
-//        return [dragItem]
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-//        print("Dragging")
-//        return dragItems(for: indexPath)
-//    }
-    
-//    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-//    }
-//}

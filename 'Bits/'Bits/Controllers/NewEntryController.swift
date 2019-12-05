@@ -16,16 +16,8 @@ class NewEntryController: UIViewController {
     let locationManager = LocationManager()
     
     let updateEntriesNotification = Notification.Name(rawValue: NotificationKey.updateEntriesNotificationKey)
-
-//    lazy var locationManager: LocationManager = {
-//        return LocationManager(locationManagerDelegate: self)
-//    }()
     
     var managedObjectContext: NSManagedObjectContext!
-    
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,26 +30,7 @@ class NewEntryController: UIViewController {
         setupViews()
         
         resetLabels()
-        
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name:UIResponder.keyboardWillShowNotification, object: nil);
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
-    func resetLabels() {
-        titleTextField.text = "Enter Title"
-        dateLabel.text = "Tap to set date"
-        locationLabel.text = "Tap to add location"
-        storyTextView.text = "Write your story here"
-        datePickerManager.datePicker.setDate(Date(), animated: false) // resets date inside picker wheel
-        datePickerManager.dateSelected = String(describing: datePickerManager.getCurrentDate()) // resets date for label, after dismissing picker without interaction
-        locationManager.locationLabel.text = "Tap to add location"
-        imageView.image = UIImage(named: Icon.bitsThumb.image)
-    }
-    
-//     Dismiss keyboard on touch event outside textView
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        view.endEditing(true)
-//    }
 
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -192,7 +165,18 @@ class NewEntryController: UIViewController {
         ])
     }
     
-    @objc func saveEntry(sender: UIButton!) {
+    func resetLabels() {
+        titleTextField.text = "Enter Title"
+        dateLabel.text = "Tap to set date"
+        locationLabel.text = "Tap to add location"
+        storyTextView.text = "Write your story here"
+        datePickerManager.datePicker.setDate(Date(), animated: false) // resets date inside picker wheel
+        datePickerManager.dateSelected = String(describing: datePickerManager.getCurrentDate()) // resets date for label
+        locationManager.locationLabel.text = "Tap to add location"
+        imageView.image = UIImage(named: Icon.bitsThumb.image)
+    }
+    
+    @objc private func saveEntry(sender: UIButton!) {
         guard let title = titleTextField.text, !title.isEmpty else {
             presentAlert(description: EntryErrors.titleEmpty.localizedDescription, viewController: self)
             return
@@ -222,24 +206,21 @@ class NewEntryController: UIViewController {
         entry.date = date
         entry.location = location
         entry.story = story
-        entry.imageData = imageData // MARK: Causes Error
+        entry.imageData = imageData
         
-        managedObjectContext.saveChanges()
+        entry.managedObjectContext?.saveChanges()
         
         NotificationCenter.default.post(name: updateEntriesNotification, object: nil)
         print("Item Saved, with title: \(entry.title)")
-        
-        // Saving an entry should dismiss the entryController
-        // Inform ViewController that there is a new entry
         navigationController?.popViewController(animated: true)
-//        dismiss(animated: true, completion: nil)
     }
     
-    @objc func cancel() {
+    @objc private func cancel() {
         dismiss(animated: true, completion: nil)
     }
     
     @objc func presentImageController(tapGestureRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
         imageController.modeSelected = .newEntryMode
         imageController.newImageDelegate = self
         imageController.managedObjectContext = self.managedObjectContext
@@ -249,6 +230,7 @@ class NewEntryController: UIViewController {
     }
     
     @objc func presentDatePicker(tapGestureRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
         datePickerManager.modeSelected = .newEntryMode
         datePickerManager.newDateDelegate = self
         datePickerManager.presentDatePicker()
@@ -256,6 +238,7 @@ class NewEntryController: UIViewController {
     }
     
     @objc func presentLocationManager(tapGestureRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
         let reachability = Reachability.checkReachable()
         
         if reachability == true {
@@ -271,25 +254,6 @@ class NewEntryController: UIViewController {
             presentAlert(description: ConnectionError.noInternet.localizedDescription, viewController: self)
         }
     }
-    
-
-    
-//    @objc func keyboardDone() {
-//        self.resignFirstResponder()
-//    }
-    
-//    @objc func keyboardWillShow(_ notification: Notification) {
-//        entryTitle.keyboardAppearance = .dark
-//        entryContent.keyboardAppearance = .dark
-//
-//        entryTitle.becomeFirstResponder()
-//        entryContent.becomeFirstResponder()
-//    }
-    
-//    @objc func keyboardWillHide(_ notification: Notification) {
-//        KeyboardManager.keyboardWillHide(notification: notification, rootView: view)
-//    }
-    
 }
 
 extension NewEntryController: NewDateDelegate, NewLocationDelegate, NewImageDelegate {
