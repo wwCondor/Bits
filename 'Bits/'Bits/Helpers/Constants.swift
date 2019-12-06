@@ -24,7 +24,7 @@ struct Constants {
     
     static let fadeViewAlpha: CGFloat = 0.4
     
-    static let squareImageSize: Double = 300
+    static let squareImageSize: Double = Double(imageSize)
 }
 
 struct NotificationKey {

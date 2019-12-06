@@ -76,7 +76,7 @@ class ImageController: UIViewController {
         
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isSynchronous = true
-        imageRequestOptions.deliveryMode = .fastFormat
+        imageRequestOptions.deliveryMode = .opportunistic
         
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -92,9 +92,9 @@ class ImageController: UIViewController {
                     }
                     if !self.imageArray.contains(image) {
                         if image.isSquare() == true {
-                            self.imageArray.append(image)
+                            self.imageArray.append(image.resizedSquare(to: Constants.squareImageSize)) // maybe resize these as well? 
                         } else if image.isSquare() == false {
-                            self.imageArray.append(image.cropToSquare(size: Constants.squareImageSize))
+                            self.imageArray.append(image.croppedToSquare(size: Constants.squareImageSize))
                         }
                     }
                 }

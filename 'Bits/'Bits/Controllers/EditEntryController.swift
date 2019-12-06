@@ -23,7 +23,7 @@ class EditEntryController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.hideKeyboardWhenTappedAround() 
+        self.hideKeyboardOnBackgroundTap() 
 
         view.backgroundColor = ColorConstants.appBackgroundColor
     

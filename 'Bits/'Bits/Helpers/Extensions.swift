@@ -25,7 +25,7 @@ extension UIView {
 
 extension UIViewController {
     // Hides keyboard when view is tapped
-    func hideKeyboardWhenTappedAround() {
+    func hideKeyboardOnBackgroundTap() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -87,7 +87,7 @@ extension UIImage {
 }
 
 extension UIImage {
-    func cropToSquare(size: Double) -> UIImage {
+    func croppedToSquare(size: Double) -> UIImage {
         let cgImage = self.cgImage!
         let contextImage: UIImage = UIImage(cgImage: cgImage)
         let contextSize: CGSize = contextImage.size
@@ -117,6 +117,22 @@ extension UIImage {
         // Create a new image based on the imageRef and rotate back to the original orientation
         let image: UIImage = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
 
+        return image
+    }
+}
+
+extension UIImage {
+    func resizedSquare(to size: Double) -> UIImage {
+        let cgImage = self.cgImage!
+        let posX: CGFloat = 0.0
+        let posY: CGFloat = 0.0
+        let cgSize: CGFloat = CGFloat(size)
+        
+        let rect: CGRect = CGRect(x: posX, y: posY, width: cgSize, height: cgSize)
+        let imageRef: CGImage = cgImage.cropping(to: rect)!
+        
+        let image: UIImage = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+        
         return image
     }
 }
